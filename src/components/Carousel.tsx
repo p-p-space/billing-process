@@ -8,7 +8,7 @@ import screen2 from '%/images/screen2.svg';
 
 export default function Carousel() {
   const [currentStep, setCurrentStep] = useState(0);
-  console.log('🚀 ~ Carousel ~ currentStep:', currentStep);
+
   const steps = [
     {
       image: screen1,
