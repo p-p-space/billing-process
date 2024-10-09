@@ -1,10 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import 'remixicon/fonts/remixicon.css';
 
 :root {
+  --color-primary: #8142f5;
+  --color-text: #333333;
+
   --background: #ffffff;
+  --grey-100: #cccccc;
+  --grey-200: #f9f9f9;
   --foreground: #171717;
+
+  --boder-radius: 12px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -21,7 +29,64 @@ body {
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .input-custom {
+    border-radius: var(--boder-radius);
+    height: 54px;
+    padding: 24px;
+    width: 100%;
+    border: 1px solid var(--grey-100);
+    color: var(--color-text);
+  }
+
+  .no-focus:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  .color-text {
+    color: var(--color-text);
+  }
+
+  .btn-primary {
+    background: var(--color-primary);
+    color: var(--foreground);
+    border: none;
+    height: 48px;
+    border-radius: var(--boder-radius);
+    padding: 12px 24px;
+    cursor: pointer;
+  }
+
+  .bg-custom-container {
+    background: var(--grey-200);
+  }
+
+  .btn-circle {
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    color: var(--color-primary);
+    background-color: white;
+    border: 1px solid var(--color-primary);
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 24px;
+  }
+
+  .hr-slider.active {
+    height: 8px;
+    width: 64px;
+    background: var(--color-primary);
+    border-radius: 8px;
+  }
+
+  .hr-slider.inactive {
+    height: 8px;
+    width: 64px;
+    background: var(--color-primary);
+    opacity: 0.2;
+    border-radius: 8px;
   }
 }
