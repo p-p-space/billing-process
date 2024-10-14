@@ -34,7 +34,14 @@ export default function Carousel() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-custom-container">
       <div className="w-full max-w-lg rounded-lg p-6">
         <div className="block mb-6">
-          <Image src={steps[currentStep].image} alt="screen" style={{ margin: 'auto' }} width={210} height={200} />
+          <Image
+            src={steps[currentStep].image}
+            alt="screen"
+            style={{ margin: 'auto', width: 'auto', height: 'auto' }}
+            width={210}
+            height={200}
+            priority
+          />
         </div>
         <h2 className="text-2xl font-bold mb-6 text-center">{steps[currentStep].title}</h2>
         <p className="mb-6 text-center">{steps[currentStep].content}</p>

@@ -16,7 +16,7 @@ export function middleware(request: NextRequest) {
 
   if (pathnameHasLocale) return;
 
-  const newPathname = pathname.split('/').slice(2).join('/') || '/';
+  const newPathname = pathname.split('/').slice(2).join('/') || '/signin';
   const locale = getLocale(request);
 
   request.nextUrl.pathname = `/${locale}/${newPathname}`;
