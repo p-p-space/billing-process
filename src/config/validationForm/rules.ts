@@ -17,4 +17,9 @@ export const validationRules: ValidationRule = {
     .max(256, 'Must have a maximum of 256 characters')
     .test('emailValid', 'Please enter a valid email', (value) => regularExpressions.emailValid?.test(value)),
   password: yup.string().required('Enter a password'),
+  newPassword: yup.string().required('Enter a new password'),
+  currentNewPassword: yup
+    .string()
+    .required('Enter a new password')
+    .oneOf([yup.ref('newPassword')], 'Passwords do not match'),
 };
