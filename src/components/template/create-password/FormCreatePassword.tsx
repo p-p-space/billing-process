@@ -1,6 +1,7 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
+import { useTranslations } from 'next-intl';
 import { yupResolver } from '@hookform/resolvers/yup';
 //Internal app
 import { getSchema } from '@/config';
@@ -11,6 +12,7 @@ interface FormProps {
 }
 
 export default function FormCreatePassword(props: FormProps) {
+  const t = useTranslations();
   const { onSubmit } = props;
 
   const schema = getSchema(['newPassword', 'currentNewPassword']);
@@ -25,13 +27,13 @@ export default function FormCreatePassword(props: FormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <InputPass name="newPassword" control={control} label="New password" />
+      <InputPass name="newPassword" control={control} label={t('Password.pass-new')} />
 
-      <InputPass name="currentNewPassword" control={control} label="Repeat new password" />
+      <InputPass name="currentNewPassword" control={control} label={t('Password.pass-repeat')} />
 
       <div>
         <button type="submit" className="flex w-full justify-center btn-primary">
-          Log in
+          {t('Common.create')}
         </button>
       </div>
     </form>

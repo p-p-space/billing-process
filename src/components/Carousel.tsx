@@ -5,20 +5,22 @@ import { useState } from 'react';
 //Internal app
 import screen1 from '%/images/screen1.svg';
 import screen2 from '%/images/screen2.svg';
+import { useTranslations } from 'next-intl';
 
 export default function Carousel() {
+  const t = useTranslations('Carousel');
   const [currentStep, setCurrentStep] = useState(0);
 
   const steps = [
     {
       image: screen1,
-      title: 'Adapt',
-      content: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.`,
+      title: t('adapt-title'),
+      content: t('adapt-content'),
     },
     {
       image: screen2,
-      title: 'Scale',
-      content: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.`,
+      title: t('scale-title'),
+      content: t('scale-content'),
     },
   ];
 

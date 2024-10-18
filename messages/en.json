@@ -1,5 +1,31 @@
 {
-  "signin": "Sign in",
-  "email": "Email",
-  "password": "Password"
+  "Common": {
+    "create": "Create",
+    "send": "Send",
+    "continue": "Continue",
+    "acept": "Acept",
+    "cancel": "Cancel",
+    "close": "close"
+  },
+  "Head": {
+    "title": "Billing process",
+    "description": "Billing process"
+  },
+  "Signin": {
+    "signin": "Sign in",
+    "login": "Log in",
+    "email": "Email",
+    "password": "Password"
+  },
+  "Password": {
+    "pass-create": "Create Password",
+    "pass-new": "New password",
+    "pass-repeat": "Repeat new password"
+  },
+  "Carousel": {
+    "adapt-title": "Adaptable",
+    "adapt-content": "Cupidatat et non magna aute ad sunt. Cupidatat sunt culpa ex est mollit elit sint esse aute id Lorem.",
+    "scale-title": "Scalable",
+    "scale-content": "Consequat cillum reprehenderit adipisicing nisi ullamco ex ea officia in qui. Consectetur irure et deserunt ad nisi duis in enim."
+  }
 }

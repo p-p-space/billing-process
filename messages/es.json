@@ -1,5 +1,31 @@
 {
-  "signin": "Iniciar Sesión",
-  "email": "Correo Electrónico",
-  "password": "Contraseña"
+  "Common": {
+    "create": "Crear",
+    "send": "Enviar",
+    "continue": "Continuar",
+    "acept": "Aceptar",
+    "cancel": "Cancelar",
+    "close": "Cerrar"
+  },
+  "Head": {
+    "title": "Proceso de factoraje",
+    "description": "Proceso de factoraje"
+  },
+  "Signin": {
+    "signin": "Iniciar Sesión",
+    "login": "Acceder",
+    "email": "Correo Electrónico",
+    "password": "Contraseña"
+  },
+  "Password": {
+    "pass-create": "Crear contraseña",
+    "pass-new": "Nueva contraseña",
+    "pass-repeat": "Repite tu contraseña"
+  },
+  "Carousel": {
+    "adapt-title": "Adaptable",
+    "adapt-content": "Cupidatat et non magna aute ad sunt. Cupidatat sunt culpa ex est mollit elit sint esse aute id Lorem.",
+    "scale-title": "Escalable",
+    "scale-content": "Consequat cillum reprehenderit adipisicing nisi ullamco ex ea officia in qui. Consectetur irure et deserunt ad nisi duis in enim."
+  }
 }
