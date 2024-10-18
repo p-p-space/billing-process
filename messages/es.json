@@ -1,0 +1,15 @@
+{
+  "Head": {
+    "title": "Crea la aplicación next",
+    "description": "Generada por create next app"
+  },
+  "Home": {
+    "start_edit": "Comienza editando",
+    "save_see": "Guarda y observa tus cambios al instante.",
+    "deploy_now": "Desplegar ahora",
+    "read_docs": "Lee nuestra documentación",
+    "learn": "Aprende",
+    "examples": "Ejemplos",
+    "go_nextjs": "ir a nextjs.org →"
+  }
+}
