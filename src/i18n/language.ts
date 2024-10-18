@@ -1,3 +1,4 @@
+//Internal app
 import { Lang } from '@/interfaces';
 
 export const cookieLang = 'app_lang';

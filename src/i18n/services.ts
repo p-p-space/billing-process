@@ -1,4 +1,5 @@
 'use server';
+
 import { cookies } from 'next/headers';
 // Internal app
 import { Lang } from '@/interfaces';

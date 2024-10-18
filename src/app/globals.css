@@ -5,11 +5,15 @@
 
 :root {
   --color-primary: #8142f5;
+  --color-secondary: #dfd3f4;
   --color-text: #333333;
+
+  --color-hover-menu: #f3edfe;
 
   --background: #ffffff;
   --grey-100: #cccccc;
   --grey-200: #f9f9f9;
+  --grey-300: #fbfbfb;
   --foreground: #171717;
 
   --boder-radius: 12px;
@@ -29,6 +33,9 @@ body {
 }
 
 @layer utilities {
+  .bg-primary-menu {
+    background: var(--color-hover-menu);
+  }
   .input-custom {
     border-radius: var(--boder-radius);
     height: 54px;
@@ -45,6 +52,14 @@ body {
 
   .color-text {
     color: var(--color-text);
+  }
+
+  .color-primary {
+    color: var(--color-primary);
+  }
+
+  .border-color-primary {
+    border-color: var(--color-primary);
   }
 
   .btn-primary {
@@ -88,5 +103,38 @@ body {
     background: var(--color-primary);
     opacity: 0.2;
     border-radius: 8px;
+  }
+  .container-menu {
+    width: 240px;
+  }
+
+  .container-main {
+    width: calc(100% - 240px);
+  }
+
+  .navbar {
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    border-bottom: 10px solid var(--color-secondary);
+    background: var(--color-primary);
+    background: linear-gradient(60deg, rgba(104, 54, 197, 1) 4%, rgba(129, 66, 245, 1) 55%, rgba(104, 54, 197, 1) 100%);
+    color: var(--color-text);
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    margin-right: 8px;
+    border-radius: 50%;
+    border: 2px solid white;
+    background: var(--color-primary);
   }
 }
