@@ -1,0 +1,10 @@
+{
+  "Common": {
+    "create": "Create",
+    "send": "Send",
+    "continue": "Continue",
+    "acept": "Acept",
+    "cancel": "Cancel",
+    "close": "close"
+  }
+}
