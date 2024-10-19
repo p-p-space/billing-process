@@ -1,0 +1,11 @@
+{
+  "Menu": {
+    "purchase-orders": "Ordenes de compra",
+    "companies": "Empresas",
+    "config-support": "CONFIGURACIÓN Y SOPORTE",
+    "users-roles": "Usuarios y roles",
+    "user-profile": "Perfil de usuario",
+    "update-password": "Actulizar contraseña",
+    "log-out": "Cerrar sesión"
+  }
+}

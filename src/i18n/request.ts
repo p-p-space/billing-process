@@ -10,6 +10,7 @@ export default getRequestConfig(async () => {
     ...(await import(`../../dictionary/${locale}/common.json`)).default,
     ...(await import(`../../dictionary/${locale}/dashboard.json`)).default,
     ...(await import(`../../dictionary/${locale}/head.json`)).default,
+    ...(await import(`../../dictionary/${locale}/menu.json`)).default,
     ...(await import(`../../dictionary/${locale}/password.json`)).default,
     ...(await import(`../../dictionary/${locale}/signin.json`)).default,
   };
