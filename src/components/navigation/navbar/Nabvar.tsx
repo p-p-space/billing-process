@@ -1,10 +1,12 @@
 'use client';
 
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 //Internal app
 import usersLogo from '%/images/users.png';
 
 export default function Nabvar(props: { toggleSidebar: () => void }) {
+  const t = useTranslations('Dashboard');
   const { toggleSidebar } = props;
 
   return (
@@ -14,7 +16,7 @@ export default function Nabvar(props: { toggleSidebar: () => void }) {
           <button onClick={toggleSidebar} className="text-white focus:outline-none lg:hidden pr-3 ">
             <i className="ri-menu-line text-2xl"></i>
           </button>
-          <h1 className="text-xl text-white">Purchase orders (PO)</h1>
+          <h1 className="text-xl text-white">{t('order-title')}</h1>
         </div>
 
         <div className="flex items-center justify-center">
@@ -29,16 +31,12 @@ export default function Nabvar(props: { toggleSidebar: () => void }) {
       <div className="container mx-auto px-4 pt-4 hidden lg:block">
         <div className="grid grid-cols-12 gap-4">
           <div className="col-span-8">
-            <h1 className="text-xl text-white">
-              In this section, you can efficiently manage all activities related to your purchase orders. Access
-              detailed data, track status and perform customized searches. If you need to create a new purchase order,
-              enter through the following button.
-            </h1>
+            <h1 className="text-xl text-white">{t('order-description')}</h1>
             <button
               onClick={toggleSidebar}
               className="border border-white text-white hover:bg-white hover:text-gray-600 font-semibold my-6 py-2 px-4 rounded transition duration-300"
             >
-              New purchase order
+              {t('order-new')}
             </button>
           </div>
           <div className="col-span-4 flex items-end">
