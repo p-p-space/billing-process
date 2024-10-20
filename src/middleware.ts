@@ -1,20 +1,15 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
-import { cookieLang, defaultLang, langs } from './i18n';
-import { Lang } from './interfaces';
+import { cookieLang, langCookieName, availableValueCookie } from './i18n';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
-  const lang = request.cookies.get(cookieLang);
-  const cookieValue = lang && langs.includes(lang.value as Lang) ? lang.value : defaultLang;
+  const lang = request.cookies.get(langCookieName)?.value;
+  const cookieValue = await availableValueCookie(lang);
 
   response.cookies.set({
-    name: cookieLang,
+    ...cookieLang,
     value: cookieValue,
-    path: '/',
-    sameSite: 'lax',
-    httpOnly: true,
-    expires: Date.now() + 6 * 30 * 24 * 60 * 60 * 1000,
   });
 
   return response;
