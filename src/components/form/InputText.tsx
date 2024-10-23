@@ -1,10 +1,13 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { Controller } from 'react-hook-form';
 //Internal app
 import { TextInputProps } from '@/interfaces';
 
 export default function InputText({ name, control, label }: TextInputProps) {
+  const t = useTranslations();
+
   return (
     <Controller
       name={name}
@@ -22,7 +25,7 @@ export default function InputText({ name, control, label }: TextInputProps) {
               type="text"
               className={`input-custom no-focus ${error ? 'border-red-500' : ''}`}
             />
-            <div className="h-6">{error && <p className="text-xs text-red-600">{error.message}</p>}</div>
+            <div className="h-6">{error && <p className="text-xs text-red-600">{t(error.message)}</p>}</div>
           </div>
         </div>
       )}

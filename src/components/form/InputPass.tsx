@@ -1,19 +1,18 @@
-// src/components/form/InputPassword.tsx
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Controller } from 'react-hook-form';
 //Internal app
 import { TextInputProps } from '@/interfaces/form';
 
 export default function InputPassword({ name, control, label }: TextInputProps) {
+  const t = useTranslations();
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
-  // const textLabel = label ?? t(`form.${name}_label`);
 
   return (
     <Controller
@@ -38,8 +37,7 @@ export default function InputPassword({ name, control, label }: TextInputProps) 
             >
               {showPassword ? <i className="ri-eye-close-line"></i> : <i className="ri-eye-line"></i>}
             </button>
-            {/* {error && <p className="mt-2 text-sm text-red-600">{t(`validation.${error.message}`)}</p>} */}
-            <div className="h-6">{error && <p className="text-xs text-red-600">{error.message}</p>}</div>
+            <div className="h-6">{error && <p className="text-xs text-red-600">{t(error.message)}</p>}</div>
           </div>
         </div>
       )}
