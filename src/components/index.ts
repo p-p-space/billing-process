@@ -1,11 +1,20 @@
-export { default as Carousel } from './Carousel';
-//form
+//Form
 export { default as InputText } from './form/InputText';
 export { default as InputPass } from './form/InputPass';
 //Template - signin
+export { default as Slider } from './template/signin/Slider';
 export { default as FormSignin } from './template/signin/FormSignin';
-//Template - Recover password
+//Template - Create password
 export { default as FormCreatePassword } from './template/create-password/FormCreatePassword';
-//navigation
-export { default as Nabvar } from './navigation/navbar/Nabvar';
+//Template - Purchase Orders
+export { default as ListPurchase } from './template/purchase-orders/ListPurchase';
+//Navigation
+export { default as Navbar } from './navigation/navbar/Navbar';
 export { default as Sidebar } from './navigation/sidebar/Sidebar';
+//Provider
+export { default as MuiProvider } from './provider/MuiProvider';
+export { default as ClientProvider } from './provider/ClientProvider';
+//Spinner
+export { default as LoadingScreen } from './LoadingScreen';
+//Modal
+export { default as GlobalError } from './GlobalError';

@@ -11,14 +11,14 @@ import { ValidationRule } from '@/interfaces';
 export const validationRules: ValidationRule = {
   email: yup
     .string()
-    .required('Validation.required')
-    .test('emailValid', 'Validation.email', (value) => regularExpressions.emailValid?.test(value))
-    .min(7, 'Validation.min-7')
-    .max(256, 'Validation.max-256'),
-  password: yup.string().required('Validation.required'),
-  newPassword: yup.string().required('Validation.required'),
+    .required('required')
+    .test('emailValid', 'email', (value) => regularExpressions.emailValid?.test(value))
+    .min(7, 'min-7')
+    .max(256, 'max-256'),
+  password: yup.string().required('required'),
+  newPassword: yup.string().required('required'),
   currentNewPassword: yup
     .string()
-    .required('Validation.required')
-    .oneOf([yup.ref('newPassword')], 'Validation.pass-match'),
+    .required('required')
+    .oneOf([yup.ref('newPassword')], 'pass-match'),
 };

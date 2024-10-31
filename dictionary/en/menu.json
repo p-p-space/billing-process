@@ -1,11 +1,12 @@
 {
-  "Menu": {
-    "purchase-orders": "Purchase orders",
+  "menu": {
+    "menu": "Menu",
+    "purchase": "Purchase orders",
     "companies": "Companies",
-    "config-support": "CONFIG & SUPPORT",
-    "users-roles": "Users & roles",
-    "user-profile": "User profile",
-    "update-password": "Update password",
+    "config-support": "Config & support",
+    "users": "Users & roles",
+    "profile": "User profile",
+    "update": "Update password",
     "log-out": "Log out"
   }
 }

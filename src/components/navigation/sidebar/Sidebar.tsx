@@ -1,24 +1,44 @@
 'use client';
 
+import { Box, Drawer } from '@mui/material';
 //Internal app
-import MenuList from './MenuList';
+import { SidebarProps } from '@/interfaces';
+import ListSidebar from './components/ListSidebar';
 
-export default function Sidebar({ open }: any) {
+/**
+ * Sidebar configured for the different resolutions.
+ *
+ * @param drawerWidth - Sidebar Width {@defaultValue `280px`}.
+ * @param open - Function to show sidebar or not - responsive.
+ * @param onTransitionEnd - Function to close the sidebar when you have an action - responsive.
+ * @param onClose - Function to close the sidebar - responsive.
+ */
+export default function Sidebar(props: Readonly<SidebarProps>): JSX.Element {
+  const { drawerWidth, open, onTransitionEnd, onClose } = props;
+
   return (
-    <>
-      <div
-        className={`fixed inset-y-0 left-0 transform flex flex-col justify-between ${
-          open ? 'translate-x-0' : '-translate-x-full'
-        } transition-transform duration-300 ease-in-out bg-white color-text container-menu z-50 pt-6 px-6 pb-2`}
+    <Box
+      component="nav"
+      sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 }, height: 'auto' }}
+      aria-label="mailbox folders"
+    >
+      <Drawer
+        anchor="left"
+        variant="temporary"
+        open={open}
+        onTransitionEnd={onTransitionEnd}
+        onClose={onClose}
+        ModalProps={{ keepMounted: true }}
+        sx={{ display: { xs: 'block', md: 'none' } }}
       >
-        <MenuList />
-      </div>
+        <Box>
+          <ListSidebar />
+        </Box>
+      </Drawer>
 
-      <div
-        className={`inset-y-0 left-0 transform hidden lg:flex flex-col justify-between translate-x-0 transition-transform  duration-300 ease-in-out bg-white color-text container-menu z-50 pt-6 px-6 pb-2`}
-      >
-        <MenuList />
-      </div>
-    </>
+      <Drawer variant="permanent" open sx={{ display: { xs: 'none', md: 'block' }, '&>.MuiPaper-root': { pb: 0 } }}>
+        <ListSidebar />
+      </Drawer>
+    </Box>
   );
 }

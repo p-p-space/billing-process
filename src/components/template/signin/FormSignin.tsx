@@ -3,17 +3,13 @@
 import { useForm } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Box, Typography, Button } from '@mui/material';
 //Internal app
 import { getSchema } from '@/config';
 import { InputPass, InputText } from '@/components';
 
-interface FormProps {
-  onSubmit: () => void;
-}
-
-export default function FormSignin(props: FormProps) {
-  const t = useTranslations('Signin');
-  const { onSubmit } = props;
+export default function FormSignin() {
+  const t = useTranslations('signin');
 
   const schema = getSchema(['email', 'password']);
 
@@ -25,17 +21,23 @@ export default function FormSignin(props: FormProps) {
     resolver: yupResolver(schema),
   });
 
+  const onSubmit = (data: object) => {
+    console.log(data);
+  };
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <InputText name="email" control={control} label={t('email')} />
+    <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+      <Typography variant="h2" sx={{ mb: 4, fontWeight: 500 }}>
+        {t('signin')}
+      </Typography>
 
-      <InputPass name="password" control={control} label={t('password')} />
+      <InputText name="email" label={t('email')} control={control} />
 
-      <div>
-        <button type="submit" className="flex w-full justify-center btn-primary">
-          {t('login')}
-        </button>
-      </div>
-    </form>
+      <InputPass name="password" label={t('password')} control={control} />
+
+      <Button variant="contained" type="submit" disabled={false} fullWidth sx={{ mb: 3 }}>
+        {t('login')}
+      </Button>
+    </Box>
   );
 }

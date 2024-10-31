@@ -3,44 +3,77 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Controller } from 'react-hook-form';
+import { FormControl, FormHelperText, InputAdornment, FormLabel, OutlinedInput, IconButton } from '@mui/material';
 //Internal app
-import { TextInputProps } from '@/interfaces/form';
+import { TextFieldProps } from '@/interfaces';
 
-export default function InputPassword({ name, control, label }: TextInputProps) {
-  const t = useTranslations();
-  const [showPassword, setShowPassword] = useState(false);
+function InputMUI(props: Readonly<TextFieldProps>): JSX.Element {
+  const { name, label, labelError, error, value, onChange, inputProperties } = props;
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  const [passwordShown, setPasswordShown] = useState(false);
+
+  const t = useTranslations('validation');
+
+  const textLabel = label ?? t(`${name}`);
 
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field, fieldState: { error } }) => (
-        <div className="!mt-0">
-          <label htmlFor={name} className="block text-sm font-medium leading-6 text-gray-900">
-            {label}
-          </label>
-          <div className="mt-2 relative">
-            <input
-              id={name}
-              {...field}
-              type={showPassword ? 'text' : 'password'}
-              className={`input-custom no-focus ${error ? 'border-red-500' : ''}`}
-            />
-            <button
-              type="button"
-              onClick={togglePasswordVisibility}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center h-14 leading-5"
+    <FormControl variant="outlined" error={!!error} sx={{ mb: 1 }} fullWidth>
+      <FormLabel htmlFor={name}>{textLabel}</FormLabel>
+      <OutlinedInput
+        id={name}
+        type={passwordShown ? 'text' : 'password'}
+        aria-describedby={`${name}-helperText`}
+        error={!!error}
+        value={value}
+        onChange={onChange}
+        endAdornment={
+          <InputAdornment position="end">
+            <IconButton
+              aria-label="toggle password visibility"
+              onClick={() => setPasswordShown((state) => !state)}
+              size="small"
+              edge="end"
             >
-              {showPassword ? <i className="ri-eye-close-line"></i> : <i className="ri-eye-line"></i>}
-            </button>
-            <div className="h-6">{error && <p className="text-xs text-red-600">{t(error.message)}</p>}</div>
-          </div>
-        </div>
+              {passwordShown ? <i className="ri-eye-close-line"></i> : <i className="ri-eye-line"></i>}
+            </IconButton>
+          </InputAdornment>
+        }
+        {...inputProperties}
+      />
+      <FormHelperText sx={{ height: '20px' }} id={`${name}-helperText`}>
+        {error ? t(`${error.message}`) : labelError || ''}
+      </FormHelperText>
+    </FormControl>
+  );
+}
+
+export default function InputText(props: Readonly<TextFieldProps>) {
+  const { name, control, onChange, ...restProps } = props;
+
+  return (
+    <>
+      {control ? (
+        <Controller
+          name={name}
+          control={control}
+          render={({ field, fieldState: { error } }) => (
+            <InputMUI
+              name={name}
+              value={field.value}
+              onChange={(e) => {
+                field.onChange(e);
+                if (onChange) {
+                  onChange(e);
+                }
+              }}
+              error={error}
+              {...restProps}
+            />
+          )}
+        />
+      ) : (
+        <InputMUI name={name} onChange={onChange} />
       )}
-    />
+    </>
   );
 }

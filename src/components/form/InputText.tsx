@@ -2,33 +2,65 @@
 
 import { useTranslations } from 'next-intl';
 import { Controller } from 'react-hook-form';
+import { FormControl, FormHelperText, InputAdornment, FormLabel, OutlinedInput } from '@mui/material';
 //Internal app
-import { TextInputProps } from '@/interfaces';
+import { TextFieldProps } from '@/interfaces';
 
-export default function InputText({ name, control, label }: TextInputProps) {
-  const t = useTranslations();
+function InputMUI(props: Readonly<TextFieldProps>): JSX.Element {
+  const { name, label, labelError, type, optional, error, value, onChange, inputProperties, ...restProps } = props;
+
+  const t = useTranslations('validation');
+
+  const textLabel = label ?? t(`${name}`);
 
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field, fieldState: { error } }) => (
-        <div className="!mt-0">
-          <label htmlFor={name} className="block text-sm font-medium leading-6 text-gray-900">
-            {label}
-          </label>
-          <div className="mt-2">
-            <input
-              id={name}
-              {...field}
-              value={field.value as string | number | readonly string[] | undefined}
-              type="text"
-              className={`input-custom no-focus ${error ? 'border-red-500' : ''}`}
+    <FormControl variant="outlined" error={!!error} sx={{ mb: 1 }} fullWidth>
+      <FormLabel htmlFor={name}>{textLabel}</FormLabel>
+      <OutlinedInput
+        id={name}
+        type={type ?? 'text'}
+        aria-describedby={`${name}-helperText`}
+        error={!!error}
+        value={value}
+        onChange={onChange}
+        endAdornment={optional ? <InputAdornment position="end">{t('optional')}</InputAdornment> : ''}
+        {...restProps}
+        {...inputProperties}
+      />
+      <FormHelperText sx={{ height: '20px' }} id={`${name}-helperText`}>
+        {error ? t(`${error.message}`) : labelError || ''}
+      </FormHelperText>
+    </FormControl>
+  );
+}
+
+export default function InputText(props: Readonly<TextFieldProps>) {
+  const { name, control, onChange, ...restProps } = props;
+
+  return (
+    <>
+      {control ? (
+        <Controller
+          name={name}
+          control={control}
+          render={({ field, fieldState: { error } }) => (
+            <InputMUI
+              name={name}
+              value={field.value}
+              onChange={(e) => {
+                field.onChange(e);
+                if (onChange) {
+                  onChange(e);
+                }
+              }}
+              error={error}
+              {...restProps}
             />
-            <div className="h-6">{error && <p className="text-xs text-red-600">{t(error.message)}</p>}</div>
-          </div>
-        </div>
+          )}
+        />
+      ) : (
+        <InputMUI name={name} onChange={onChange} />
       )}
-    />
+    </>
   );
 }

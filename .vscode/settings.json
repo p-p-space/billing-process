@@ -24,8 +24,7 @@
     ".env.*": "Properties",
     ".env*": "Properties",
     ".htaccess.*": "apacheconf",
-    ".htaccess*": "apacheconf",
-    "*.css": "tailwindcss"
+    ".htaccess*": "apacheconf"
   },
   "[html]": {
     "editor.suggest.insertMode": "replace"

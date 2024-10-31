@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
+import 'remixicon/fonts/remixicon.css';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 //Internal app
-import './globals.css';
 import { RootLayout } from '@/interfaces';
+import { ClientProvider, MuiProvider } from '@/components';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('Head');
+  const t = await getTranslations('head');
 
   return {
     title: {
@@ -14,21 +16,23 @@ export async function generateMetadata(): Promise<Metadata> {
       default: t('title'),
     },
     description: t('description'),
-    // icons: {
-    //   icon: '/vercel.ico',
-    // },
   };
 }
 
 export default async function RootLayoutMain({ children }: Readonly<RootLayout>) {
   const lang = await getLocale();
+
   const messages = await getMessages();
 
   return (
     <html lang={lang}>
       <body>
         <NextIntlClientProvider messages={messages}>
-          <div className="bg-white min-h-screen w-full color-text">{children}</div>
+          <AppRouterCacheProvider>
+            <MuiProvider>
+              <ClientProvider>{children}</ClientProvider>
+            </MuiProvider>
+          </AppRouterCacheProvider>
         </NextIntlClientProvider>
       </body>
     </html>

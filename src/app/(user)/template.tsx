@@ -1,30 +1,47 @@
 'use client';
 
 import Image from 'next/image';
-//Internal app
+import { Box, Grid2 } from '@mui/material/';
+//Internal App
 import logo from '%/images/logo.svg';
-import { Carousel } from '@/components';
-import { RootLayout } from '@/interfaces';
+import { Slider } from '@/components';
 
-export default function Template({ children }: RootLayout) {
+export default function Template({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="grid lg:grid-cols-2 grip-cols h-screen">
-      <div className="col-auto hidden lg:block">
-        <div className="block mb-6 absolute top-6 left-6">
-          <Image src={logo} alt="logo" width={176} height={40} style={{ margin: 'auto' }} priority />
-        </div>
-        <Carousel />
-      </div>
+    <Grid2 container spacing={3} height="100%">
+      <Grid2 size={{ lg: 7 }} display={{ xs: 'none', lg: 'flex' }} alignItems="center" justifyContent="center">
+        <Box sx={{ p: 3, display: 'block', position: 'absolute', top: 2, left: 2 }}>
+          <Image src={logo} width={176} height={40} style={{ margin: 'auto' }} alt={`Picture of the author`} priority />
+        </Box>
+        <Slider />
+      </Grid2>
 
-      <div className="col-auto flex flex-col items-center justify-center bg-white h-full">
-        <div className="mt-10 mx-auto sm:max-w-sm w-80">
-          <div className="block lg:hidden mb-6">
-            <Image src={logo} alt="logo" width={176} height={40} style={{ margin: 'auto' }} priority />
-          </div>
-
+      <Grid2
+        size={{ lg: 5 }}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flex: 1,
+          bgcolor: 'white',
+          flexDirection: 'column',
+          position: 'relative',
+        }}
+      >
+        <Box sx={{ width: '100%', maxWidth: 320 }}>
+          <Box sx={{ p: 3, display: { xs: 'block', md: 'none' }, textAlign: 'center' }}>
+            <Image
+              src={logo}
+              width={176}
+              height={40}
+              style={{ margin: 'auto' }}
+              alt={`Picture of the author`}
+              priority
+            />
+          </Box>
           {children}
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Grid2>
+    </Grid2>
   );
 }
