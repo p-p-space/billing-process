@@ -30,7 +30,7 @@ export default function Template({ children }: Readonly<RootLayout>): JSX.Elemen
   };
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+    <Box sx={{ display: 'flex' }}>
       <Sidebar
         open={drawerStatus}
         onTransitionEnd={handleDrawerTransitionEnd}
