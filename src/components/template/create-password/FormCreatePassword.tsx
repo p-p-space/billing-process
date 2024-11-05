@@ -9,7 +9,7 @@ import { getSchema } from '@/config';
 import { InputPass } from '@/components';
 
 export default function FormCreatePassword() {
-  const t = useTranslations('password');
+  const t = useTranslations();
 
   const schema = getSchema(['newPassword', 'currentNewPassword']);
 
@@ -28,15 +28,15 @@ export default function FormCreatePassword() {
   return (
     <Box component="form" onSubmit={handleSubmit(onSubmit)}>
       <Typography variant="h2" sx={{ mb: 4, fontWeight: 500 }}>
-        {t('pass-create')}
+        {t('password.pass-create')}
       </Typography>
 
-      <InputPass name="newPassword" label={t('pass-new')} control={control} />
+      <InputPass name="newPassword" label={t('password.pass-new')} control={control} />
 
-      <InputPass name="currentNewPassword" label={t('pass-repeat')} control={control} />
+      <InputPass name="currentNewPassword" label={t('password.pass-repeat')} control={control} />
 
       <Button variant="contained" type="submit" disabled={false} fullWidth sx={{ mb: 3 }}>
-        {t('login')}
+        {t('common.create')}
       </Button>
     </Box>
   );
