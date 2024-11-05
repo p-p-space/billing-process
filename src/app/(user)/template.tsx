@@ -8,7 +8,7 @@ import { Slider } from '@/components';
 
 export default function Template({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <Grid2 container spacing={3} height="100%">
+    <Grid2 container spacing={3} height="100vh">
       <Grid2 size={{ lg: 7 }} display={{ xs: 'none', lg: 'flex' }} alignItems="center" justifyContent="center">
         <Box sx={{ p: 3, display: 'block', position: 'absolute', top: 2, left: 2 }}>
           <Image src={logo} width={176} height={40} style={{ margin: 'auto' }} alt={`Picture of the author`} priority />
