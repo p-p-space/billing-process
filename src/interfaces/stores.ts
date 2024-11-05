@@ -65,9 +65,9 @@ export interface NavbarStoreProps {
 
 type Data = {
   title: string;
-  description: string;
-  image: string;
-  actions: [
+  description?: string;
+  image?: string;
+  actions?: [
     {
       label: string;
       onClick: () => void;
