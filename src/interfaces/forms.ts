@@ -1,6 +1,7 @@
 import React from 'react';
-import { OutlinedInputProps, SxProps } from '@mui/material';
+import { Control } from 'react-hook-form';
 import { DateView, DesktopDatePickerProps } from '@mui/x-date-pickers';
+import { InputProps, OutlinedInputProps, SxProps } from '@mui/material';
 
 /**
  * Form global variables
@@ -13,7 +14,6 @@ import { DateView, DesktopDatePickerProps } from '@mui/x-date-pickers';
  * @typeParam onChange (Optional): (...e: any[]) => void
  * @typeParam type (Optional): string
  * @typeParam control (Optional): any
- * @typeParam getOptionLabel (Optional): Function
  * @typeParam disabled (Optional): boolean
  * @typeParam readOnly (Optional): boolean
  * @typeParam inputProps (Optional): any
@@ -22,16 +22,15 @@ export interface FormMUIProps {
   name: string;
   label?: string;
   labelError?: string | React.ReactNode;
-  error?: any;
-  value?: any;
-  onChange?: (..._e: any[]) => void;
+  error?: string | boolean;
+  value?: string | number | boolean | null;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   type?: string;
-  control?: any;
-  getOptionLabel?: Function;
+  control?: Control;
   disabled?: boolean;
   readOnly?: boolean;
   sx?: SxProps;
-  inputProps?: any;
+  inputProps?: InputProps;
 }
 
 /**
@@ -64,7 +63,7 @@ export interface TextFieldProps extends FormMUIProps {
  */
 export interface InputOptionsProps extends FormMUIProps {
   options: { value: string; text: string }[];
-  onClick?: (e: any) => void;
+  onClick?: () => void;
   disableClearable?: boolean;
 }
 
@@ -77,7 +76,7 @@ export interface InputOptionsProps extends FormMUIProps {
 export interface InputDatePickerProps extends FormMUIProps {
   views?: DateView[];
   format?: string;
-  datePickerProps?: DesktopDatePickerProps<any>;
+  datePickerProps?: DesktopDatePickerProps<unknown>;
 }
 
 /**
@@ -91,7 +90,7 @@ export interface InputDatePickerProps extends FormMUIProps {
  * @typeParam mtError (Optional): number
  */
 export interface InputCheckProps extends FormMUIProps {
-  onClick?: (..._e: any[]) => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   checked?: boolean;
   disabled?: boolean;
   labelHandle?: React.ReactNode | string;
