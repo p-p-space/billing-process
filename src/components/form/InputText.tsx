@@ -7,7 +7,7 @@ import { FormControl, FormHelperText, InputAdornment, FormLabel, OutlinedInput }
 import { TextFieldProps } from '@/interfaces';
 
 function InputMUI(props: Readonly<TextFieldProps>): JSX.Element {
-  const { name, label, labelError, type, optional, error, value, onChange, inputProperties, ...restProps } = props;
+  const { name, label, labelError, type, optional, error, value, onChange, ...restProps } = props;
 
   const t = useTranslations('validation');
 
@@ -25,7 +25,6 @@ function InputMUI(props: Readonly<TextFieldProps>): JSX.Element {
         onChange={onChange}
         endAdornment={optional ? <InputAdornment position="end">{t('optional')}</InputAdornment> : ''}
         {...restProps}
-        {...inputProperties}
       />
       <FormHelperText sx={{ height: '20px' }} id={`${name}-helperText`}>
         {error ? t(`${error.message}`) : labelError || ''}

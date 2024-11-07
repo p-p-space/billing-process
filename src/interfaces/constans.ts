@@ -1,3 +1,5 @@
+import { langs } from '@/i18n';
+
 /**
  * RootLayout
  *
@@ -20,3 +22,8 @@ export type PageProps = {
     lang: 'en' | 'es';
   };
 };
+
+/**
+ * Type definition for Lang, which represents a language from the available languages.
+ */
+export type Lang = (typeof langs)[number];

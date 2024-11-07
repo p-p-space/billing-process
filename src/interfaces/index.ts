@@ -1,4 +1,3 @@
-export * from './lang';
 export * from './forms';
 export * from './stores';
 export * from './constans';

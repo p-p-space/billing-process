@@ -1,28 +1,28 @@
 import React from 'react';
-import { Control } from 'react-hook-form';
+import { Control, ErrorOption } from 'react-hook-form';
+import { OutlinedInputProps, SxProps } from '@mui/material';
 import { DateView, DesktopDatePickerProps } from '@mui/x-date-pickers';
-import { InputProps, OutlinedInputProps, SxProps } from '@mui/material';
 
 /**
  * Form global variables
  *
- * @typeParam name: string
- * @typeParam label (Optional): string
- * @typeParam labelError (Optional): string
- * @typeParam error (Optional): any
- * @typeParam value (Optional): any
- * @typeParam onChange (Optional): (...e: any[]) => void
- * @typeParam type (Optional): string
- * @typeParam control (Optional): any
- * @typeParam disabled (Optional): boolean
- * @typeParam readOnly (Optional): boolean
- * @typeParam inputProps (Optional): any
+ * @property name - The name of the form field
+ * @property label - The label for the form field (Optional)
+ * @property labelError - The error label for the form field (Optional)
+ * @property error - The error state of the form field (Optional)
+ * @property value - The value of the form field (Optional)
+ * @property onChange - The change event handler for the form field (Optional)
+ * @property type - The type of the form field (Optional)
+ * @property control - The control object for the form field (Optional)
+ * @property disabled - The disabled state of the form field (Optional)
+ * @property readOnly - The read-only state of the form field (Optional)
+ * @property sx - The style properties for the form field (Optional)
  */
 export interface FormMUIProps {
   name: string;
   label?: string;
   labelError?: string | React.ReactNode;
-  error?: string | boolean;
+  error?: ErrorOption;
   value?: string | number | boolean | null;
   onChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   type?: string;
@@ -30,15 +30,16 @@ export interface FormMUIProps {
   disabled?: boolean;
   readOnly?: boolean;
   sx?: SxProps;
-  inputProps?: InputProps;
 }
 
 /**
- * TextField input
+ * TextField input properties
  *
- * @typeParam optional (Optional): boolean
- * @typeParam additionalInfo (Optional): boolean
- * @typeParam colorText (Optional): string
+ * @property optional - Indicates if the field is optional (Optional)
+ * @property additionalInfo - Indicates if additional information is provided (Optional)
+ * @property colorText - The color of the text (Optional)
+ * @property endAdornment - The end adornment for the text field (Optional)
+ * @property inputProperties - The input properties for the text field (Optional)
  */
 export interface TextFieldProps extends FormMUIProps {
   optional?: boolean;
@@ -49,17 +50,11 @@ export interface TextFieldProps extends FormMUIProps {
 }
 
 /**
- * DatePicker input
+ * Input options properties
  *
- * @typeParam onClick (Optional): (e: any) => void;
- * @typeParam disableClearable (Optional): boolean;
- * @typeParam options: {
- *
- * value: string
- *
- * text: string
- *
- * }[]
+ * @property options - The options for the input
+ * @property onClick - The click event handler for the input (Optional)
+ * @property disableClearable - Indicates if the clearable option is disabled (Optional)
  */
 export interface InputOptionsProps extends FormMUIProps {
   options: { value: string; text: string }[];
@@ -68,10 +63,11 @@ export interface InputOptionsProps extends FormMUIProps {
 }
 
 /**
- * DatePicker input
+ * DatePicker input properties
  *
- * @typeParam views (Optional): DateView[]
- * @typeParam format (Optional): string
+ * @property views - The views for the date picker (Optional)
+ * @property format - The format for the date picker (Optional)
+ * @property datePickerProps - The properties for the date picker (Optional)
  */
 export interface InputDatePickerProps extends FormMUIProps {
   views?: DateView[];
@@ -80,14 +76,14 @@ export interface InputDatePickerProps extends FormMUIProps {
 }
 
 /**
- * Checkbox input
+ * Checkbox input properties
  *
- * @typeParam onClick (Optional): (...e: any[]) => void
- * @typeParam checked (Optional): boolean
- * @typeParam disabled (Optional): boolean
- * @typeParam labelHandle (Optional): boolean | string
- * @typeParam sx (Optional): SxProps
- * @typeParam mtError (Optional): number
+ * @property onClick - The click event handler for the checkbox (Optional)
+ * @property checked - The checked state of the checkbox (Optional)
+ * @property disabled - The disabled state of the checkbox (Optional)
+ * @property labelHandle - The label handle for the checkbox (Optional)
+ * @property sx - The style properties for the checkbox (Optional)
+ * @property mtError - The margin top for the error message (Optional)
  */
 export interface InputCheckProps extends FormMUIProps {
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
@@ -123,10 +119,10 @@ export interface NewPasswordFormFields {
 }
 
 /**
- * Fields for the login form
+ * Fields for the update password form
  *
- * @property newPassword - New Password
- * @property newPasswordConfirm - New password confirm
+ * @property newPassword - The new password
+ * @property newPasswordConfirm - Confirmation of the new password
  */
 export interface UpdatePasswordFormFields {
   newPassword: string;
@@ -134,11 +130,11 @@ export interface UpdatePasswordFormFields {
 }
 
 /**
- * Fields for the login form
+ * Fields for the change password form
  *
- * @property currentPassword - Current user password
- * @property newPassword - New Password
- * @property newPasswordConfirm - New password confirm
+ * @property currentPassword - The current user password
+ * @property newPassword - The new password
+ * @property newPasswordConfirm - Confirmation of the new password
  */
 export interface ChangePasswordFormFields {
   currentPassword: string;
@@ -147,9 +143,9 @@ export interface ChangePasswordFormFields {
 }
 
 /**
- * Fields for the Mfa form
+ * Fields for the MFA form
  *
- * @property confirmationCode - The user's email address
+ * @property confirmationCode - The confirmation code sent to the user's email
  */
 export interface MfaFormFields {
   confirmationCode: string;
