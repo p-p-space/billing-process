@@ -14,6 +14,7 @@ export default getRequestConfig(async () => {
     ...(await import(`../../dictionary/${locale}/password.json`)).default,
     ...(await import(`../../dictionary/${locale}/signin.json`)).default,
     ...(await import(`../../dictionary/${locale}/validation.json`)).default,
+    ...(await import(`../../dictionary/${locale}/profile.json`)).default,
   };
 
   return {

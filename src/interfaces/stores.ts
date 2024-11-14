@@ -17,8 +17,12 @@ export interface UiStore {
   setLoadingScreen: (status: boolean) => void;
   showModalError: boolean;
   closeModalError: () => void;
-  setModalError: (value: ErrorMessage | ErrorContext | null) => void;
-  modalErrorObject: ErrorMessage | ErrorContext | null;
+  setModalError: (value: ErrorMessage | null) => void;
+  modalErrorObject: ErrorMessage | null;
+  showModalSuccess: boolean;
+  closeModalSuccess: () => void;
+  setModalSuccess: (value: ErrorMessage | null) => void;
+  modalSuccessObject: ErrorMessage | null;
   showModal: boolean;
   closeModal: () => void;
   setModal: (value: Message | null) => void;
@@ -36,17 +40,6 @@ interface ErrorMessage {
   code?: string;
   title: string;
   description: string;
-}
-
-/**
- * Interface representing the context of an error.
- *
- * @property {unknown} error - The error object.
- * @property {'terms' | 'login'} [context] - The context in which the error occurred.
- */
-interface ErrorContext {
-  error: unknown;
-  context?: 'terms' | 'login';
 }
 
 /**

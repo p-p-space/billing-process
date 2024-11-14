@@ -5,6 +5,9 @@
     "continue": "Continuar",
     "acept": "Aceptar",
     "cancel": "Cancelar",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "update": "Actualizar",
+    "edit": "Editar",
+    "save": "Guardar"
   }
 }

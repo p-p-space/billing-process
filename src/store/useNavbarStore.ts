@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
 //Internal app
 import { NavbarStoreProps } from '@/interfaces';
 
@@ -17,6 +17,6 @@ export const useNavbarStore = create<NavbarStoreProps>()(
 
       setNavbarObject: (value) => set({ navbarObject: value }),
     }),
-    { name: 'navbar-store', storage: createJSONStorage(() => sessionStorage) }
+    { name: 'navbar-store', version: undefined }
   )
 );

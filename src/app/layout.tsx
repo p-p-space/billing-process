@@ -5,7 +5,7 @@ import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 //Internal app
 import { RootLayout } from '@/interfaces';
-import { ClientProvider, MuiProvider } from '@/components';
+import { ClientProvider, GlobalError, MuiProvider, GlobalSuccess, Lang } from '@/components';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('head');
@@ -31,6 +31,9 @@ export default async function RootLayoutMain({ children }: Readonly<RootLayout>)
           <AppRouterCacheProvider>
             <MuiProvider>
               <ClientProvider>{children}</ClientProvider>
+              <GlobalError />
+              <GlobalSuccess />
+              <Lang />
             </MuiProvider>
           </AppRouterCacheProvider>
         </NextIntlClientProvider>

@@ -48,6 +48,15 @@ export const useUiStore = create<UiStore>()((set) => ({
 
   setModalError: (value) => set({ showModalError: true, modalErrorObject: value }),
 
+  /*Notification success */
+  modalSuccessObject: null,
+
+  showModalSuccess: false,
+
+  closeModalSuccess: () => set({ showModalSuccess: false }),
+
+  setModalSuccess: (value) => set({ showModalSuccess: true, modalSuccessObject: value }),
+
   /*Global Modal */
   modalObject: null,
 

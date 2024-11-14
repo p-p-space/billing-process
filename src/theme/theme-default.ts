@@ -290,6 +290,7 @@ const theme = createTheme({
           borderRadius: borderRadius,
           ':hover': {
             boxShadow: 'none',
+            backgroundColor: primary,
           },
         },
         outlined: {
@@ -307,7 +308,10 @@ const theme = createTheme({
     },
     MuiAlert: {
       styleOverrides: {
-        root: {
+        outlinedSuccess: {
+          backgroundColor: '#d4ffd6',
+        },
+        outlinedError: {
           backgroundColor: '#FBE5E5',
         },
       },
@@ -448,13 +452,6 @@ const theme = createTheme({
         },
         indicator: {
           display: 'none',
-        },
-      },
-    },
-    MuiFormControl: {
-      styleOverrides: {
-        root: {
-          width: 320,
         },
       },
     },
