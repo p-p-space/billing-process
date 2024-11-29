@@ -5,16 +5,16 @@ import { getAppLang } from './services';
 export default getRequestConfig(async () => {
   const locale = await getAppLang();
   const messages = {
-    ...(await import(`../../dictionary/app.json`)).default,
-    ...(await import(`../../dictionary/${locale}/carousel.json`)).default,
-    ...(await import(`../../dictionary/${locale}/common.json`)).default,
-    ...(await import(`../../dictionary/${locale}/purchase.json`)).default,
-    ...(await import(`../../dictionary/${locale}/head.json`)).default,
-    ...(await import(`../../dictionary/${locale}/menu.json`)).default,
-    ...(await import(`../../dictionary/${locale}/password.json`)).default,
-    ...(await import(`../../dictionary/${locale}/signin.json`)).default,
-    ...(await import(`../../dictionary/${locale}/validation.json`)).default,
-    ...(await import(`../../dictionary/${locale}/profile.json`)).default,
+    ...(await import(`../../dictionary/bt/app.json`)).default,
+    ...(await import(`../../dictionary/bt/${locale}/carousel.json`)).default,
+    ...(await import(`../../dictionary/bt/${locale}/common.json`)).default,
+    ...(await import(`../../dictionary/bt/${locale}/purchase.json`)).default,
+    ...(await import(`../../dictionary/bt/${locale}/head.json`)).default,
+    ...(await import(`../../dictionary/bt/${locale}/menu.json`)).default,
+    ...(await import(`../../dictionary/bt/${locale}/password.json`)).default,
+    ...(await import(`../../dictionary/bt/${locale}/signin.json`)).default,
+    ...(await import(`../../dictionary/bt/${locale}/validation.json`)).default,
+    ...(await import(`../../dictionary/bt/${locale}/profile.json`)).default,
   };
 
   return {
