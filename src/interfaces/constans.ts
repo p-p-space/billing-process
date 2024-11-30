@@ -27,3 +27,17 @@ export type PageProps = {
  * Type definition for Lang, which represents a language from the available languages.
  */
 export type Lang = (typeof langs)[number];
+
+/**
+ * Type definition for LangData, which It outlines the properties and values for a language data
+ */
+export type LangData = {
+  [key: string]: Record<string, string>;
+};
+
+/**
+ * Type definition for LangFiles, which It outlines the properties and values for a language file json
+ */
+export type LangFiles = {
+  [key: string]: string[];
+};
