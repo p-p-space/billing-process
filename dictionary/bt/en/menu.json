@@ -1,0 +1,12 @@
+{
+  "menu": {
+    "menu": "Menu",
+    "purchase": "Purchase orders",
+    "companies": "Companies",
+    "config-support": "Config & support",
+    "users": "Users & roles",
+    "profile": "User profile",
+    "update": "Update password",
+    "log-out": "Log out"
+  }
+}

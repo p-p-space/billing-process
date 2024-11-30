@@ -1,0 +1,9 @@
+{
+  "purchase": {
+    "purc-title": "Purchase orders",
+    "purc-description": "Welcome to the dashboard, here you can find all the information you need to manage your business. Use the menu on the left to navigate through the different sections.",
+    "order-title": "Purchase orders (PO)",
+    "order-description": "In this section, you can efficiently manage all activities related to your purchase orders. Access detailed data, track status and perform customized searches. If you need to create a new purchase order, enter through the following button.",
+    "order-new": "New purchase order"
+  }
+}

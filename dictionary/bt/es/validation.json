@@ -1,0 +1,9 @@
+{
+  "validation": {
+    "required": "Este campo es requerido.",
+    "email": "Por favor indica un correo válido.",
+    "min-7": "Debe tener al menos 7 caracteres.",
+    "max-256": "Debe tener un máximo de 256 caracteres.",
+    "pass-match": "Las contraseñas no coinciden."
+  }
+}

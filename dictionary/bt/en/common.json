@@ -1,0 +1,13 @@
+{
+  "common": {
+    "create": "Create",
+    "send": "Send",
+    "continue": "Continue",
+    "acept": "Acept",
+    "cancel": "Cancel",
+    "close": "close",
+    "update": "Update",
+    "edit": "Edit",
+    "save": "Save"
+  }
+}
