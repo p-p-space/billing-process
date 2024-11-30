@@ -6,14 +6,17 @@ import { Lang } from '@/interfaces';
 import { cookieLang, langCookieName, defaultLang, langs } from './language';
 
 export async function getAppLang() {
-  const lang = cookies().get(langCookieName)?.value;
+  const cookieStore = await cookies();
+  const lang = cookieStore.get(langCookieName)?.value;
   const cookieValue = await availableValueCookie(lang);
 
   return cookieValue;
 }
 
 export async function setAppLang(lang: Lang) {
-  cookies().set({
+  const cookieStore = await cookies();
+
+  cookieStore.set({
     ...cookieLang,
     name: langCookieName,
     value: lang,

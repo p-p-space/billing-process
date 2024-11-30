@@ -2,7 +2,7 @@ export const menu = [
   {
     main: [
       {
-        url: '/purchase-order',
+        url: '/purchase-orders',
         icon: 'ri-draft-line',
         enable: true,
         id: 'purchase',
