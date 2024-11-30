@@ -1,4 +1,5 @@
 {
+  "diffEditor.ignoreTrimWhitespace": false,
   "editor.bracketPairColorization.enabled": true,
   "editor.bracketPairColorization.independentColorPoolPerBracketType": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -13,28 +14,25 @@
   "editor.tabSize": 2,
   "editor.wordWrap": "wordWrapColumn",
   "editor.wordWrapColumn": 120,
+  "files.eol": "\n",
+  "prettier.bracketSameLine": false,
   "prettier.jsxSingleQuote": false,
-  "prettier.singleQuote": true,
   "prettier.printWidth": 120,
   "prettier.semi": true,
-  "prettier.bracketSameLine": false,
   "prettier.singleAttributePerLine": false,
+  "prettier.singleQuote": true,
   "window.commandCenter": true,
+  "emmet.includeLanguages": {
+    "postcss": "css"
+  },
   "files.associations": {
-    ".env.*": "Properties",
-    ".env*": "Properties",
-    ".htaccess.*": "apacheconf",
-    ".htaccess*": "apacheconf"
+    ".env.*": "settings",
+    ".env*": "settings"
   },
   "[html]": {
     "editor.suggest.insertMode": "replace"
   },
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
-  },
-  "diffEditor.ignoreTrimWhitespace": false,
-  "files.eol": "\n",
-  "emmet.includeLanguages": {
-    "postcss": "css"
   }
 }
