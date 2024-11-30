@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
-import { cookieLang, langCookieName, availableValueCookie } from './i18n';
+import { cookieValues } from './utils';
+import { langCookieName, availableValueCookie } from './i18n';
 
 export async function middleware(request: NextRequest) {
   const { cookies, nextUrl, url } = request;
@@ -11,12 +12,9 @@ export async function middleware(request: NextRequest) {
   } else {
     const lang = cookies.get(langCookieName)?.value;
     const cookieValue = await availableValueCookie(lang);
+    const { cookieContent } = cookieValues({ name: langCookieName, value: cookieValue });
 
-    response.cookies.set({
-      ...cookieLang,
-      name: langCookieName,
-      value: cookieValue,
-    });
+    response.cookies.set(cookieContent);
   }
 
   return response;

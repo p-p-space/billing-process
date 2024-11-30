@@ -3,7 +3,8 @@ import { getRequestConfig } from 'next-intl/server';
 import { getAppLang } from './services';
 
 export default getRequestConfig(async () => {
-  const locale = await getAppLang();
+  const { locale } = await getAppLang();
+
   const messages = {
     ...(await import(`../../dictionary/bt/app.json`)).default,
     ...(await import(`../../dictionary/bt/${locale}/carousel.json`)).default,

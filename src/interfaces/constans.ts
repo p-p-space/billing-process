@@ -1,10 +1,12 @@
+import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
+// Internal app
 import { langs } from '@/i18n';
 
 /**
- * RootLayout
+ * Represents the layout of the root component.
  *
- * @typeParam children: React.ReactNode
- * @typeParam params.lang: React.ReactNode
+ * @typeParam children - The child components to be rendered within the layout.
+ * @typeParam params.lang - The language parameter.
  */
 export type RootLayout = {
   children?: React.ReactNode;
@@ -15,7 +17,8 @@ export type RootLayout = {
 
 /**
  * Represents the properties passed to a page component.
- * @typeParam params.lang: string
+ *
+ * @typeParam params.lang - The language parameter, which can be either 'en' or 'es'.
  */
 export type PageProps = {
   params: {
@@ -24,20 +27,32 @@ export type PageProps = {
 };
 
 /**
- * Type definition for Lang, which represents a language from the available languages.
+ * Represents a language from the available languages.
  */
 export type Lang = (typeof langs)[number];
 
 /**
- * Type definition for LangData, which It outlines the properties and values for a language data
+ * Represents the data structure for language data.
  */
 export type LangData = {
   [key: string]: Record<string, string>;
 };
 
 /**
- * Type definition for LangFiles, which It outlines the properties and values for a language file json
+ * Represents the structure for language files.
  */
 export type LangFiles = {
   [key: string]: string[];
+};
+
+/**
+ * Represents the options for configuring a cookie.
+ */
+export type CookieOptions = Pick<ResponseCookie, 'name' | 'value' | 'path' | 'sameSite' | 'expires'>;
+
+/**
+ * Represents the response containing cookie values.
+ */
+export type CookieValues = {
+  cookieContent: ResponseCookie;
 };

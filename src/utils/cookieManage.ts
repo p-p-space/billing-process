@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 // Internal app imports
-import { CookieOptions } from '@/interfaces';
+import { CookieOptions, CookieValues } from '@/interfaces';
 
 // Define constants for default values
 const DEFAULT_PATH = '/';
@@ -17,9 +17,9 @@ const DEFAULT_EXPIRATION = new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000);
  * @param {string} [options.path='/'] - The path where the cookie is valid. Defaults to '/'.
  * @param {boolean | 'lax' | 'strict' | 'none'} [options.sameSite='lax'] - The SameSite policy of the cookie. Defaults to 'lax'.
  * @param {Date | number} [options.expires] - The expiration date of the cookie. Defaults to 6 months from now.
- * @returns {ResponseCookie} cookieContent - The content of the cookie.
+ * @returns {CookieValues} cookieContent - The content of the cookie.
  */
-export function cookieValues(options: CookieOptions): { cookieContent: ResponseCookie } {
+export function cookieValues(options: CookieOptions): CookieValues {
   const { name, value, path = DEFAULT_PATH, sameSite = DEFAULT_SAMESITE, expires = DEFAULT_EXPIRATION } = options;
 
   if (!name || !value) {
