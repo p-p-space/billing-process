@@ -6,7 +6,7 @@ export const langCookieName = 'app_lang';
 export const langs = ['en', 'es'] as const;
 export const defaultLang: Lang = 'en';
 export const cookieLang: ResponseCookie = {
-  name: langCookieName,
+  name: '',
   value: '',
   path: '/',
   sameSite: 'lax',

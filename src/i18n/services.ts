@@ -15,6 +15,7 @@ export async function getAppLang() {
 export async function setAppLang(lang: Lang) {
   cookies().set({
     ...cookieLang,
+    name: langCookieName,
     value: lang,
   });
 }
