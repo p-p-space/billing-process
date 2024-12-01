@@ -7,13 +7,14 @@ import { langCookieName, defaultLang, langs } from './language';
 
 /**
  * Gets the application language from cookies.
- * @returns {Promise<{ locale: Lang }>} An object containing the application language.
+ * @returns {Promise<{ locale: Lang, tenant: string }>} An object containing the application language and tenant.
  */
-export async function getAppLang(): Promise<{ locale: Lang }> {
+export async function getAppLang(): Promise<{ locale: Lang; tenant: string }> {
   const lang = await readCookie(langCookieName);
   const locale = await availableValueCookie(lang);
+  const tenant = 'bt';
 
-  return { locale };
+  return { locale, tenant };
 }
 
 /**
