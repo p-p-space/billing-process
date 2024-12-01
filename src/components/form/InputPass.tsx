@@ -34,7 +34,7 @@ function InputMUI(props: Readonly<TextFieldProps>): JSX.Element {
               size="small"
               edge="end"
             >
-              {passwordShown ? <i className="ri-eye-close-line"></i> : <i className="ri-eye-line"></i>}
+              {passwordShown ? <i className="ri-eye-line"></i> : <i className="ri-eye-close-line"></i>}
             </IconButton>
           </InputAdornment>
         }
