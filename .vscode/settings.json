@@ -26,8 +26,8 @@
     "postcss": "css"
   },
   "files.associations": {
-    ".env.*": "settings",
-    ".env*": "settings"
+    ".env.*": "properties",
+    ".env*": "properties"
   },
   "[html]": {
     "editor.suggest.insertMode": "replace"
