@@ -46,8 +46,9 @@ export function cookieValues(options: CookieOptions): CookieValues {
  * @returns {Promise<void>}
  */
 export async function createCookie(cookieContent: ResponseCookie): Promise<void> {
+  const cookieStore = await cookies();
+
   try {
-    const cookieStore = await cookies();
     cookieStore.set(cookieContent);
   } catch (error) {
     console.error('Error setting cookie:', error);
@@ -61,12 +62,13 @@ export async function createCookie(cookieContent: ResponseCookie): Promise<void>
  * @returns {Promise<string | undefined>} The value of the cookie, or undefined if not found.
  */
 export async function readCookie(cookieName: string): Promise<string | undefined> {
+  const cookieStore = await cookies();
+
   if (!cookieName) {
     throw new Error('Cookie name is required');
   }
 
   try {
-    const cookieStore = await cookies();
     const cookieValue = cookieStore.get(cookieName)?.value;
 
     return cookieValue;
@@ -82,12 +84,13 @@ export async function readCookie(cookieName: string): Promise<string | undefined
  * @returns {Promise<void>}
  */
 export async function deleteCookie(cookieName: string): Promise<void> {
+  const cookieStore = await cookies();
+
   if (!cookieName) {
     throw new Error('Cookie name is required');
   }
 
   try {
-    const cookieStore = await cookies();
     cookieStore.delete(cookieName);
   } catch (error) {
     console.error('Error deleting cookie:', error);
