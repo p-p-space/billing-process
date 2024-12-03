@@ -10,9 +10,6 @@ import { langs } from '@/i18n';
  */
 export type RootLayout = {
   children?: React.ReactNode;
-  params?: {
-    lang: string;
-  };
 };
 
 /**
