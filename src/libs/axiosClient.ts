@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const httpClientInstance = axios.create({
-  baseURL: `${process.env.HOST_URL}/api/v1`,
+  baseURL: `${process.env.NEXT_PUBLIC_WEB_URL}/api/v1`,
   timeout: 59800,
   headers: {
     'Content-Type': 'application/json',
