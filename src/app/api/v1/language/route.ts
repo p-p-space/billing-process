@@ -12,7 +12,7 @@ import { LangFiles } from '@/interfaces';
  */
 export async function POST(
   request: NextRequest
-): Promise<NextResponse<{ code: string; language: LangFiles }> | NextResponse<{ code: string; error: unknown }>> {
+): Promise<NextResponse<{ code: string; language?: LangFiles; error?: unknown }>> {
   // Extract locale and tenant from the request body
   const { locale, tenant = 'bt' } = await request.json();
   const jsonRegex = /\.json$/i;
