@@ -1,6 +1,7 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Typography, Button } from '@mui/material';
@@ -10,6 +11,7 @@ import { InputPass, InputText } from '@/components';
 
 export default function FormSignin() {
   const t = useTranslations('signin');
+  const { push } = useRouter();
 
   const schema = getSchema(['email', 'password']);
 
@@ -23,6 +25,7 @@ export default function FormSignin() {
 
   const onSubmit = (data: object) => {
     console.log(data);
+    push('companies');
   };
 
   return (
