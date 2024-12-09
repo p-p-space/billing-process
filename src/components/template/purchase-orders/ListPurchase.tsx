@@ -20,7 +20,7 @@ export default function ListPurchase() {
       title: t('order-title'),
       description: t('order-description'),
       image: '/images/users.png',
-      actions: [{ label: t('order-new'), onClick: () => push('/purchase/new-purchase-order') }],
+      actions: [{ label: t('order-new'), onClick: () => push('/purchase/new-purchase-orders') }],
     });
   }, [push, setNavbarObject, t]);
 
