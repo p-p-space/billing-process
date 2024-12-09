@@ -34,13 +34,15 @@ export default function MuiProvider({ children }: Readonly<RootLayout>): JSX.Ele
   );
 
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    if (process.env.NEXT_PUBLIC_HANDLE_SESS === 'ON') {
+      window.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('beforeunload', handleBeforeUnload);
 
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
+      return () => {
+        window.removeEventListener('keydown', handleKeyDown);
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }
   }, [handleKeyDown, handleBeforeUnload]);
 
   return (
