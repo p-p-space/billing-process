@@ -20,14 +20,16 @@ export default function MuiProvider({ children }: Readonly<RootLayout>): JSX.Ele
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
-      const keyRegex = /^r$/i;
-      const keyEvent = keyRegex.test(event.key);
-      const isF5 = event.key === 'F5';
-      const isCtrlR = event.ctrlKey && keyEvent;
-      const isMetaR = event.metaKey && keyEvent;
+      if (process.env.NEXT_PUBLIC_HANDLE_SESS === 'ON') {
+        const keyRegex = /^r$/i;
+        const keyEvent = keyRegex.test(event.key);
+        const isF5 = event.key === 'F5';
+        const isCtrlR = event.ctrlKey && keyEvent;
+        const isMetaR = event.metaKey && keyEvent;
 
-      if (isF5 || isCtrlR || isMetaR) {
-        window.removeEventListener('beforeunload', handleBeforeUnload);
+        if (isF5 || isCtrlR || isMetaR) {
+          window.removeEventListener('beforeunload', handleBeforeUnload);
+        }
       }
     },
     [handleBeforeUnload]
