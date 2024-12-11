@@ -1,9 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Box, CircularProgress, Container } from '@mui/material';
 //Internal app
 import { RootLayout } from '@/interfaces';
+
+const queryClient = new QueryClient();
 
 export default function ClientProvider({ children }: Readonly<RootLayout>): JSX.Element {
   const [isHydrated, setIsHydrated] = useState<boolean>(true);
@@ -19,5 +22,9 @@ export default function ClientProvider({ children }: Readonly<RootLayout>): JSX.
       </Box>
     );
 
-  return <Container>{children}</Container>;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Container>{children}</Container>;
+    </QueryClientProvider>
+  );
 }

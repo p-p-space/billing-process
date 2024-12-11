@@ -1,6 +1,8 @@
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 // Internal app
 import { langs } from '@/i18n';
+import { z } from 'zod';
+import { dataRequestSchema } from '@/schemas';
 
 /**
  * Represents the layout of the root component.
@@ -53,3 +55,15 @@ export type CookieOptions = Pick<ResponseCookie, 'name' | 'value' | 'path' | 'sa
 export type CookieValues = {
   cookieContent: ResponseCookie;
 };
+
+/**
+ * Represents the data structure for body data.
+ */
+export type RequestBody = {
+  [key: string]: string;
+};
+
+/**
+ * Represents the data structure for axios request.
+ */
+export type DataRequest = z.infer<typeof dataRequestSchema>;
