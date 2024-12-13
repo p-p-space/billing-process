@@ -35,7 +35,8 @@ export default function FormSignin() {
     onError: (error) => {
       console.error(error);
     },
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
+      console.log(data);
       push('companies');
     },
   });

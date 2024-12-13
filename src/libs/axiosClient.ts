@@ -1,7 +1,7 @@
 import axios from 'axios';
 // Internal app
-import { encryptData, signatureData } from '@/handlers';
-import { jwePublicKey, jwsPrivateKey } from '@/utils/constans';
+import { decryptData, encryptData, signatureData, verifyJWE } from '@/handlers';
+import { jwePrivateKey, jwePublicKey, jwsPrivateKey, jwsPublicKey } from '@/utils/constans';
 
 export const httpClientInstance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_WEB_URL}/api/v0`,
@@ -42,6 +42,18 @@ httpClientInstance.interceptors.request.use(
 
 httpClientInstance.interceptors.response.use(
   async (response) => {
+    const { data } = response;
+    let decrypt = undefined;
+
+    if (data) {
+      const { payload } = data;
+
+      const verifySignature = await verifyJWE(payload, jwsPublicKey);
+      decrypt = await decryptData(verifySignature, jwePrivateKey);
+
+      response.data = decrypt;
+    }
+
     return response;
   },
   (error) => {
