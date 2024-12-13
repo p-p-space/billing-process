@@ -1,4 +1,7 @@
 import axios from 'axios';
+// Internal app
+import { createJWT, decryptData, encryptData, signatureData, verifyJWE, verifyJwt } from '@/handlers';
+import { jwePrivateKey, jwePublicKey, jwsPrivateKey, jwsPublicKey } from '@/utils/constans';
 
 export const httpClientInstance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_WEB_URL}/api/v1`,
@@ -9,15 +12,11 @@ export const httpClientInstance = axios.create({
   },
   transformRequest: [
     (data) => {
-      // console.log({ data, headers });
-
       return JSON.stringify(data);
     },
   ],
   transformResponse: [
     (data) => {
-      // console.log({ data });
-
       return JSON.parse(data);
     },
   ],
@@ -25,8 +24,20 @@ export const httpClientInstance = axios.create({
 
 httpClientInstance.interceptors.request.use(
   async (request) => {
-    // const { url, data, method } = request;
-    // console.log({ url, data, method });
+    const { data } = request;
+
+    const encrypt = await encryptData(data, jwePublicKey);
+    console.log({ encrypt });
+    const signature = await signatureData(encrypt, jwsPrivateKey);
+    console.log({ signature });
+    const verifySignature = await verifyJWE(signature, jwsPublicKey);
+    console.log({ verifySignature });
+    const decrypt = await decryptData(verifySignature, jwePrivateKey);
+    console.log({ decrypt });
+    const jwt = await createJWT(decrypt, jwsPrivateKey);
+    console.log({ jwt });
+    const verify = await verifyJwt(jwt, jwsPublicKey);
+    console.log({ verify });
 
     return request;
   },
@@ -37,8 +48,6 @@ httpClientInstance.interceptors.request.use(
 
 httpClientInstance.interceptors.response.use(
   async (response) => {
-    // console.log({response});
-
     return response;
   },
   (error) => {

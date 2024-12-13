@@ -4,7 +4,6 @@ import {
   CompactEncrypt,
   CompactSign,
   compactVerify,
-  type CompactVerifyResult,
   importPKCS8,
   importSPKI,
   type JWTPayload,
@@ -110,15 +109,16 @@ export async function assembleJWS(jws: string, payload: string): Promise<string>
 /**
  * Verifies the given JWS string.
  * @param {string} jws - The JWS string to be verified.
- * @returns {Promise<CompactVerifyResult>} - The verification result.
+ * @returns {Promise<string>} - The verification result.
  * @throws {Error} - If verification fails.
  */
-export async function verifyJWE(jws: string, jwsKey: string): Promise<CompactVerifyResult> {
+export async function verifyJWE(jws: string, jwsKey: string): Promise<string> {
   try {
     const key = await importSPKI(jwsKey, jwsAlg);
     const verifyResult = await compactVerify(jws, key);
+    const payload = decode(verifyResult.payload);
 
-    return verifyResult;
+    return payload;
   } catch (error) {
     throw new Error(`verifyJWE error: ${(error as Error).message}`);
   }
