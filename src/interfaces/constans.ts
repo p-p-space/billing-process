@@ -15,17 +15,6 @@ export type RootLayout = {
 };
 
 /**
- * Represents the properties passed to a page component.
- *
- * @typeParam params.lang - The language parameter, which can be either 'en' or 'es'.
- */
-export type PageProps = {
-  params: {
-    lang: 'en' | 'es';
-  };
-};
-
-/**
  * Represents a language from the available languages.
  */
 export type Lang = (typeof langs)[number];
