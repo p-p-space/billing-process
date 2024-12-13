@@ -13,21 +13,7 @@ import {
 } from 'jose';
 // Internal app
 import { RequestBody } from '@/interfaces';
-import {
-  audience,
-  decode,
-  encode,
-  expiresIn,
-  issuer,
-  JWE_ALG,
-  JWE_ENC,
-  jwePrivateKey,
-  jwePublicKey,
-  JWS_ALG,
-  jwsPrivateKey,
-  jwsPublicKey,
-  JWT_ALG,
-} from '@/utils';
+import { audience, decode, encode, expiresIn, issuer, JweAlg, JweEnc, jwsAlg, JwtAlg } from '@/utils/constans';
 
 /**
  * Encrypts the given payload using JWE.
@@ -35,12 +21,12 @@ import {
  * @returns {Promise<string>} - The encrypted JWE string.
  * @throws {Error} - If encryption fails.
  */
-export async function encryptData(payload: RequestBody): Promise<string> {
+export async function encryptData(payload: RequestBody, jweKey: string): Promise<string> {
   try {
     const plaintext = encode(JSON.stringify(payload));
-    const key = await importSPKI(jwePublicKey, JWE_ALG);
+    const key = await importSPKI(jweKey, JweAlg);
     const jwe = await new CompactEncrypt(plaintext)
-      .setProtectedHeader({ alg: JWE_ALG, enc: JWE_ENC, type: 'jwe' })
+      .setProtectedHeader({ alg: JweAlg, enc: JweEnc, type: 'jwe' })
       .encrypt(key);
 
     return jwe;
@@ -55,9 +41,9 @@ export async function encryptData(payload: RequestBody): Promise<string> {
  * @returns {Promise<RequestBody>} - The decrypted data.
  * @throws {Error} - If decryption fails.
  */
-export async function decryptData(jwe: string): Promise<RequestBody> {
+export async function decryptData(jwe: string, jweKey: string): Promise<RequestBody> {
   try {
-    const key = await importPKCS8(jwePrivateKey, JWE_ALG);
+    const key = await importPKCS8(jweKey, JweAlg);
     const { plaintext } = await compactDecrypt(jwe, key);
     const data = JSON.parse(decode(plaintext));
 
@@ -73,10 +59,10 @@ export async function decryptData(jwe: string): Promise<RequestBody> {
  * @returns {Promise<string>} - The signed JWS string.
  * @throws {Error} - If signing fails.
  */
-export async function signatureData(jwe: string): Promise<string> {
+export async function signatureData(jwe: string, jwsKey: string): Promise<string> {
   try {
-    const key = await importPKCS8(jwsPrivateKey, JWS_ALG);
-    const jws = await new CompactSign(encode(jwe)).setProtectedHeader({ alg: JWS_ALG, type: 'jws' }).sign(key);
+    const key = await importPKCS8(jwsKey, jwsAlg);
+    const jws = await new CompactSign(encode(jwe)).setProtectedHeader({ alg: jwsAlg, type: 'jws' }).sign(key);
 
     return jws;
   } catch (error) {
@@ -127,9 +113,9 @@ export async function assembleJWS(jws: string, payload: string): Promise<string>
  * @returns {Promise<CompactVerifyResult>} - The verification result.
  * @throws {Error} - If verification fails.
  */
-export async function verifyJWE(jws: string): Promise<CompactVerifyResult> {
+export async function verifyJWE(jws: string, jwsKey: string): Promise<CompactVerifyResult> {
   try {
-    const key = await importSPKI(jwsPublicKey, JWS_ALG);
+    const key = await importSPKI(jwsKey, jwsAlg);
     const verifyResult = await compactVerify(jws, key);
 
     return verifyResult;
@@ -144,11 +130,11 @@ export async function verifyJWE(jws: string): Promise<CompactVerifyResult> {
  * @returns {Promise<string>} - The signed JWT string.
  * @throws {Error} - If JWT creation fails.
  */
-export async function createJWT(payload: JWTPayload): Promise<string> {
+export async function createJWT(payload: JWTPayload, jwsKey: string): Promise<string> {
   try {
-    const key = await importPKCS8(jwsPrivateKey, JWT_ALG);
+    const key = await importPKCS8(jwsKey, JwtAlg);
     const jwt = await new SignJWT(payload)
-      .setProtectedHeader({ alg: JWT_ALG, type: 'jwt' })
+      .setProtectedHeader({ alg: JwtAlg, type: 'jwt' })
       .setIssuedAt()
       .setIssuer(issuer)
       .setAudience(audience)
@@ -167,9 +153,9 @@ export async function createJWT(payload: JWTPayload): Promise<string> {
  * @returns {Promise<JWTPayload>} - The verified JWT payload.
  * @throws {Error} - If JWT verification fails.
  */
-export async function verifyJwt(jwt: string): Promise<JWTPayload> {
+export async function verifyJwt(jwt: string, jwsKey: string): Promise<JWTPayload> {
   try {
-    const key = await importSPKI(jwsPublicKey, JWT_ALG);
+    const key = await importSPKI(jwsKey, JwtAlg);
     const { payload } = await jwtVerify(jwt, key, {
       issuer: issuer,
       audience: audience,

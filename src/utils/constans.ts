@@ -1,7 +1,7 @@
-export const JWE_ALG = 'RSA-OAEP-256';
-export const JWE_ENC = 'A256GCM';
-export const JWS_ALG = 'RS512';
-export const JWT_ALG = 'PS512';
+export const JweAlg = 'RSA-OAEP-256';
+export const JweEnc = 'A256GCM';
+export const jwsAlg = 'RS512';
+export const JwtAlg = 'PS512';
 export const audience = 'audience';
 export const issuer = 'issuer';
 export const expiresIn = '2h';
