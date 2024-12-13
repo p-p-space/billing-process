@@ -12,7 +12,6 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const dataReq = await req.json();
-  console.log(dataReq);
 
-  return NextResponse.json(response, { status: 200 });
+  return NextResponse.json(dataReq, { status: 200 });
 }

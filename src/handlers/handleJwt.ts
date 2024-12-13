@@ -20,10 +20,10 @@ import { audience, decode, encode, expiresIn, issuer, JweAlg, JweEnc, jwsAlg, Jw
  * @returns {Promise<string>} - The encrypted JWE string.
  * @throws {Error} - If encryption fails.
  */
-export async function encryptData(payload: RequestBody, jweKey: string): Promise<string> {
+export async function encryptData(payload: RequestBody, jwePublicKey: string): Promise<string> {
   try {
     const plaintext = encode(JSON.stringify(payload));
-    const key = await importSPKI(jweKey, JweAlg);
+    const key = await importSPKI(jwePublicKey, JweAlg);
     const jwe = await new CompactEncrypt(plaintext)
       .setProtectedHeader({ alg: JweAlg, enc: JweEnc, type: 'jwe' })
       .encrypt(key);
@@ -40,9 +40,9 @@ export async function encryptData(payload: RequestBody, jweKey: string): Promise
  * @returns {Promise<RequestBody>} - The decrypted data.
  * @throws {Error} - If decryption fails.
  */
-export async function decryptData(jwe: string, jweKey: string): Promise<RequestBody> {
+export async function decryptData(jwe: string, jwePrivateKey: string): Promise<RequestBody> {
   try {
-    const key = await importPKCS8(jweKey, JweAlg);
+    const key = await importPKCS8(jwePrivateKey, JweAlg);
     const { plaintext } = await compactDecrypt(jwe, key);
     const data = JSON.parse(decode(plaintext));
 
@@ -58,9 +58,9 @@ export async function decryptData(jwe: string, jweKey: string): Promise<RequestB
  * @returns {Promise<string>} - The signed JWS string.
  * @throws {Error} - If signing fails.
  */
-export async function signatureData(jwe: string, jwsKey: string): Promise<string> {
+export async function signatureData(jwe: string, jwsPrivateKey: string): Promise<string> {
   try {
-    const key = await importPKCS8(jwsKey, jwsAlg);
+    const key = await importPKCS8(jwsPrivateKey, jwsAlg);
     const jws = await new CompactSign(encode(jwe)).setProtectedHeader({ alg: jwsAlg, type: 'jws' }).sign(key);
 
     return jws;
@@ -112,9 +112,9 @@ export async function assembleJWS(jws: string, payload: string): Promise<string>
  * @returns {Promise<string>} - The verification result.
  * @throws {Error} - If verification fails.
  */
-export async function verifyJWE(jws: string, jwsKey: string): Promise<string> {
+export async function verifyJWE(jws: string, jwsPublicKey: string): Promise<string> {
   try {
-    const key = await importSPKI(jwsKey, jwsAlg);
+    const key = await importSPKI(jwsPublicKey, jwsAlg);
     const verifyResult = await compactVerify(jws, key);
     const payload = decode(verifyResult.payload);
 
@@ -130,9 +130,9 @@ export async function verifyJWE(jws: string, jwsKey: string): Promise<string> {
  * @returns {Promise<string>} - The signed JWT string.
  * @throws {Error} - If JWT creation fails.
  */
-export async function createJWT(payload: JWTPayload, jwsKey: string): Promise<string> {
+export async function createJWT(payload: JWTPayload, jwsPrivateKey: string): Promise<string> {
   try {
-    const key = await importPKCS8(jwsKey, JwtAlg);
+    const key = await importPKCS8(jwsPrivateKey, JwtAlg);
     const jwt = await new SignJWT(payload)
       .setProtectedHeader({ alg: JwtAlg, type: 'jwt' })
       .setIssuedAt()
@@ -153,9 +153,9 @@ export async function createJWT(payload: JWTPayload, jwsKey: string): Promise<st
  * @returns {Promise<JWTPayload>} - The verified JWT payload.
  * @throws {Error} - If JWT verification fails.
  */
-export async function verifyJwt(jwt: string, jwsKey: string): Promise<JWTPayload> {
+export async function verifyJwt(jwt: string, jwsPublicKey: string): Promise<JWTPayload> {
   try {
-    const key = await importSPKI(jwsKey, JwtAlg);
+    const key = await importSPKI(jwsPublicKey, JwtAlg);
     const { payload } = await jwtVerify(jwt, key, {
       issuer: issuer,
       audience: audience,
