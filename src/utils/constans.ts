@@ -1,0 +1,13 @@
+export const JWE_ALG = 'RSA-OAEP-256';
+export const JWE_ENC = 'A256GCM';
+export const JWS_ALG = 'RS512';
+export const JWT_ALG = 'PS512';
+export const audience = 'audience';
+export const issuer = 'issuer';
+export const expiresIn = '2h';
+export const jwePrivateKey = process.env.NEXT_PUBLIC_WEB_JWE_PRIVATE_KEY ?? '';
+export const jwePublicKey = process.env.NEXT_PUBLIC_WEB_JWE_PUBLIC_KEY ?? '';
+export const jwsPrivateKey = process.env.NEXT_PUBLIC_WEB_JWS_PRIVATE_KEY ?? '';
+export const jwsPublicKey = process.env.NEXT_PUBLIC_WEB_JWS_PUBLIC_KEY ?? '';
+export const encode = TextEncoder.prototype.encode.bind(new TextEncoder());
+export const decode = TextDecoder.prototype.decode.bind(new TextDecoder());

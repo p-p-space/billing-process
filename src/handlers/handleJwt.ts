@@ -13,20 +13,21 @@ import {
 } from 'jose';
 // Internal app
 import { RequestBody } from '@/interfaces';
-
-const JWE_ALG = 'RSA-OAEP-256';
-const JWE_ENC = 'A256GCM';
-const JWS_ALG = 'RS512';
-const JWT_ALG = 'PS512';
-const AUDIENCE = 'Audience';
-const ISSUER = 'Issuer';
-const expiresIn = '2h';
-const jwePrivateKey = process.env.NEXT_PUBLIC_WEB_JWE_PRIVATE_KEY ?? '';
-const jwePublicKey = process.env.NEXT_PUBLIC_WEB_JWE_PUBLIC_KEY ?? '';
-const jwsPrivateKey = process.env.NEXT_PUBLIC_WEB_JWS_PRIVATE_KEY ?? '';
-const jwsPublicKey = process.env.NEXT_PUBLIC_WEB_JWS_PUBLIC_KEY ?? '';
-const encode = TextEncoder.prototype.encode.bind(new TextEncoder());
-const decode = TextDecoder.prototype.decode.bind(new TextDecoder());
+import {
+  audience,
+  decode,
+  encode,
+  expiresIn,
+  issuer,
+  JWE_ALG,
+  JWE_ENC,
+  jwePrivateKey,
+  jwePublicKey,
+  JWS_ALG,
+  jwsPrivateKey,
+  jwsPublicKey,
+  JWT_ALG,
+} from '@/utils';
 
 /**
  * Encrypts the given payload using JWE.
@@ -149,8 +150,8 @@ export async function createJWT(payload: JWTPayload): Promise<string> {
     const jwt = await new SignJWT(payload)
       .setProtectedHeader({ alg: JWT_ALG, type: 'jwt' })
       .setIssuedAt()
-      .setIssuer(ISSUER)
-      .setAudience(AUDIENCE)
+      .setIssuer(issuer)
+      .setAudience(audience)
       .setExpirationTime(expiresIn)
       .sign(key);
 
@@ -170,8 +171,8 @@ export async function verifyJwt(jwt: string): Promise<JWTPayload> {
   try {
     const key = await importSPKI(jwsPublicKey, JWT_ALG);
     const { payload } = await jwtVerify(jwt, key, {
-      issuer: ISSUER,
-      audience: AUDIENCE,
+      issuer: issuer,
+      audience: audience,
     });
 
     return payload;
