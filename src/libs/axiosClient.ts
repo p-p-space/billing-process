@@ -37,12 +37,16 @@ httpClientInstance.interceptors.request.use(
     const { data } = request;
 
     if (data) {
-      const secJwe = await importSPKI(jwePublicKey, JweAlgRsa);
-      const encrypt = await jwt.encryptData(data, secJwe, JweAlgRsa);
-      const secJws = encode(SecretJws);
-      const payload = await jwt.signData(encrypt, secJws, jwsAlgSec);
+      try {
+        const secJwe = await importSPKI(jwePublicKey, JweAlgRsa);
+        const encrypt = await jwt.encryptData(data, secJwe, JweAlgRsa);
+        const secJws = encode(SecretJws);
+        const payload = await jwt.signData(encrypt, secJws, jwsAlgSec);
 
-      request.data = { payload };
+        request.data = { payload };
+      } catch (error) {
+        return Promise.reject(new Error(`Client Interceptor Request: ${(error as Error).message}`));
+      }
     }
 
     return request;
@@ -59,12 +63,17 @@ httpClientInstance.interceptors.response.use(
 
     if (data) {
       const { payload } = data;
-      const secJws = await importSPKI(jwsPublicKey, jwsAlgRsa);
-      const veriSig = await jwt.verifySignature(payload, secJws);
-      const secJwe = encode(SecretJwe);
-      decrypt = await jwt.decryptData(veriSig, secJwe);
 
-      response.data = decrypt;
+      try {
+        const secJws = await importSPKI(jwsPublicKey, jwsAlgRsa);
+        const veriSig = await jwt.verifySignature(payload, secJws);
+        const secJwe = encode(SecretJwe);
+        decrypt = await jwt.decryptData(veriSig, secJwe);
+
+        response.data = decrypt;
+      } catch (error) {
+        return Promise.reject(new Error(`Client Interceptor Response: ${(error as Error).message}`));
+      }
     }
 
     return response;
