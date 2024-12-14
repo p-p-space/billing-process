@@ -40,7 +40,7 @@ httpClientInstance.interceptors.request.use(
       const secJwe = await importSPKI(jwePublicKey, JweAlgRsa);
       const encrypt = await jwt.encryptData(data, secJwe, JweAlgRsa);
       const secJws = encode(SecretJws);
-      const payload = await jwt.signatureData(encrypt, secJws, jwsAlgSec);
+      const payload = await jwt.signData(encrypt, secJws, jwsAlgSec);
 
       request.data = { payload };
     }
@@ -60,7 +60,7 @@ httpClientInstance.interceptors.response.use(
     if (data) {
       const { payload } = data;
       const secJws = await importSPKI(jwsPublicKey, jwsAlgRsa);
-      const veriSig = await jwt.verifyJWE(payload, secJws);
+      const veriSig = await jwt.verifySignature(payload, secJws);
       const secJwe = encode(SecretJwe);
       decrypt = await jwt.decryptData(veriSig, secJwe);
 

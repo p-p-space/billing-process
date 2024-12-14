@@ -25,7 +25,7 @@ export async function HandleCustomerRequest(request: NextRequest) {
   if (data) {
     const { payload } = data;
     const secJws = encode(SecretJws);
-    const veriSig = await jwt.verifyJWE(payload, secJws);
+    const veriSig = await jwt.verifySignature(payload, secJws);
     const secJwe = await importPKCS8(jwePrivateKey, JweAlgRsa);
     decrypt = await jwt.decryptData(veriSig, secJwe);
 
@@ -58,7 +58,7 @@ async function requestApi({ formData, method, url }: DataRequest) {
       const secJwe = encode(SecretJwe);
       const sec = await jwt.encryptData(data, secJwe, JweAlgSec);
       const secJws = await importPKCS8(jwsPrivateKey, jwsAlgRsa);
-      payload = await jwt.signatureData(sec, secJws, jwsAlgRsa);
+      payload = await jwt.signData(sec, secJws, jwsAlgRsa);
     }
 
     const result = {

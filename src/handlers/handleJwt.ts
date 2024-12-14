@@ -46,50 +46,13 @@ export async function decryptData(jwe: string, secret: KeyLike | Uint8Array): Pr
  * @returns {Promise<string>} - The signed JWS string.
  * @throws {Error} - If signing fails.
  */
-export async function signatureData(jwe: string, secret: KeyLike | Uint8Array, jwsAlg: string): Promise<string> {
+export async function signData(jwe: string, secret: KeyLike | Uint8Array, jwsAlg: string): Promise<string> {
   try {
     const jws = await new jose.CompactSign(encode(jwe)).setProtectedHeader({ alg: jwsAlg, type: 'jws' }).sign(secret);
 
     return jws;
   } catch (error) {
-    throw new Error(`signatureData: ${(error as Error).message}`);
-  }
-}
-
-/**
- * Disassembles the given JWS string.
- * @param {string} jws - The JWS string to be disassembled.
- * @returns {Promise<string>} - The disassembled JWS header and signature.
- * @throws {Error} - If disassembly fails.
- */
-export async function disassembleJWS(jws: string): Promise<string> {
-  try {
-    const jwsParts = jws.split('.');
-    const headerSignature = `${jwsParts[0]}..${jwsParts[2]}`;
-
-    return headerSignature;
-  } catch (error) {
-    throw new Error(`disassembleJWS: ${(error as Error).message}`);
-  }
-}
-
-/**
- * Assembles a JWS string with the given payload.
- * @param {string} jws - The JWS string to be assembled.
- * @param {string} payload - The payload to be included.
- * @returns {Promise<string>} - The complete JWS string.
- * @throws {Error} - If assembly fails.
- */
-export async function assembleJWS(jws: string, payload: string): Promise<string> {
-  try {
-    const base64UrlPayload = jose.base64url.encode(payload);
-    const jwsReplace = jws.replace('JWS ', '');
-    const parts = jwsReplace.split('.');
-    const completeJws = `${parts[0]}.${base64UrlPayload}.${parts[2]}`;
-
-    return completeJws;
-  } catch (error) {
-    throw new Error(`assembleJWS: ${(error as Error).message}`);
+    throw new Error(`signData: ${(error as Error).message}`);
   }
 }
 
@@ -99,14 +62,14 @@ export async function assembleJWS(jws: string, payload: string): Promise<string>
  * @returns {Promise<string>} - The verification result.
  * @throws {Error} - If verification fails.
  */
-export async function verifyJWE(jws: string, secret: KeyLike | Uint8Array): Promise<string> {
+export async function verifySignature(jws: string, secret: KeyLike | Uint8Array): Promise<string> {
   try {
     const verifyResult = await jose.compactVerify(jws, secret);
     const payload = decode(verifyResult.payload);
 
     return payload;
   } catch (error) {
-    throw new Error(`verifyJWE: ${(error as Error).message}`);
+    throw new Error(`verifySignature: ${(error as Error).message}`);
   }
 }
 
@@ -150,5 +113,42 @@ export async function verifyJwt(jwt: string, jwsPublicKey: string): Promise<JWTP
     return payload;
   } catch (error) {
     throw new Error(`verifyJwt: ${(error as Error).message}`);
+  }
+}
+
+/**
+ * Disassembles the given JWS string.
+ * @param {string} jws - The JWS string to be disassembled.
+ * @returns {Promise<string>} - The disassembled JWS header and signature.
+ * @throws {Error} - If disassembly fails.
+ */
+export async function disassembleJWS(jws: string): Promise<string> {
+  try {
+    const jwsParts = jws.split('.');
+    const headerSignature = `${jwsParts[0]}..${jwsParts[2]}`;
+
+    return headerSignature;
+  } catch (error) {
+    throw new Error(`disassembleJWS: ${(error as Error).message}`);
+  }
+}
+
+/**
+ * Assembles a JWS string with the given payload.
+ * @param {string} jws - The JWS string to be assembled.
+ * @param {string} payload - The payload to be included.
+ * @returns {Promise<string>} - The complete JWS string.
+ * @throws {Error} - If assembly fails.
+ */
+export async function assembleJWS(jws: string, payload: string): Promise<string> {
+  try {
+    const base64UrlPayload = jose.base64url.encode(payload);
+    const jwsReplace = jws.replace('JWS ', '');
+    const parts = jwsReplace.split('.');
+    const completeJws = `${parts[0]}.${base64UrlPayload}.${parts[2]}`;
+
+    return completeJws;
+  } catch (error) {
+    throw new Error(`assembleJWS: ${(error as Error).message}`);
   }
 }
