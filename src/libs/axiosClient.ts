@@ -1,18 +1,21 @@
 import axios from 'axios';
-// Internal app
 import { importSPKI } from 'jose';
+// Internal app
 import * as jwt from '@/handlers/handleJwt';
 import {
   encode,
-  JweAlgRsa,
+  rsaAlgJwe,
   jwePublicKey,
   jwsAlgRsa,
-  jwsAlgSec,
+  secretAlgJws,
   jwsPublicKey,
-  SecretJwe,
-  SecretJws,
+  jweSecretString,
+  jwsSecretString,
 } from '@/utils/constans';
 
+/**
+ * Creates an Axios instance with predefined configuration for making HTTP requests.
+ */
 export const httpClientInstance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_WEB_URL}/api/v0`,
   timeout: 59800,
@@ -32,16 +35,20 @@ export const httpClientInstance = axios.create({
   ],
 });
 
+/**
+ * Interceptor for handling request encryption and signing.
+ * Encrypts the request data and signs it before sending.
+ */
 httpClientInstance.interceptors.request.use(
   async (request) => {
     const { data } = request;
 
     if (data) {
       try {
-        const secJwe = await importSPKI(jwePublicKey, JweAlgRsa);
-        const encrypt = await jwt.encryptData(data, secJwe, JweAlgRsa);
-        const secJws = encode(SecretJws);
-        const payload = await jwt.signData(encrypt, secJws, jwsAlgSec);
+        const secretJwe = await importSPKI(jwePublicKey, rsaAlgJwe);
+        const encrypt = await jwt.encryptData(data, secretJwe, rsaAlgJwe);
+        const secretJws = encode(jwsSecretString);
+        const payload = await jwt.signData(encrypt, secretJws, secretAlgJws);
 
         request.data = { payload };
       } catch (error) {
@@ -56,19 +63,22 @@ httpClientInstance.interceptors.request.use(
   }
 );
 
+/**
+ * Interceptor for handling response decryption and verification.
+ * Verifies the response signature and decrypts the data.
+ */
 httpClientInstance.interceptors.response.use(
   async (response) => {
     const { data } = response;
-    let decrypt = undefined;
 
     if (data) {
       const { payload } = data;
 
       try {
-        const secJws = await importSPKI(jwsPublicKey, jwsAlgRsa);
-        const veriSig = await jwt.verifySignature(payload, secJws);
-        const secJwe = encode(SecretJwe);
-        decrypt = await jwt.decryptData(veriSig, secJwe);
+        const secretJws = await importSPKI(jwsPublicKey, jwsAlgRsa);
+        const signatureVerified = await jwt.verifySignature(payload, secretJws);
+        const secretJwe = encode(jweSecretString);
+        const decrypt = await jwt.decryptData(signatureVerified, secretJwe);
 
         response.data = decrypt;
       } catch (error) {
