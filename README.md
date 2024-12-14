@@ -12,6 +12,8 @@ yarn dev
 pnpm dev
 # or
 bun dev
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

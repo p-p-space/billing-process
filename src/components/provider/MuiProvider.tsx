@@ -20,7 +20,7 @@ export default function MuiProvider({ children }: Readonly<RootLayout>): JSX.Ele
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
-      if (process.env.NEXT_PUBLIC_HANDLE_SESS === 'ON') {
+      if (process.env.NEXT_PUBLIC_HANDLE_REFRESH === 'ON') {
         const keyRegex = /^r$/i;
         const keyEvent = keyRegex.test(event.key);
         const isF5 = event.key === 'F5';
@@ -36,7 +36,7 @@ export default function MuiProvider({ children }: Readonly<RootLayout>): JSX.Ele
   );
 
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_HANDLE_SESS === 'ON') {
+    if (process.env.NEXT_PUBLIC_HANDLE_REFRESH === 'ON') {
       window.addEventListener('keydown', handleKeyDown);
       window.addEventListener('beforeunload', handleBeforeUnload);
 
