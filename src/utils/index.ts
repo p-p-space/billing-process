@@ -1,2 +1,2 @@
-export * from './handleRequestc';
+export * from './handleRequest';
 export * from './cookieManage';
