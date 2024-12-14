@@ -16,13 +16,26 @@ import {
 import { createJWT, verifyJwt } from '@/handlers';
 import { importPKCS8 } from 'jose';
 
-export async function HandleCustomerRequest(request: NextRequest) {
+export async function customerRequest(request: NextRequest) {
   const { method, nextUrl } = request;
   const { pathname, origin } = nextUrl;
-  const data = await request.json();
-  let decrypt = undefined;
+  let data;
 
-  if (data) {
+  try {
+    data = await request.json();
+  } catch (error) {
+    return NextResponse.json(
+      { code: '400.00.000', message: `Invalid json: ${(error as Error).message}` },
+      { status: 400 }
+    );
+  }
+
+  if (!data.payload) {
+    return NextResponse.json({ code: '400.00.001', message: 'Missing payload' }, { status: 400 });
+  }
+
+  let decrypt;
+  try {
     const { payload } = data;
     const secJws = encode(SecretJws);
     const veriSig = await jwt.verifySignature(payload, secJws);
@@ -31,6 +44,11 @@ export async function HandleCustomerRequest(request: NextRequest) {
 
     const jwtTemp = await createJWT(decrypt, jwsPrivateKey);
     await verifyJwt(jwtTemp, jwsPublicKey);
+  } catch (error) {
+    return NextResponse.json(
+      { code: '500.00.000', message: `customerRequest: ${(error as Error).message}` },
+      { status: 500 }
+    );
   }
 
   const dataRequest = {
@@ -47,7 +65,7 @@ async function requestApi({ formData, method, url }: DataRequest) {
 
   try {
     const response = await fetch(`${url}`, {
-      method: method,
+      method,
       body,
     });
     const { status } = response;
@@ -69,6 +87,9 @@ async function requestApi({ formData, method, url }: DataRequest) {
 
     return NextResponse.json(result, { status });
   } catch (error) {
-    throw new Error(`requestApi: ${(error as Error).message}`);
+    return NextResponse.json(
+      { code: '500.00.000', message: `requestApi: ${(error as Error).message}` },
+      { status: 500 }
+    );
   }
 }
