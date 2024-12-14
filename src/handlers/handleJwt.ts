@@ -1,18 +1,8 @@
-import {
-  base64url,
-  compactDecrypt,
-  CompactEncrypt,
-  CompactSign,
-  compactVerify,
-  importPKCS8,
-  importSPKI,
-  type JWTPayload,
-  jwtVerify,
-  SignJWT,
-} from 'jose';
+import * as jose from 'jose';
+import type { JWTPayload, KeyLike } from 'jose';
 // Internal app
 import { RequestBody } from '@/interfaces';
-import { audience, decode, encode, expiresIn, issuer, JweAlg, JweEnc, jwsAlg, JwtAlg } from '@/utils/constans';
+import { audience, decode, encode, expiresIn, issuer, JweEnc, JwtAlg } from '@/utils/constans';
 
 /**
  * Encrypts the given payload using JWE.
@@ -20,17 +10,16 @@ import { audience, decode, encode, expiresIn, issuer, JweAlg, JweEnc, jwsAlg, Jw
  * @returns {Promise<string>} - The encrypted JWE string.
  * @throws {Error} - If encryption fails.
  */
-export async function encryptData(payload: RequestBody, jwePublicKey: string): Promise<string> {
+export async function encryptData(payload: RequestBody, secret: KeyLike | Uint8Array, JweAlg: string): Promise<string> {
   try {
     const plaintext = encode(JSON.stringify(payload));
-    const key = await importSPKI(jwePublicKey, JweAlg);
-    const jwe = await new CompactEncrypt(plaintext)
+    const jwe = await new jose.CompactEncrypt(plaintext)
       .setProtectedHeader({ alg: JweAlg, enc: JweEnc, type: 'jwe' })
-      .encrypt(key);
+      .encrypt(secret);
 
     return jwe;
   } catch (error) {
-    throw new Error(`encryptData error: ${(error as Error).message}`);
+    throw new Error(`encryptData: ${(error as Error).message}`);
   }
 }
 
@@ -40,15 +29,14 @@ export async function encryptData(payload: RequestBody, jwePublicKey: string): P
  * @returns {Promise<RequestBody>} - The decrypted data.
  * @throws {Error} - If decryption fails.
  */
-export async function decryptData(jwe: string, jwePrivateKey: string): Promise<RequestBody> {
+export async function decryptData(jwe: string, secret: KeyLike | Uint8Array): Promise<RequestBody> {
   try {
-    const key = await importPKCS8(jwePrivateKey, JweAlg);
-    const { plaintext } = await compactDecrypt(jwe, key);
+    const { plaintext } = await jose.compactDecrypt(jwe, secret);
     const data = JSON.parse(decode(plaintext));
 
     return data;
   } catch (error) {
-    throw new Error(`decryptData error: ${(error as Error).message}`);
+    throw new Error(`decryptData: ${(error as Error).message}`);
   }
 }
 
@@ -58,14 +46,13 @@ export async function decryptData(jwe: string, jwePrivateKey: string): Promise<R
  * @returns {Promise<string>} - The signed JWS string.
  * @throws {Error} - If signing fails.
  */
-export async function signatureData(jwe: string, jwsPrivateKey: string): Promise<string> {
+export async function signatureData(jwe: string, secret: KeyLike | Uint8Array, jwsAlg: string): Promise<string> {
   try {
-    const key = await importPKCS8(jwsPrivateKey, jwsAlg);
-    const jws = await new CompactSign(encode(jwe)).setProtectedHeader({ alg: jwsAlg, type: 'jws' }).sign(key);
+    const jws = await new jose.CompactSign(encode(jwe)).setProtectedHeader({ alg: jwsAlg, type: 'jws' }).sign(secret);
 
     return jws;
   } catch (error) {
-    throw new Error(`signatureData error: ${(error as Error).message}`);
+    throw new Error(`signatureData: ${(error as Error).message}`);
   }
 }
 
@@ -82,7 +69,7 @@ export async function disassembleJWS(jws: string): Promise<string> {
 
     return headerSignature;
   } catch (error) {
-    throw new Error(`disassembleJWS error: ${(error as Error).message}`);
+    throw new Error(`disassembleJWS: ${(error as Error).message}`);
   }
 }
 
@@ -95,14 +82,14 @@ export async function disassembleJWS(jws: string): Promise<string> {
  */
 export async function assembleJWS(jws: string, payload: string): Promise<string> {
   try {
-    const base64UrlPayload = base64url.encode(payload);
+    const base64UrlPayload = jose.base64url.encode(payload);
     const jwsReplace = jws.replace('JWS ', '');
     const parts = jwsReplace.split('.');
     const completeJws = `${parts[0]}.${base64UrlPayload}.${parts[2]}`;
 
     return completeJws;
   } catch (error) {
-    throw new Error(`assembleJWS error: ${(error as Error).message}`);
+    throw new Error(`assembleJWS: ${(error as Error).message}`);
   }
 }
 
@@ -112,15 +99,14 @@ export async function assembleJWS(jws: string, payload: string): Promise<string>
  * @returns {Promise<string>} - The verification result.
  * @throws {Error} - If verification fails.
  */
-export async function verifyJWE(jws: string, jwsPublicKey: string): Promise<string> {
+export async function verifyJWE(jws: string, secret: KeyLike | Uint8Array): Promise<string> {
   try {
-    const key = await importSPKI(jwsPublicKey, jwsAlg);
-    const verifyResult = await compactVerify(jws, key);
+    const verifyResult = await jose.compactVerify(jws, secret);
     const payload = decode(verifyResult.payload);
 
     return payload;
   } catch (error) {
-    throw new Error(`verifyJWE error: ${(error as Error).message}`);
+    throw new Error(`verifyJWE: ${(error as Error).message}`);
   }
 }
 
@@ -132,8 +118,8 @@ export async function verifyJWE(jws: string, jwsPublicKey: string): Promise<stri
  */
 export async function createJWT(payload: JWTPayload, jwsPrivateKey: string): Promise<string> {
   try {
-    const key = await importPKCS8(jwsPrivateKey, JwtAlg);
-    const jwt = await new SignJWT(payload)
+    const key = await jose.importPKCS8(jwsPrivateKey, JwtAlg);
+    const jwt = await new jose.SignJWT(payload)
       .setProtectedHeader({ alg: JwtAlg, type: 'jwt' })
       .setIssuedAt()
       .setIssuer(issuer)
@@ -143,7 +129,7 @@ export async function createJWT(payload: JWTPayload, jwsPrivateKey: string): Pro
 
     return jwt;
   } catch (error) {
-    throw new Error(`createJWT error: ${(error as Error).message}`);
+    throw new Error(`createJWT: ${(error as Error).message}`);
   }
 }
 
@@ -155,14 +141,14 @@ export async function createJWT(payload: JWTPayload, jwsPrivateKey: string): Pro
  */
 export async function verifyJwt(jwt: string, jwsPublicKey: string): Promise<JWTPayload> {
   try {
-    const key = await importSPKI(jwsPublicKey, JwtAlg);
-    const { payload } = await jwtVerify(jwt, key, {
+    const key = await jose.importSPKI(jwsPublicKey, JwtAlg);
+    const { payload } = await jose.jwtVerify(jwt, key, {
       issuer: issuer,
       audience: audience,
     });
 
     return payload;
   } catch (error) {
-    throw new Error(`verifyJwt error: ${(error as Error).message}`);
+    throw new Error(`verifyJwt: ${(error as Error).message}`);
   }
 }

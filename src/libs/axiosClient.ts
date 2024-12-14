@@ -1,7 +1,17 @@
 import axios from 'axios';
 // Internal app
-import { decryptData, encryptData, signatureData, verifyJWE } from '@/handlers';
-import { jwePrivateKey, jwePublicKey, jwsPrivateKey, jwsPublicKey } from '@/utils/constans';
+import { importSPKI } from 'jose';
+import * as jwt from '@/handlers/handleJwt';
+import {
+  encode,
+  JweAlgRsa,
+  jwePublicKey,
+  jwsAlgRsa,
+  jwsAlgSec,
+  jwsPublicKey,
+  SecretJwe,
+  SecretJws,
+} from '@/utils/constans';
 
 export const httpClientInstance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_WEB_URL}/api/v0`,
@@ -27,8 +37,10 @@ httpClientInstance.interceptors.request.use(
     const { data } = request;
 
     if (data) {
-      const encrypt = await encryptData(data, jwePublicKey);
-      const payload = await signatureData(encrypt, jwsPrivateKey);
+      const secJwe = await importSPKI(jwePublicKey, JweAlgRsa);
+      const encrypt = await jwt.encryptData(data, secJwe, JweAlgRsa);
+      const secJws = encode(SecretJws);
+      const payload = await jwt.signatureData(encrypt, secJws, jwsAlgSec);
 
       request.data = { payload };
     }
@@ -47,9 +59,10 @@ httpClientInstance.interceptors.response.use(
 
     if (data) {
       const { payload } = data;
-
-      const verifySignature = await verifyJWE(payload, jwsPublicKey);
-      decrypt = await decryptData(verifySignature, jwePrivateKey);
+      const secJws = await importSPKI(jwsPublicKey, jwsAlgRsa);
+      const veriSig = await jwt.verifyJWE(payload, secJws);
+      const secJwe = encode(SecretJwe);
+      decrypt = await jwt.decryptData(veriSig, secJwe);
 
       response.data = decrypt;
     }

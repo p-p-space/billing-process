@@ -1,22 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
 // Internal app
 import { DataRequest } from '@/interfaces';
-import { jwePrivateKey, jwePublicKey, jwsPrivateKey, jwsPublicKey } from './constans';
-import { createJWT, decryptData, encryptData, signatureData, verifyJWE, verifyJwt } from '@/handlers';
+import * as jwt from '@/handlers/handleJwt';
+import {
+  encode,
+  JweAlgRsa,
+  JweAlgSec,
+  jwePrivateKey,
+  jwsAlgRsa,
+  jwsPrivateKey,
+  jwsPublicKey,
+  SecretJwe,
+  SecretJws,
+} from './constans';
+import { createJWT, verifyJwt } from '@/handlers';
+import { importPKCS8 } from 'jose';
 
 export async function HandleCustomerRequest(request: NextRequest) {
   const { method, nextUrl } = request;
   const { pathname, origin } = nextUrl;
-  let decrypt = undefined;
   const data = await request.json();
+  let decrypt = undefined;
 
   if (data) {
     const { payload } = data;
+    const secJws = encode(SecretJws);
+    const veriSig = await jwt.verifyJWE(payload, secJws);
+    const secJwe = await importPKCS8(jwePrivateKey, JweAlgRsa);
+    decrypt = await jwt.decryptData(veriSig, secJwe);
 
-    const verifySignature = await verifyJWE(payload, jwsPublicKey);
-    decrypt = await decryptData(verifySignature, jwePrivateKey);
-    const jwt = await createJWT(decrypt, jwsPrivateKey);
-    await verifyJwt(jwt, jwsPublicKey);
+    const jwtTemp = await createJWT(decrypt, jwsPrivateKey);
+    await verifyJwt(jwtTemp, jwsPublicKey);
   }
 
   const dataRequest = {
@@ -36,14 +50,15 @@ async function requestApi({ formData, method, url }: DataRequest) {
       method: method,
       body,
     });
-
     const { status } = response;
     const data = await response.json();
     let payload = undefined;
 
     if (data) {
-      const encrypt = await encryptData(data, jwePublicKey);
-      payload = await signatureData(encrypt, jwsPrivateKey);
+      const secJwe = encode(SecretJwe);
+      const sec = await jwt.encryptData(data, secJwe, JweAlgSec);
+      const secJws = await importPKCS8(jwsPrivateKey, jwsAlgRsa);
+      payload = await jwt.signatureData(sec, secJws, jwsAlgRsa);
     }
 
     const result = {
@@ -54,6 +69,6 @@ async function requestApi({ formData, method, url }: DataRequest) {
 
     return NextResponse.json(result, { status });
   } catch (error) {
-    throw new Error(`requestApi error: ${(error as Error).message}`);
+    throw new Error(`requestApi: ${(error as Error).message}`);
   }
 }
