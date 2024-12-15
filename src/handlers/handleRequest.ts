@@ -24,35 +24,37 @@ import {
  * @returns {Promise<NextResponse>} - The response from the API or an error response.
  */
 export async function customerRequest(request: NextRequest): Promise<NextResponse> {
-  const { method, nextUrl } = request;
+  const { headers, method, nextUrl } = request;
   const { pathname, origin } = nextUrl;
   let decrypt = undefined;
 
-  try {
-    const data = await request.json();
-    const { payload } = data;
-    const secretJws = encode(jwsSecretString);
-    const signatureVerified = await jwt.verifySignature(payload, secretJws);
-    const secretJwe = await importPKCS8(jwePrivateKey, rsaAlgJwe);
-    decrypt = await jwt.decryptData(signatureVerified, secretJwe);
+  if (headers.get('X-Body-Content') !== null) {
+    try {
+      const data = await request.json();
+      const { payload } = data;
+      const secretJws = encode(jwsSecretString);
+      const signatureVerified = await jwt.verifySignature(payload, secretJws);
+      const secretJwe = await importPKCS8(jwePrivateKey, rsaAlgJwe);
+      decrypt = await jwt.decryptData(signatureVerified, secretJwe);
 
-    // Temporary statements for JWT creation and verification
-    const jwtTemp = await createJWT(decrypt, jwsPrivateKey);
-    await verifyJwt(jwtTemp, jwsPublicKey);
-
-    const dataRequest = {
-      formData: decrypt,
-      method,
-      url: `${origin}${pathname.replace('/v0/', '/v1/')}`,
-    } as DataRequest;
-
-    return await requestApi(dataRequest);
-  } catch (error) {
-    return NextResponse.json(
-      { code: '500.00.000', message: `customerRequest: ${(error as Error).message}` },
-      { status: 500 }
-    );
+      // Temporary statements for JWT creation and verification
+      const jwtTemp = await createJWT(decrypt, jwsPrivateKey);
+      await verifyJwt(jwtTemp, jwsPublicKey);
+    } catch (error) {
+      return NextResponse.json(
+        { code: '500.00.000', message: `customerRequest: ${(error as Error).message}` },
+        { status: 500 }
+      );
+    }
   }
+
+  const dataRequest = {
+    formData: decrypt,
+    method,
+    url: `${origin}${pathname.replace('/v0/', '/v1/')}`,
+  } as DataRequest;
+
+  return await requestApi(dataRequest);
 }
 
 /**

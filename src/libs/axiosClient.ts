@@ -42,6 +42,8 @@ export const httpClientInstance = axios.create({
 httpClientInstance.interceptors.request.use(
   async (request) => {
     const { data } = request;
+    console.log(!!data);
+    request.headers['X-Body-Content'] = !!data;
 
     if (data) {
       try {
