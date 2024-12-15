@@ -9,9 +9,7 @@ import { Navbar, Sidebar } from '@/components';
 
 export default function Template({ children }: Readonly<RootLayout>): JSX.Element {
   const drawerWidth = 280;
-
   const { drawerStatus, setDrawerStatus } = useMenuStore();
-
   const [isClosing, setIsClosing] = useState<boolean>(false);
 
   const handleDrawerClose = () => {

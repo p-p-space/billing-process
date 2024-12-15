@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
-import { cookieValues, customerRequest } from './utils';
+import { cookieValues } from './utils';
+import { customerRequest } from './handlers';
 import { langCookieName, availableValueCookie } from './i18n';
 
 export async function middleware(request: NextRequest) {

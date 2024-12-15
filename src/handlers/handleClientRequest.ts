@@ -16,6 +16,6 @@ export async function handleClientRequest(dataRequest: DataRequest) {
 
     return response;
   } catch (error) {
-    throw new Error(`handleClientRequest error: ${(error as Error).message}`);
+    throw new Error(`handleClientRequest: ${(error as Error).message}`);
   }
 }

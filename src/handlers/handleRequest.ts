@@ -5,16 +5,16 @@ import { DataRequest } from '@/interfaces';
 import * as jwt from '@/handlers/handleJwt';
 import { createJWT, verifyJwt } from '@/handlers';
 import {
-  encode,
-  rsaAlgJwe,
-  JweAlgSec,
+  jwsSecretString,
   jwePrivateKey,
-  jwsAlgRsa,
+  rsaAlgJwe,
   jwsPrivateKey,
   jwsPublicKey,
   jweSecretString,
-  jwsSecretString,
-} from './constans';
+  JweAlgSec,
+  jwsAlgRsa,
+  encode,
+} from '@/utils/constans';
 
 /**
  * Handles customer requests by verifying and decrypting the payload,

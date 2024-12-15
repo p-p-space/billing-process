@@ -37,7 +37,7 @@ export default function FormSignin() {
     },
     onSuccess: ({ data }) => {
       console.log(data);
-      push('companies');
+      push('signin');
     },
   });
 
