@@ -15,3 +15,5 @@ export const jweSecretString = process.env.NEXT_PUBLIC_SECRET_jWE ?? '';
 export const jwsSecretString = process.env.NEXT_PUBLIC_SECRET_jWS ?? '';
 export const encode = TextEncoder.prototype.encode.bind(new TextEncoder());
 export const decode = TextDecoder.prototype.decode.bind(new TextDecoder());
+export const internalApis = ['language', 'logout', 'prueba'];
+export const servicesApi = 'services';
