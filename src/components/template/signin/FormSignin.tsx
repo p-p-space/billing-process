@@ -9,7 +9,7 @@ import { Box, Typography, Button } from '@mui/material';
 //Internal app
 import { getSchema } from '@/config';
 import { DataRequest } from '@/interfaces';
-import { handleClientRequest } from '@/handlers';
+import { manageClientRequest } from '@/handlers';
 import { InputPass, InputText } from '@/components';
 
 type LoginData = {
@@ -31,7 +31,7 @@ export default function FormSignin() {
   });
 
   const { mutate } = useMutation({
-    mutationFn: handleClientRequest,
+    mutationFn: manageClientRequest,
     onError: (error) => {
       console.error(error);
     },

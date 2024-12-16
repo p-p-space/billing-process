@@ -2,6 +2,7 @@ import { getRequestConfig } from 'next-intl/server';
 // Internal app
 import { getAppLang } from './services';
 import { Lang, LangData, LangFiles } from '@/interfaces';
+import { baseAppURL, pathApp } from '@/utils/constans';
 
 /**
  * Request configuration to fetch language messages.
@@ -11,12 +12,12 @@ export default getRequestConfig(async () => {
   const { locale, tenant } = await getAppLang();
   const request = { locale, tenant };
 
-  const filesLang = await fetch(`${process.env.NEXT_PUBLIC_WEB_URL}/api/v1/language`, {
+  const filesLang = await fetch(`${baseAppURL}/${pathApp}/language`, {
     method: 'POST',
     body: JSON.stringify(request),
   });
-  const data = await filesLang.json();
 
+  const data = await filesLang.json();
   const { messages } = await loadDataLang(data.language, locale, tenant);
 
   return {

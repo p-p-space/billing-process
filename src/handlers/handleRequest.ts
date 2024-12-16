@@ -17,7 +17,7 @@ import {
   bodyContent,
   originalPath,
   pathServ,
-  internalApis,
+  appApis,
   apiVersionServ,
   apiVersionApp,
   pathApp,
@@ -121,7 +121,7 @@ function urlTransform(pathUrl: string | null, pathname: string, search: string):
     throw new Error(`urlTransform: The transformed URL does not match the expected format.`);
   }
 
-  if (!internalApis.includes(searchPath)) {
+  if (!appApis.includes(searchPath)) {
     appUrl = originRequest.replace(`${pathServ}/${searchPath}`, `${pathApp}/${servicesApi}`);
   }
 

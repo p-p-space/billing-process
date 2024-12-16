@@ -61,9 +61,9 @@ export async function POST(
     }
 
     // Return the response with the language files
-    return NextResponse.json({ code: '200.000', language }, { status: 200 });
+    return NextResponse.json({ code: '200.000.00', language }, { status: 200 });
   } catch (error) {
     // Handle errors and return an error response
-    return NextResponse.json({ code: '500.000', error }, { status: 500 });
+    return NextResponse.json({ code: '500.000.00', error }, { status: 500 });
   }
 }

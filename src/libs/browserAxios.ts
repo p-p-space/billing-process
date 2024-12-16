@@ -14,13 +14,14 @@ import {
   pathServ,
   bodyContent,
   originalPath,
+  baseAppURL,
 } from '@/utils/constans';
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
-export const httpClientInstance = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_WEB_URL}/${pathServ}`,
+export const browserAxios = axios.create({
+  baseURL: `${baseAppURL}/${pathServ}`,
   timeout: 59800,
   headers: {
     'Content-Type': 'application/json',
@@ -42,7 +43,7 @@ export const httpClientInstance = axios.create({
  * Interceptor for handling request encryption and signing.
  * Encrypts the request data and signs it before sending.
  */
-httpClientInstance.interceptors.request.use(
+browserAxios.interceptors.request.use(
   async (request) => {
     const { data, url } = request;
     request.headers[bodyContent] = !!data;
@@ -72,11 +73,11 @@ httpClientInstance.interceptors.request.use(
  * Interceptor for handling response decryption and verification.
  * Verifies the response signature and decrypts the data.
  */
-httpClientInstance.interceptors.response.use(
+browserAxios.interceptors.response.use(
   async (response) => {
     const { data } = response;
 
-    if (data && data.payload) {
+    if (data?.payload) {
       const { payload } = data;
 
       try {
@@ -94,7 +95,7 @@ httpClientInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.error(new Error(`httpClientInstance: ${(error as Error).message}`));
+    console.error(new Error(`browserAxios: ${(error as Error).message}`));
     const { response } = error;
 
     if (response.data.error) {

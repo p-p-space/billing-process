@@ -6,7 +6,7 @@ import { ThemeProvider } from '@mui/material/styles';
 // Internal app
 import theme from '@/theme/theme-default';
 import { RootLayout } from '@/interfaces';
-import { httpClientInstance } from '@/libs';
+import { browserAxios } from '@/libs';
 
 /**
  * Provider setting material ui theme
@@ -15,7 +15,7 @@ import { httpClientInstance } from '@/libs';
  */
 export default function MuiProvider({ children }: Readonly<RootLayout>): JSX.Element {
   const handleBeforeUnload = useCallback(() => {
-    httpClientInstance.get('/logout');
+    browserAxios.get('/logout');
   }, []);
 
   const handleKeyDown = useCallback(
