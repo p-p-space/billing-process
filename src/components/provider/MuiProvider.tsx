@@ -4,9 +4,10 @@ import { CssBaseline } from '@mui/material';
 import { useEffect, useCallback } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 // Internal app
+import { browserAxios } from '@/libs';
 import theme from '@/theme/theme-default';
 import { RootLayout } from '@/interfaces';
-import { browserAxios } from '@/libs';
+import { handleRefresh } from '@/utils/constans';
 
 /**
  * Provider setting material ui theme
@@ -20,7 +21,7 @@ export default function MuiProvider({ children }: Readonly<RootLayout>): JSX.Ele
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
-      if (process.env.NEXT_PUBLIC_HANDLE_REFRESH === 'ON') {
+      if (handleRefresh === 'ON') {
         const keyRegex = /^r$/i;
         const keyEvent = keyRegex.test(event.key);
         const isF5 = event.key === 'F5';
@@ -36,7 +37,7 @@ export default function MuiProvider({ children }: Readonly<RootLayout>): JSX.Ele
   );
 
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_HANDLE_REFRESH === 'ON') {
+    if (handleRefresh === 'ON') {
       window.addEventListener('keydown', handleKeyDown);
       window.addEventListener('beforeunload', handleBeforeUnload);
 

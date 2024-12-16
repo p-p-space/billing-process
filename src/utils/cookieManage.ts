@@ -51,8 +51,7 @@ export async function createCookie(cookieContent: ResponseCookie): Promise<void>
   try {
     cookieStore.set(cookieContent);
   } catch (error) {
-    console.error('Error setting cookie:', error);
-    throw error; // Re-throw the error after logging it
+    throw new Error(`Setting cookie: ${(error as Error).message}`); // Re-throw the error after logging it
   }
 }
 
@@ -73,8 +72,7 @@ export async function readCookie(cookieName: string): Promise<string | undefined
 
     return cookieValue;
   } catch (error) {
-    console.error('Error reading cookie:', error);
-    throw error; // Re-throw the error after logging it
+    throw new Error(`Reading cookie: ${(error as Error).message}`); // Re-throw the error after logging it
   }
 }
 
@@ -93,7 +91,6 @@ export async function deleteCookie(cookieName: string): Promise<void> {
   try {
     cookieStore.delete(cookieName);
   } catch (error) {
-    console.error('Error deleting cookie:', error);
-    throw error; // Re-throw the error after logging it
+    throw new Error(`Deleting cookie: ${(error as Error).message}`); // Re-throw the error after logging it
   }
 }
