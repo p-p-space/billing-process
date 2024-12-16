@@ -14,6 +14,14 @@ import {
   JweAlgSec,
   jwsAlgRsa,
   encode,
+  bodyContent,
+  originalPath,
+  pathServ,
+  internalApis,
+  apiVersionServ,
+  apiVersionApp,
+  pathApp,
+  servicesApi,
 } from '@/utils/constans';
 
 /**
@@ -25,11 +33,14 @@ import {
  */
 export async function customerRequest(request: NextRequest): Promise<NextResponse> {
   const { headers, method, nextUrl } = request;
-  const { pathname, origin } = nextUrl;
-  let decrypt = undefined;
+  const { pathname, origin, search } = nextUrl;
 
-  if (headers.get('X-Body-Content') !== null) {
-    try {
+  try {
+    const originalPathUrl = headers.get(originalPath);
+    const apiUrl = urlTransform(originalPathUrl, pathname, search);
+    let decrypt = undefined;
+
+    if (headers.get(bodyContent) !== null) {
       const data = await request.json();
       const { payload } = data;
       const secretJws = encode(jwsSecretString);
@@ -40,21 +51,21 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
       // Temporary statements for JWT creation and verification
       const jwtTemp = await createJWT(decrypt, jwsPrivateKey);
       await verifyJwt(jwtTemp, jwsPublicKey);
-    } catch (error) {
-      return NextResponse.json(
-        { code: '500.00.000', message: `customerRequest: ${(error as Error).message}` },
-        { status: 500 }
-      );
     }
+
+    const dataRequest = {
+      formData: decrypt,
+      method,
+      url: `${origin}${apiUrl}`,
+    } as DataRequest;
+
+    return await requestApi(dataRequest);
+  } catch (error) {
+    return NextResponse.json(
+      { code: '500.00.000', message: `customerRequest: ${(error as Error).message}` },
+      { status: 500 }
+    );
   }
-
-  const dataRequest = {
-    formData: decrypt,
-    method,
-    url: `${origin}${pathname.replace('/v0/', '/v1/')}`,
-  } as DataRequest;
-
-  return await requestApi(dataRequest);
 }
 
 /**
@@ -66,34 +77,53 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
  */
 async function requestApi({ formData, method, url }: DataRequest): Promise<NextResponse> {
   const body = formData ? JSON.stringify(formData) : formData;
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/json');
+  headers.append('Accept', 'application/json');
+
+  if (body) {
+    headers.append(bodyContent, 'true');
+  }
 
   try {
     const response = await fetch(`${url}`, {
       method,
       body,
+      headers,
     });
     const { status } = response;
     const data = await response.json();
-    let payload = undefined;
 
-    if (data) {
+    if (data.payload) {
+      const { payload } = data;
       const secretJwe = encode(jweSecretString);
-      const encrypt = await jwt.encryptData(data, secretJwe, JweAlgSec);
+      const encrypt = await jwt.encryptData(payload, secretJwe, JweAlgSec);
       const secretJws = await importPKCS8(jwsPrivateKey, jwsAlgRsa);
-      payload = await jwt.signData(encrypt, secretJws, jwsAlgRsa);
+      data.payload = await jwt.signData(encrypt, secretJws, jwsAlgRsa);
     }
 
-    const result = {
-      code: '200.00.000',
-      message: 'process ok',
-      payload,
-    };
-
-    return NextResponse.json(result, { status });
+    return NextResponse.json(data, { status });
   } catch (error) {
     return NextResponse.json(
       { code: '500.00.000', message: `requestApi: ${(error as Error).message}` },
       { status: 500 }
     );
   }
+}
+
+function urlTransform(pathUrl: string | null, pathname: string, search: string): string {
+  const headerRequest = `/${pathServ}/${pathUrl}`;
+  const originRequest = `${pathname}${search}`;
+  const searchPath = pathname.split('/')[3];
+  let appUrl = pathname.replace(`/${apiVersionServ}/`, `/${apiVersionApp}/`);
+
+  if (headerRequest !== originRequest) {
+    throw new Error(`urlTransform: The transformed URL does not match the expected format.`);
+  }
+
+  if (!internalApis.includes(searchPath)) {
+    appUrl = originRequest.replace(`${pathServ}/${searchPath}`, `${pathApp}/${servicesApi}`);
+  }
+
+  return appUrl;
 }

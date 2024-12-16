@@ -11,13 +11,16 @@ import {
   jwsPublicKey,
   jweSecretString,
   jwsSecretString,
+  pathServ,
+  bodyContent,
+  originalPath,
 } from '@/utils/constans';
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
 export const httpClientInstance = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_WEB_URL}/api/v0`,
+  baseURL: `${process.env.NEXT_PUBLIC_WEB_URL}/${pathServ}`,
   timeout: 59800,
   headers: {
     'Content-Type': 'application/json',
@@ -41,9 +44,9 @@ export const httpClientInstance = axios.create({
  */
 httpClientInstance.interceptors.request.use(
   async (request) => {
-    const { data } = request;
-    console.log(!!data);
-    request.headers['X-Body-Content'] = !!data;
+    const { data, url } = request;
+    request.headers[bodyContent] = !!data;
+    request.headers[originalPath] = url;
 
     if (data) {
       try {
@@ -73,7 +76,7 @@ httpClientInstance.interceptors.response.use(
   async (response) => {
     const { data } = response;
 
-    if (data) {
+    if (data && data.payload) {
       const { payload } = data;
 
       try {
@@ -82,7 +85,7 @@ httpClientInstance.interceptors.response.use(
         const secretJwe = encode(jweSecretString);
         const decrypt = await jwt.decryptData(signatureVerified, secretJwe);
 
-        response.data = decrypt;
+        response.data.payload = decrypt;
       } catch (error) {
         return Promise.reject(new Error(`Client Interceptor Response: ${(error as Error).message}`));
       }
@@ -91,6 +94,13 @@ httpClientInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    return Promise.reject(new Error(error));
+    console.error(new Error(`httpClientInstance: ${(error as Error).message}`));
+    const { response } = error;
+
+    if (response.data.error) {
+      console.error(response.data.error);
+    }
+
+    return error;
   }
 );

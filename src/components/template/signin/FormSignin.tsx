@@ -35,15 +35,15 @@ export default function FormSignin() {
     onError: (error) => {
       console.error(error);
     },
-    onSuccess: ({ data }) => {
-      console.log(data);
+    onSuccess: (data) => {
+      console.log(data?.data.payload);
       push('signin');
     },
   });
 
   const handleLogin = (loginData: LoginData) => {
     const dataLogin: DataRequest = {
-      url: '/prueba',
+      url: 'prueba',
       method: 'post',
       formData: loginData,
     };

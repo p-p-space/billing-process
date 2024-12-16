@@ -1,3 +1,5 @@
+import { isAxiosError } from 'axios';
+// Internal App
 import { DataRequest } from '@/interfaces';
 import { httpClientInstance } from '@/libs';
 import { dataRequestSchema } from '@/schemas';
@@ -14,8 +16,15 @@ export async function handleClientRequest(dataRequest: DataRequest) {
   try {
     const response = await httpClientInstance[method](url, formData);
 
+    if (response.data) {
+      const { code, message } = response.data;
+      console.log({ code, message });
+    }
+
     return response;
   } catch (error) {
-    throw new Error(`handleClientRequest: ${(error as Error).message}`);
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
   }
 }
