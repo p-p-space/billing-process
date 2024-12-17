@@ -5,15 +5,15 @@ import * as jwt from '@/handlers/handleJwt';
 import {
   encode,
   rsaAlgJwe,
-  jwePublicKey,
+  webJwePublicKey,
   jwsAlgRsa,
   secretAlgJws,
-  jwsPublicKey,
-  jweSecretString,
-  jwsSecretString,
+  webJwsPublicKey,
+  webJweSecretString,
+  webJwsSecretString,
   pathServ,
   bodyContent,
-  originalPath,
+  originPath,
   baseAppURL,
 } from '@/utils/constans';
 
@@ -47,14 +47,16 @@ browserAxios.interceptors.request.use(
   async (request) => {
     const { data, url } = request;
     request.headers[bodyContent] = !!data;
-    request.headers[originalPath] = url;
+    request.headers[originPath] = url;
 
     if (data) {
       try {
-        const secretJwe = await importSPKI(jwePublicKey, rsaAlgJwe);
-        const encrypt = await jwt.encryptData(data, secretJwe, rsaAlgJwe);
-        const secretJws = encode(jwsSecretString);
-        const payload = await jwt.signData(encrypt, secretJws, secretAlgJws);
+        const secretJwe = await importSPKI(webJwePublicKey, rsaAlgJwe);
+        const payload = await jwt.encryptData(data, secretJwe, rsaAlgJwe);
+        const secretJws = encode(webJwsSecretString);
+        const signedData = await jwt.signData(payload, secretJws, secretAlgJws);
+        const authJws = jwt.disassembleJWS(signedData);
+        request.headers['App-token'] = `JWS ${authJws}`;
 
         request.data = { payload };
       } catch (error) {
@@ -81,9 +83,9 @@ browserAxios.interceptors.response.use(
       const { payload } = data;
 
       try {
-        const secretJws = await importSPKI(jwsPublicKey, jwsAlgRsa);
+        const secretJws = await importSPKI(webJwsPublicKey, jwsAlgRsa);
         const signatureVerified = await jwt.verifySignature(payload, secretJws);
-        const secretJwe = encode(jweSecretString);
+        const secretJwe = encode(webJweSecretString);
         const decrypt = await jwt.decryptData(signatureVerified, secretJwe);
 
         response.data.payload = decrypt;

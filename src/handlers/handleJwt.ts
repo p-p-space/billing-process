@@ -79,9 +79,9 @@ export async function verifySignature(jws: string, secret: KeyLike | Uint8Array)
  * @returns {Promise<string>} - The signed JWT string.
  * @throws {Error} - If JWT creation fails.
  */
-export async function createJWT(payload: JWTPayload, jwsPrivateKey: string): Promise<string> {
+export async function createJWT(payload: JWTPayload, webJwsPrivateKey: string): Promise<string> {
   try {
-    const key = await jose.importPKCS8(jwsPrivateKey, JwtAlg);
+    const key = await jose.importPKCS8(webJwsPrivateKey, JwtAlg);
     const jwt = await new jose.SignJWT(payload)
       .setProtectedHeader({ alg: JwtAlg, type: 'jwt' })
       .setIssuedAt()
@@ -102,9 +102,9 @@ export async function createJWT(payload: JWTPayload, jwsPrivateKey: string): Pro
  * @returns {Promise<JWTPayload>} - The verified JWT payload.
  * @throws {Error} - If JWT verification fails.
  */
-export async function verifyJwt(jwt: string, jwsPublicKey: string): Promise<JWTPayload> {
+export async function verifyJwt(jwt: string, webJwsPublicKey: string): Promise<JWTPayload> {
   try {
-    const key = await jose.importSPKI(jwsPublicKey, JwtAlg);
+    const key = await jose.importSPKI(webJwsPublicKey, JwtAlg);
     const { payload } = await jose.jwtVerify(jwt, key, {
       issuer: issuer,
       audience: audience,
@@ -119,10 +119,10 @@ export async function verifyJwt(jwt: string, jwsPublicKey: string): Promise<JWTP
 /**
  * Disassembles the given JWS string.
  * @param {string} jws - The JWS string to be disassembled.
- * @returns {Promise<string>} - The disassembled JWS header and signature.
+ * @returns {string} - The disassembled JWS header and signature.
  * @throws {Error} - If disassembly fails.
  */
-export async function disassembleJWS(jws: string): Promise<string> {
+export function disassembleJWS(jws: string): string {
   try {
     const jwsParts = jws.split('.');
     const headerSignature = `${jwsParts[0]}..${jwsParts[2]}`;
@@ -137,15 +137,15 @@ export async function disassembleJWS(jws: string): Promise<string> {
  * Assembles a JWS string with the given payload.
  * @param {string} jws - The JWS string to be assembled.
  * @param {string} payload - The payload to be included.
- * @returns {Promise<string>} - The complete JWS string.
+ * @returns {string} - The complete JWS string.
  * @throws {Error} - If assembly fails.
  */
-export async function assembleJWS(jws: string, payload: string): Promise<string> {
+export function assembleJWS(jws: string, payload: string): string {
   try {
-    const base64UrlPayload = jose.base64url.encode(payload);
+    const jwe = jose.base64url.encode(payload);
     const jwsReplace = jws.replace('JWS ', '');
     const parts = jwsReplace.split('.');
-    const completeJws = `${parts[0]}.${base64UrlPayload}.${parts[2]}`;
+    const completeJws = `${parts[0]}.${jwe}.${parts[2]}`;
 
     return completeJws;
   } catch (error) {

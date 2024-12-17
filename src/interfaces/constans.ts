@@ -1,8 +1,8 @@
+import { z } from 'zod';
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 // Internal app
 import { langs } from '@/i18n';
-import { z } from 'zod';
-import { dataRequestSchema } from '@/schemas';
+import { dataRequestSchema, responseApiSchema } from '@/schemas';
 
 /**
  * Represents the layout of the root component.
@@ -56,3 +56,8 @@ export type RequestBody = {
  * Represents the data structure for axios request.
  */
 export type DataRequest = z.infer<typeof dataRequestSchema>;
+
+/**
+ * Represents the data structure for api response.
+ */
+export type ResponseApi = z.infer<typeof responseApiSchema>;

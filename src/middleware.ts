@@ -1,13 +1,14 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
 import { cookieValues } from './utils';
+import { pathServ } from './utils/constans';
 import { customerRequest } from './handlers';
 import { langCookieName, availableValueCookie } from './i18n';
 
 export async function middleware(request: NextRequest) {
   const { cookies, nextUrl } = request;
 
-  if (nextUrl.pathname.startsWith('/api/v0')) {
+  if (nextUrl.pathname.startsWith(`/${pathServ}`)) {
     const response = await customerRequest(request);
 
     return response;

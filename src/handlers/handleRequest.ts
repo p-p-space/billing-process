@@ -5,17 +5,17 @@ import { DataRequest } from '@/interfaces';
 import * as jwt from '@/handlers/handleJwt';
 import { createJWT, verifyJwt } from '@/handlers';
 import {
-  jwsSecretString,
-  jwePrivateKey,
+  webJwsSecretString,
+  webJwePrivateKey,
   rsaAlgJwe,
-  jwsPrivateKey,
-  jwsPublicKey,
-  jweSecretString,
+  webJwsPrivateKey,
+  webJwsPublicKey,
+  webJweSecretString,
   JweAlgSec,
   jwsAlgRsa,
   encode,
   bodyContent,
-  originalPath,
+  originPath,
   pathServ,
   appApis,
   apiVersionServ,
@@ -36,21 +36,23 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
   const { pathname, origin, search } = nextUrl;
 
   try {
-    const originalPathUrl = headers.get(originalPath);
+    const originalPathUrl = headers.get(originPath);
     const apiUrl = urlTransform(originalPathUrl, pathname, search);
     let decrypt = undefined;
 
     if (headers.get(bodyContent) !== null) {
       const data = await request.json();
       const { payload } = data;
-      const secretJws = encode(jwsSecretString);
-      const signatureVerified = await jwt.verifySignature(payload, secretJws);
-      const secretJwe = await importPKCS8(jwePrivateKey, rsaAlgJwe);
+      const tokenApp = headers.get('App-token') ?? '';
+      const signedData = jwt.assembleJWS(tokenApp, payload);
+      const secretJws = encode(webJwsSecretString);
+      const signatureVerified = await jwt.verifySignature(signedData, secretJws);
+      const secretJwe = await importPKCS8(webJwePrivateKey, rsaAlgJwe);
       decrypt = await jwt.decryptData(signatureVerified, secretJwe);
 
       // Temporary statements for JWT creation and verification
-      const jwtTemp = await createJWT(decrypt, jwsPrivateKey);
-      await verifyJwt(jwtTemp, jwsPublicKey);
+      const jwtTemp = await createJWT(decrypt, webJwsPrivateKey);
+      await verifyJwt(jwtTemp, webJwsPublicKey);
     }
 
     const dataRequest = {
@@ -80,6 +82,7 @@ async function requestApi({ formData, method, url }: DataRequest): Promise<NextR
   const headers = new Headers();
   headers.append('Content-Type', 'application/json');
   headers.append('Accept', 'application/json');
+  headers.append('Accept', 'application/json');
 
   if (body) {
     headers.append(bodyContent, 'true');
@@ -96,9 +99,9 @@ async function requestApi({ formData, method, url }: DataRequest): Promise<NextR
 
     if (data.payload) {
       const { payload } = data;
-      const secretJwe = encode(jweSecretString);
+      const secretJwe = encode(webJweSecretString);
       const encrypt = await jwt.encryptData(payload, secretJwe, JweAlgSec);
-      const secretJws = await importPKCS8(jwsPrivateKey, jwsAlgRsa);
+      const secretJws = await importPKCS8(webJwsPrivateKey, jwsAlgRsa);
       data.payload = await jwt.signData(encrypt, secretJws, jwsAlgRsa);
     }
 
