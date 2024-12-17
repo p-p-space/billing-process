@@ -1,69 +1,68 @@
 import { type NextRequest, NextResponse } from 'next/server';
+// Internal App
+import { ResponseApi } from '@/interfaces';
 
-const status = 200;
-const response: { code: string; message: string; payload: undefined | object; error: undefined | string | object } = {
-  code: '',
-  message: '',
+const status: number = 200;
+
+const response: ResponseApi = {
+  code: `${status}.00.001`,
+  message: 'Process ok',
+  info: '',
+  datetime: '2022-05-17T15:44:11.656Z[UTC]',
   payload: undefined,
   error: undefined,
 };
-const payload = {
-  user: {
-    id: 12345,
-    name: 'Juan Pérez',
-    email: 'juan.perez@example.com',
-  },
-};
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse<ResponseApi>> {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
 
-  response.code = `${status}.00.000`;
   response.message = `${pathname}${search} --- ${method}`;
-  response.payload = payload;
+  response.payload = {
+    user: {
+      id: 12345,
+      name: 'Juan Pérez',
+      email: 'juan.perez@example.com',
+    },
+  };
 
   return NextResponse.json(response, { status });
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse<ResponseApi>> {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
 
-  response.code = `${status}.00.001`;
   response.message = `${pathname}${search} --- ${method}`;
   response.payload = await request.json();
 
   return NextResponse.json(response, { status });
 }
 
-export async function PUT(request: NextRequest) {
+export async function PUT(request: NextRequest): Promise<NextResponse<ResponseApi>> {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
 
-  response.code = `${status}.00.002`;
   response.message = `${pathname}${search} --- ${method}`;
   response.payload = await request.json();
 
   return NextResponse.json(response, { status });
 }
 
-export async function PATCH(request: NextRequest) {
+export async function PATCH(request: NextRequest): Promise<NextResponse<ResponseApi>> {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
 
-  response.code = `${status}.00.002`;
   response.message = `${pathname}${search} --- ${method}`;
   response.payload = await request.json();
 
   return NextResponse.json(response, { status });
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE(request: NextRequest): Promise<NextResponse<ResponseApi>> {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
 
-  response.code = `${status}.00.003`;
   response.message = `${pathname}${search} --- ${method}`;
   response.payload = undefined;
 
