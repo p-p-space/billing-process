@@ -23,6 +23,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<ResponseAp
       id: 12345,
       name: 'Juan Pérez',
       email: 'juan.perez@example.com',
+      apps: ['uno', 'dos'],
     },
   };
 

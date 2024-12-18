@@ -1,5 +1,5 @@
 export const baseAppURL = process.env.NEXT_PUBLIC_WEB_URL ?? '';
-export const baseServURL = process.env.BACK_URL ?? '';
+export const baseServURL = process.env.SERV_URL ?? '';
 export const handleRefresh = process.env.NEXT_PUBLIC_HANDLE_REFRESH ?? 'OFF';
 export const rsaAlgJwe = 'RSA-OAEP-256';
 export const JweAlgSec = 'A256KW';

@@ -43,9 +43,9 @@ export default function FormSignin() {
 
   const handleLogin = (loginData: LoginData) => {
     const dataLogin: WebRequest = {
-      url: 'prueba',
+      pathUrl: '/prueba',
       method: 'post',
-      formData: loginData,
+      dataRequest: loginData,
     };
 
     mutate(dataLogin);

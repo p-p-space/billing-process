@@ -2,13 +2,18 @@ import { z } from 'zod';
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 // Internal app
 import { langs } from '@/i18n';
-import { webRequestSchema, responseApiSchema, servRequestSchema } from '@/schemas';
+import {
+  webRequestSchema,
+  responseApiSchema,
+  servRequestSchema,
+  axiosConfigSchema,
+  requestBodySchema,
+} from '@/schemas';
 
 /**
  * Represents the layout of the root component.
  *
  * @typeParam children - The child components to be rendered within the layout.
- * @typeParam params.lang - The language parameter.
  */
 export type RootLayout = {
   children?: React.ReactNode;
@@ -48,9 +53,7 @@ export type CookieValues = {
 /**
  * Represents the data structure for body data.
  */
-export type RequestBody = {
-  [key: string]: string;
-};
+export type RequestBody = z.infer<typeof requestBodySchema>;
 
 /**
  * Represents the data structure for axios web request.
@@ -66,3 +69,8 @@ export type ServRequest = z.infer<typeof servRequestSchema>;
  * Represents the data structure for api response.
  */
 export type ResponseApi = z.infer<typeof responseApiSchema>;
+
+/**
+ * Represents the data structure for api response.
+ */
+export type AxiosConfig = z.infer<typeof axiosConfigSchema>;

@@ -5,7 +5,6 @@ import * as jwt from '@/handlers/handleJwt';
 import {
   rsaAlgJwe,
   jwsAlgRsa,
-  pathServ,
   baseServURL,
   servJwePublicKey,
   servJwsPrivateKey,
@@ -16,7 +15,7 @@ import {
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
 export const serverAxios = axios.create({
-  baseURL: `${baseServURL}${pathServ}`,
+  baseURL: baseServURL,
   timeout: 59650,
 });
 

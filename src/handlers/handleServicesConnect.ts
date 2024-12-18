@@ -20,17 +20,6 @@ const payload = {
 export async function managerCoreServices(request: NextRequest) {
   const { headers, method, nextUrl } = request;
   const { pathname, search } = nextUrl;
-  response.code = `${status}.00.000`;
-  response.message = `${pathname}${search} --- ${method}`;
-  response.payload = payload;
-
-  if (method === 'DELETE') {
-    response.payload = undefined;
-  }
-
-  if (headers.get(appBodyContent) !== null) {
-    response.payload = await request.json();
-  }
 
   return NextResponse.json(response, { status });
 }

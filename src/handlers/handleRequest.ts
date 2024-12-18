@@ -55,14 +55,14 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
       await verifyJwt(jwtTemp, webJwsPublicKey);
     }
 
-    const dataRequest = {
+    const requestConfig = {
       method,
       url,
-      formData: decrypt,
+      dataRequest: decrypt,
       originPath,
     } as ServRequest;
 
-    return await requestApi(dataRequest);
+    return await requestApi(requestConfig);
   } catch (error) {
     return NextResponse.json(
       { code: '500.00.000', message: `customerRequest: ${(error as Error).message}` },
@@ -75,11 +75,11 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
  * Sends a request to the API with the provided data, encrypts the response,
  * and returns it as a signed JWT.
  *
- * @param {ServRequest} dataRequest - The data request object containing formData, method, and url.
+ * @param {ServRequest} dataRequest - The data request object containing dataRequest, method, and url.
  * @returns {Promise<NextResponse>} - The response from the API or an error response.
  */
-async function requestApi({ formData, method, url, originPath }: ServRequest): Promise<NextResponse> {
-  const body = formData ? JSON.stringify(formData) : null;
+async function requestApi({ dataRequest, method, url, originPath }: ServRequest): Promise<NextResponse> {
+  const body = dataRequest ? JSON.stringify(dataRequest) : null;
   const headers = new Headers({
     'Content-Type': 'application/json',
     Accept: 'application/json',
