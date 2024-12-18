@@ -13,7 +13,6 @@ import {
   webJweSecretString,
   JweAlgSec,
   jwsAlgRsa,
-  encode,
   bodyContent,
   originPath,
   pathServ,
@@ -22,6 +21,7 @@ import {
   apiVersionApp,
   pathApp,
   servicesApi,
+  jwsToken,
 } from '@/utils/constans';
 
 /**
@@ -43,9 +43,9 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
     if (headers.get(bodyContent) !== null) {
       const data = await request.json();
       const { payload } = data;
-      const tokenApp = headers.get('App-token') ?? '';
+      const tokenApp = headers.get(jwsToken) ?? '';
       const signedData = jwt.assembleJWS(tokenApp, payload);
-      const secretJws = encode(webJwsSecretString);
+      const secretJws = jwt.encode(webJwsSecretString);
       const signatureVerified = await jwt.verifySignature(signedData, secretJws);
       const secretJwe = await importPKCS8(webJwePrivateKey, rsaAlgJwe);
       decrypt = await jwt.decryptData(signatureVerified, secretJwe);
@@ -80,8 +80,8 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
 async function requestApi({ formData, method, url }: DataRequest): Promise<NextResponse> {
   const body = formData ? JSON.stringify(formData) : formData;
   const headers = new Headers();
+  let authJws = '';
   headers.append('Content-Type', 'application/json');
-  headers.append('Accept', 'application/json');
   headers.append('Accept', 'application/json');
 
   if (body) {
@@ -89,23 +89,29 @@ async function requestApi({ formData, method, url }: DataRequest): Promise<NextR
   }
 
   try {
-    const response = await fetch(`${url}`, {
+    const responseApi = await fetch(`${url}`, {
       method,
       body,
       headers,
     });
-    const { status } = response;
-    const data = await response.json();
+    const { status } = responseApi;
+    const data = await responseApi.json();
 
     if (data.payload) {
       const { payload } = data;
-      const secretJwe = encode(webJweSecretString);
+      const secretJwe = jwt.encode(webJweSecretString);
       const encrypt = await jwt.encryptData(payload, secretJwe, JweAlgSec);
       const secretJws = await importPKCS8(webJwsPrivateKey, jwsAlgRsa);
-      data.payload = await jwt.signData(encrypt, secretJws, jwsAlgRsa);
+      const signedData = await jwt.signData(encrypt, secretJws, jwsAlgRsa);
+      authJws = jwt.disassembleJWS(signedData);
+
+      data.payload = encrypt;
     }
 
-    return NextResponse.json(data, { status });
+    const response = NextResponse.json(data, { status });
+    response.headers.set(jwsToken, `JWS ${authJws}`);
+
+    return response;
   } catch (error) {
     return NextResponse.json(
       { code: '500.00.000', message: `requestApi: ${(error as Error).message}` },
