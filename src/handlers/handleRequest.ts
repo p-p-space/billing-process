@@ -78,22 +78,19 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
  * @returns {Promise<NextResponse>} - The response from the API or an error response.
  */
 async function requestApi({ formData, method, url }: DataRequest): Promise<NextResponse> {
-  const body = formData ? JSON.stringify(formData) : formData;
-  const headers = new Headers();
+  const body = formData ? JSON.stringify(formData) : null;
+  const headers = new Headers({
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  });
   let authJws = '';
-  headers.append('Content-Type', 'application/json');
-  headers.append('Accept', 'application/json');
 
   if (body) {
     headers.append(bodyContent, 'true');
   }
 
   try {
-    const responseApi = await fetch(`${url}`, {
-      method,
-      body,
-      headers,
-    });
+    const responseApi = await fetch(url, { method, body, headers });
     const { status } = responseApi;
     const data = await responseApi.json();
 
@@ -120,6 +117,15 @@ async function requestApi({ formData, method, url }: DataRequest): Promise<NextR
   }
 }
 
+/**
+ * Transforms the URL based on the provided path and search parameters.
+ *
+ * @param {string | null} pathUrl - The original path URL from the headers.
+ * @param {string} pathname - The pathname from the request URL.
+ * @param {string} search - The search parameters from the request URL.
+ * @returns {string} - The transformed URL.
+ * @throws {Error} - If the transformed URL does not match the expected format.
+ */
 function urlTransform(pathUrl: string | null, pathname: string, search: string): string {
   const headerRequest = `/${pathServ}/${pathUrl}`;
   const originRequest = `${pathname}${search}`;
