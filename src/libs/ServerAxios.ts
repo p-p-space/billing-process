@@ -16,7 +16,7 @@ import {
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
 export const serverAxios = axios.create({
-  baseURL: `${baseServURL}/${pathServ}`,
+  baseURL: `${baseServURL}${pathServ}`,
   timeout: 59650,
 });
 

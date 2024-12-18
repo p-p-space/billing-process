@@ -1,7 +1,7 @@
 import { importPKCS8 } from 'jose';
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
-import { DataRequest } from '@/interfaces';
+import { ServRequest } from '@/interfaces';
 import * as jwt from '@/handlers/handleJwt';
 import { createJWT, verifyJwt } from '@/handlers';
 import {
@@ -13,15 +13,15 @@ import {
   webJweSecretString,
   JweAlgSec,
   jwsAlgRsa,
-  bodyContent,
-  originPath,
-  pathServ,
-  appApis,
-  apiVersionServ,
-  apiVersionApp,
+  appBodyContent,
   pathApp,
   servicesApi,
   jwsToken,
+  baseAppURL,
+  apiVersionServ,
+  apiVersionApp,
+  appApis,
+  appOriginPath,
 } from '@/utils/constans';
 
 /**
@@ -33,14 +33,14 @@ import {
  */
 export async function customerRequest(request: NextRequest): Promise<NextResponse> {
   const { headers, method, nextUrl } = request;
-  const { pathname, origin, search } = nextUrl;
+  const { pathname, search } = nextUrl;
+  const originPath = `${pathname}${search}`;
+  const url = urlTransform(originPath);
 
   try {
-    const originalPathUrl = headers.get(originPath);
-    const apiUrl = urlTransform(originalPathUrl, pathname, search);
     let decrypt = undefined;
 
-    if (headers.get(bodyContent) !== null) {
+    if (headers.get(appBodyContent) !== null) {
       const data = await request.json();
       const { payload } = data;
       const tokenApp = headers.get(jwsToken) ?? '';
@@ -56,10 +56,11 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
     }
 
     const dataRequest = {
-      formData: decrypt,
       method,
-      url: `${origin}${apiUrl}`,
-    } as DataRequest;
+      url,
+      formData: decrypt,
+      originPath,
+    } as ServRequest;
 
     return await requestApi(dataRequest);
   } catch (error) {
@@ -74,19 +75,20 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
  * Sends a request to the API with the provided data, encrypts the response,
  * and returns it as a signed JWT.
  *
- * @param {DataRequest} dataRequest - The data request object containing formData, method, and url.
+ * @param {ServRequest} dataRequest - The data request object containing formData, method, and url.
  * @returns {Promise<NextResponse>} - The response from the API or an error response.
  */
-async function requestApi({ formData, method, url }: DataRequest): Promise<NextResponse> {
+async function requestApi({ formData, method, url, originPath }: ServRequest): Promise<NextResponse> {
   const body = formData ? JSON.stringify(formData) : null;
   const headers = new Headers({
     'Content-Type': 'application/json',
     Accept: 'application/json',
   });
+  headers.append(appOriginPath, originPath);
   let authJws = '';
 
   if (body) {
-    headers.append(bodyContent, 'true');
+    headers.append(appBodyContent, 'true');
   }
 
   try {
@@ -120,25 +122,18 @@ async function requestApi({ formData, method, url }: DataRequest): Promise<NextR
 /**
  * Transforms the URL based on the provided path and search parameters.
  *
- * @param {string | null} pathUrl - The original path URL from the headers.
- * @param {string} pathname - The pathname from the request URL.
- * @param {string} search - The search parameters from the request URL.
+ * @param {string} uriPath - The pathname from the request URL.
  * @returns {string} - The transformed URL.
- * @throws {Error} - If the transformed URL does not match the expected format.
  */
-function urlTransform(pathUrl: string | null, pathname: string, search: string): string {
-  const headerRequest = `/${pathServ}/${pathUrl}`;
-  const originRequest = `${pathname}${search}`;
-  const searchPath = pathname.split('/')[3];
-  let appUrl = pathname.replace(`/${apiVersionServ}/`, `/${apiVersionApp}/`);
+function urlTransform(uriPath: string): string {
+  const neededPart = uriPath.split('/')[3];
+  let appUrl = `${baseAppURL}${uriPath.replace(apiVersionServ, apiVersionApp)}`;
 
-  if (headerRequest !== originRequest) {
-    throw new Error(`urlTransform: The transformed URL does not match the expected format.`);
+  if (!appApis.includes(neededPart)) {
+    appUrl = `${baseAppURL}${pathApp}/${servicesApi}`;
   }
 
-  if (!appApis.includes(searchPath)) {
-    appUrl = originRequest.replace(`${pathServ}/${searchPath}`, `${pathApp}/${servicesApi}`);
-  }
+  console.log(appUrl);
 
   return appUrl;
 }

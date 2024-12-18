@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal App
-import { bodyContent } from '@/utils/constans';
+import { appBodyContent } from '@/utils/constans';
 
 const status = 200;
 const response: { code: string; message: string; payload: undefined | object; error: undefined | string | object } = {
@@ -28,7 +28,7 @@ export async function managerCoreServices(request: NextRequest) {
     response.payload = undefined;
   }
 
-  if (headers.get(bodyContent) !== null) {
+  if (headers.get(appBodyContent) !== null) {
     response.payload = await request.json();
   }
 

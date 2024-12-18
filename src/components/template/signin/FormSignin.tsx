@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Typography, Button } from '@mui/material';
 //Internal app
 import { getSchema } from '@/config';
-import { DataRequest } from '@/interfaces';
+import { WebRequest } from '@/interfaces';
 import { manageClientRequest } from '@/handlers';
 import { InputPass, InputText } from '@/components';
 
@@ -36,13 +36,13 @@ export default function FormSignin() {
       console.error(error);
     },
     onSuccess: (data) => {
-      console.log(data?.data.payload);
+      console.log(data.payload);
       push('signin');
     },
   });
 
   const handleLogin = (loginData: LoginData) => {
-    const dataLogin: DataRequest = {
+    const dataLogin: WebRequest = {
       url: 'prueba',
       method: 'post',
       formData: loginData,

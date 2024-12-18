@@ -2,11 +2,14 @@ import { z } from 'zod';
 
 const codeRegex = /^codeHttp\.\d{2}\.\d{3}$/;
 
-export const dataRequestSchema = z.object({
+export const webRequestSchema = z.object({
   method: z.enum(['get', 'post', 'put', 'patch', 'delete', 'options']),
   url: z.string(),
   formData: z.record(z.string()).optional(),
-  originPath: z.string().optional(),
+});
+
+export const servRequestSchema = webRequestSchema.extend({
+  originPath: z.string(),
 });
 
 export const responseApiSchema = z.object({

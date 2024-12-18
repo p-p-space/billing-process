@@ -11,8 +11,7 @@ import {
   webJweSecretString,
   webJwsSecretString,
   pathServ,
-  bodyContent,
-  originPath,
+  appBodyContent,
   baseAppURL,
   jwsToken,
 } from '@/utils/constans';
@@ -21,7 +20,7 @@ import {
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
 export const browserAxios = axios.create({
-  baseURL: `${baseAppURL}/${pathServ}`,
+  baseURL: `${baseAppURL}${pathServ}`,
   timeout: 59800,
   headers: {
     'Content-Type': 'application/json',
@@ -45,9 +44,8 @@ export const browserAxios = axios.create({
  */
 browserAxios.interceptors.request.use(
   async (request) => {
-    const { data, url } = request;
-    request.headers[bodyContent] = !!data;
-    request.headers[originPath] = url;
+    const { data } = request;
+    request.headers[appBodyContent] = !!data;
 
     if (data) {
       try {

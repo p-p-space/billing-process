@@ -8,7 +8,7 @@ import { langCookieName, availableValueCookie } from './i18n';
 export async function middleware(request: NextRequest) {
   const { cookies, nextUrl } = request;
 
-  if (nextUrl.pathname.startsWith(`/${pathServ}`)) {
+  if (nextUrl.pathname.startsWith(pathServ)) {
     const response = await customerRequest(request);
 
     return response;
