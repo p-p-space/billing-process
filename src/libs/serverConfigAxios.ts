@@ -5,19 +5,16 @@ import * as jwt from '@/handlers/handleJwt';
 import {
   rsaAlgJwe,
   jwsAlgRsa,
-  baseServURL,
   servJwePublicKey,
   servJwsPrivateKey,
   servJwePrivateKey,
+  servJwsPublicKey,
 } from '@/utils/constans';
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
-export const serverAxios = axios.create({
-  baseURL: baseServURL,
-  timeout: 59650,
-});
+export const serverAxios = axios.create();
 
 /**
  * Interceptor for handling request encryption and signing.
@@ -26,16 +23,23 @@ export const serverAxios = axios.create({
 serverAxios.interceptors.request.use(
   async (request) => {
     const { data } = request;
+    const { way = '' } = data;
+    delete data.way;
 
-    if (data) {
+    if (data && way === 'core') {
+      let payload = data;
+
       try {
         const secretJwe = await importSPKI(servJwePublicKey, rsaAlgJwe);
-        const encrypt = await jwt.encryptData(data, secretJwe, rsaAlgJwe);
+        payload = await jwt.encryptData(payload, secretJwe, rsaAlgJwe);
         const secretJws = await importPKCS8(servJwsPrivateKey, jwsAlgRsa);
-        const payload = await jwt.signData(encrypt, secretJws, jwsAlgRsa);
+        const signedData = await jwt.signData(payload, secretJws, jwsAlgRsa);
+        const authJws = jwt.disassembleJWS(signedData);
+        request.headers['X-Token'] = `JWS ${authJws}`;
 
         request.data = payload;
       } catch (error) {
+        console.log({ error });
         return Promise.reject(new Error(`Client Interceptor Request: ${(error as Error).message}`));
       }
     }
@@ -55,16 +59,15 @@ serverAxios.interceptors.response.use(
   async (response) => {
     const { data } = response;
 
-    if (data?.payload) {
-      const { payload } = data;
-
+    if (data?.data) {
+      const { data } = response.data.data;
       try {
-        const secretJws = await importSPKI(servJwePublicKey, jwsAlgRsa);
-        const signatureVerified = await jwt.verifySignature(payload, secretJws);
+        const secretJws = await importSPKI(servJwsPublicKey, jwsAlgRsa);
+        const signatureVerified = await jwt.verifySignature(data, secretJws);
         const secretJwe = await importPKCS8(servJwePrivateKey, rsaAlgJwe);
         const decrypt = await jwt.decryptData(signatureVerified, secretJwe);
 
-        response.data.payload = decrypt;
+        response.data.data = decrypt;
       } catch (error) {
         return Promise.reject(new Error(`Client Interceptor Response: ${(error as Error).message}`));
       }
@@ -73,12 +76,7 @@ serverAxios.interceptors.response.use(
     return response;
   },
   (error) => {
-    const { response } = error;
-
-    if (response.data.error) {
-      console.error(response.data.error);
-    }
-
+    console.log('error---------------', { error });
     return error;
   }
 );

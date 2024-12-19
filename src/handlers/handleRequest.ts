@@ -75,7 +75,7 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
  * Sends a request to the API with the provided data, encrypts the response,
  * and returns it as a signed JWT.
  *
- * @param {ServRequest} dataRequest - The data request object containing dataRequest, method, and url.
+ * @param {ServRequest} requestConfig - The data request object containing dataRequest, method, and url.
  * @returns {Promise<NextResponse>} - The response from the API or an error response.
  */
 async function requestApi({ dataRequest, method, url, originPath }: ServRequest): Promise<NextResponse> {
@@ -84,7 +84,7 @@ async function requestApi({ dataRequest, method, url, originPath }: ServRequest)
     'Content-Type': 'application/json',
     Accept: 'application/json',
   });
-  headers.append(appOriginPath, originPath);
+  headers.append(appOriginPath, `${originPath}`);
   let authJws = '';
 
   if (body) {

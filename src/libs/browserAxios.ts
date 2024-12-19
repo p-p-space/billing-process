@@ -16,18 +16,7 @@ import {
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
-export const browserAxios = axios.create({
-  transformRequest: [
-    (data) => {
-      return JSON.stringify(data);
-    },
-  ],
-  transformResponse: [
-    (data) => {
-      return JSON.parse(data);
-    },
-  ],
-});
+export const browserAxios = axios.create();
 
 /**
  * Interceptor for handling request encryption and signing.
