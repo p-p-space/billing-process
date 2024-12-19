@@ -2,19 +2,16 @@ import axios from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
 import * as jwt from '@/handlers/handleJwt';
-import {
-  rsaAlgJwe,
-  jwsAlgRsa,
-  servJwePublicKey,
-  servJwsPrivateKey,
-  servJwePrivateKey,
-  servJwsPublicKey,
-} from '@/utils/constans';
+import { rsaAlgJwe, jwsAlgRsa, servJwePublicKey, servJwsPrivateKey, servJwePrivateKey } from '@/utils/constans';
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
-export const serverAxios = axios.create();
+export const serverAxios = axios.create({
+  headers: {
+    Accept: 'application/json',
+  },
+});
 
 /**
  * Interceptor for handling request encryption and signing.
@@ -23,10 +20,9 @@ export const serverAxios = axios.create();
 serverAxios.interceptors.request.use(
   async (request) => {
     const { data } = request;
-    const { way = '' } = data;
-    delete data.way;
 
-    if (data && way === 'core') {
+    if (data && data?.way === 'core') {
+      delete data.way;
       let payload = data;
 
       try {
@@ -39,7 +35,6 @@ serverAxios.interceptors.request.use(
 
         request.data = payload;
       } catch (error) {
-        console.log({ error });
         return Promise.reject(new Error(`Client Interceptor Request: ${(error as Error).message}`));
       }
     }
@@ -60,12 +55,11 @@ serverAxios.interceptors.response.use(
     const { data } = response;
 
     if (data?.data) {
-      const { data } = response.data.data;
+      const { data } = response.data;
+
       try {
-        const secretJws = await importSPKI(servJwsPublicKey, jwsAlgRsa);
-        const signatureVerified = await jwt.verifySignature(data, secretJws);
         const secretJwe = await importPKCS8(servJwePrivateKey, rsaAlgJwe);
-        const decrypt = await jwt.decryptData(signatureVerified, secretJwe);
+        const decrypt = await jwt.decryptData(data, secretJwe);
 
         response.data.data = decrypt;
       } catch (error) {
@@ -76,7 +70,6 @@ serverAxios.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.log('error---------------', { error });
-    return error;
+    return error.response;
   }
 );

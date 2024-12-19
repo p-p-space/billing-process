@@ -35,7 +35,7 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
   const { headers, method, nextUrl } = request;
   const { pathname, search } = nextUrl;
   const originPath = `${pathname}${search}`;
-  const url = urlTransform(originPath);
+  const pathUrl = urlTransform(originPath);
 
   try {
     let decrypt = undefined;
@@ -57,7 +57,7 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
 
     const requestConfig = {
       method,
-      url,
+      pathUrl,
       dataRequest: decrypt,
       originPath,
     } as ServRequest;
@@ -78,7 +78,7 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
  * @param {ServRequest} requestConfig - The data request object containing dataRequest, method, and url.
  * @returns {Promise<NextResponse>} - The response from the API or an error response.
  */
-async function requestApi({ dataRequest, method, url, originPath }: ServRequest): Promise<NextResponse> {
+async function requestApi({ dataRequest, method, pathUrl, originPath }: ServRequest): Promise<NextResponse> {
   const body = dataRequest ? JSON.stringify(dataRequest) : null;
   const headers = new Headers({
     'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ async function requestApi({ dataRequest, method, url, originPath }: ServRequest)
   }
 
   try {
-    const responseApi = await fetch(url, { method, body, headers });
+    const responseApi = await fetch(pathUrl, { method, body, headers });
     const { status } = responseApi;
     const data = await responseApi.json();
 

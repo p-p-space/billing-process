@@ -1,13 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal App
-import {
-  appBodyContent,
-  appOriginPath,
-  baseServURL,
-  credentialsKey,
-  credentialsSecret,
-  tenantId,
-} from '@/utils/constans';
+import { appBodyContent, appOriginPath, credentialsKey, credentialsSecret, tenantId } from '@/utils/constans';
 import { manageServerRequest } from './handleServerRequest';
 import { AxiosConfig, RequestBody, ServRequest } from '@/interfaces';
 
@@ -29,8 +22,8 @@ const response: { code: string; message: string; payload: undefined | object; er
 export async function managerCoreServices(request: NextRequest) {
   const { headers, method } = request;
   const oauthToken = await getOauthBearer();
-  const url = headers.get(appOriginPath);
-  let dataRequest = null;
+  const pathUrl = headers.get(appOriginPath);
+  let dataRequest = undefined;
 
   if (headers.get(appBodyContent) !== null) {
     dataRequest = await request.json();
@@ -41,22 +34,20 @@ export async function managerCoreServices(request: NextRequest) {
     timeout: serverTimeOut,
     headers: {
       Authorization: `Bearer ${oauthToken}`,
-      Accept: 'application/json',
       'Content-Type': 'application/json',
-      'X-Tenant-Id': tenantId,
       'X-Request-Id': 'e30b625a-e085-42a5-aac2-3d52f73ad8fe',
+      'X-Tenant-Id': tenantId,
     },
   };
 
   const requestConfig = {
     method: method.toLowerCase(),
-    url,
+    pathUrl,
     dataRequest,
-    oauthToken,
     axiosConfig,
   } as ServRequest;
 
-  const { data } = await manageServerRequest(requestConfig);
+  const data = await manageServerRequest(requestConfig);
   console.log(data);
 
   return NextResponse.json(response, { status });
@@ -81,7 +72,7 @@ export async function getOauthBearer() {
 
     const requestConfig = {
       method: 'post',
-      url: `${baseServURL}/oauth2/v1/token`,
+      pathUrl: `/oauth2/v1/token`,
       dataRequest,
       axiosConfig,
     } as ServRequest;

@@ -15,10 +15,7 @@ export const webRequestSchema = z.object({
   dataRequest: requestBodySchema.optional(),
 });
 
-const webRequestOmit = webRequestSchema.omit({ pathUrl: true });
-
-export const servRequestSchema = webRequestOmit.extend({
-  url: z.string(),
+export const servRequestSchema = webRequestSchema.extend({
   originPath: z.string().optional(),
   axiosConfig: axiosConfigSchema,
 });
