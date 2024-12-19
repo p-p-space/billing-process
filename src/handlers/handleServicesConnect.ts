@@ -1,23 +1,10 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal App
-import { appBodyContent, appOriginPath, credentialsKey, credentialsSecret, tenantId } from '@/utils/constans';
-import { manageServerRequest } from './handleServerRequest';
+import { manageServicesRequest } from '@/libs';
 import { AxiosConfig, RequestBody, ServRequest } from '@/interfaces';
+import { appBodyContent, appOriginPath, credentialsKey, credentialsSecret, tenantId } from '@/utils/constans';
 
 const serverTimeOut = 59650;
-const status = 200;
-const response: { code: string; message: string; payload: undefined | object; error: undefined | string | object } = {
-  code: '',
-  message: '',
-  payload: {
-    user: {
-      id: 12345,
-      name: 'Juan Pérez',
-      email: 'juan.perez@example.com',
-    },
-  },
-  error: undefined,
-};
 
 export async function managerCoreServices(request: NextRequest) {
   const { headers, method } = request;
@@ -27,14 +14,13 @@ export async function managerCoreServices(request: NextRequest) {
 
   if (headers.get(appBodyContent) !== null) {
     dataRequest = await request.json();
-    dataRequest['way'] = 'core';
+    dataRequest['cipher'] = true;
   }
 
   const axiosConfig: AxiosConfig = {
     timeout: serverTimeOut,
     headers: {
       Authorization: `Bearer ${oauthToken}`,
-      'Content-Type': 'application/json',
       'X-Request-Id': 'e30b625a-e085-42a5-aac2-3d52f73ad8fe',
       'X-Tenant-Id': tenantId,
     },
@@ -47,10 +33,9 @@ export async function managerCoreServices(request: NextRequest) {
     axiosConfig,
   } as ServRequest;
 
-  const data = await manageServerRequest(requestConfig);
-  console.log(data);
+  const { status, data } = await manageServicesRequest(requestConfig);
 
-  return NextResponse.json(response, { status });
+  return NextResponse.json(data, { status });
 }
 
 export async function getOauthBearer() {
@@ -77,7 +62,7 @@ export async function getOauthBearer() {
       axiosConfig,
     } as ServRequest;
 
-    const data = await manageServerRequest(requestConfig);
+    const { data } = await manageServicesRequest(requestConfig);
 
     bearer = data.access_token;
   }
