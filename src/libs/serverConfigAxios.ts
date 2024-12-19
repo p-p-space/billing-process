@@ -1,15 +1,40 @@
 import axios from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
+import { ServRequest } from '@/interfaces';
 import * as jwt from '@/handlers/handleJwt';
-import { rsaAlgJwe, jwsAlgRsa, servJwePublicKey, servJwsPrivateKey, servJwePrivateKey } from '@/utils/constans';
+import { servRequestSchema } from '@/schemas';
+import {
+  rsaAlgJwe,
+  jwsAlgRsa,
+  servJwePublicKey,
+  servJwsPrivateKey,
+  servJwePrivateKey,
+  baseServURL,
+} from '@/utils/constans';
+
+export async function manageServicesRequest(servRequest: ServRequest) {
+  const parsedData = servRequestSchema.safeParse(servRequest);
+
+  if (!parsedData.success) {
+    throw new Error(`Invalid server request: ${JSON.stringify(parsedData.error)}`);
+  }
+
+  const { method, pathUrl, dataRequest, axiosConfig } = parsedData.data;
+  const url = `${baseServURL}${pathUrl}`;
+
+  const response = await servicesAxios({ url, method, data: dataRequest, ...axiosConfig });
+
+  return response;
+}
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
-export const serverAxios = axios.create({
+const servicesAxios = axios.create({
   headers: {
     Accept: 'application/json',
+    'Content-Type': 'application/json',
   },
 });
 
@@ -17,17 +42,16 @@ export const serverAxios = axios.create({
  * Interceptor for handling request encryption and signing.
  * Encrypts the request data and signs it before sending.
  */
-serverAxios.interceptors.request.use(
+servicesAxios.interceptors.request.use(
   async (request) => {
     const { data } = request;
 
-    if (data && data?.way === 'core') {
-      delete data.way;
-      let payload = data;
+    if (data?.cipher) {
+      delete data.cipher;
 
       try {
         const secretJwe = await importSPKI(servJwePublicKey, rsaAlgJwe);
-        payload = await jwt.encryptData(payload, secretJwe, rsaAlgJwe);
+        const payload = await jwt.encryptData(data, secretJwe, rsaAlgJwe);
         const secretJws = await importPKCS8(servJwsPrivateKey, jwsAlgRsa);
         const signedData = await jwt.signData(payload, secretJws, jwsAlgRsa);
         const authJws = jwt.disassembleJWS(signedData);
@@ -50,7 +74,7 @@ serverAxios.interceptors.request.use(
  * Interceptor for handling response decryption and verification.
  * Verifies the response signature and decrypts the data.
  */
-serverAxios.interceptors.response.use(
+servicesAxios.interceptors.response.use(
   async (response) => {
     const { data } = response;
 
