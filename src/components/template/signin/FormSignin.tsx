@@ -7,9 +7,9 @@ import { useMutation } from '@tanstack/react-query';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Typography, Button } from '@mui/material';
 //Internal app
+import { manageBrowserRequest } from '@/libs';
 import { getSchema } from '@/config';
 import { WebRequest } from '@/interfaces';
-import { manageClientRequest } from '@/handlers';
 import { InputPass, InputText } from '@/components';
 
 type LoginData = {
@@ -31,7 +31,7 @@ export default function FormSignin() {
   });
 
   const { mutate } = useMutation({
-    mutationFn: manageClientRequest,
+    mutationFn: manageBrowserRequest,
     onError: (error) => {
       console.error(error);
     },
@@ -43,6 +43,8 @@ export default function FormSignin() {
 
   const handleLogin = (loginData: LoginData) => {
     const dataLogin: WebRequest = {
+      // pathUrl: '/onboarding/validate?consultantCode=000650714&countryCode=PE',
+      // method: 'get',
       pathUrl: '/prueba',
       method: 'post',
       dataRequest: loginData,

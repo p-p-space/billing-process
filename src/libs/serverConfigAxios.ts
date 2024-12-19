@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
 import { ServRequest } from '@/interfaces';
@@ -94,6 +94,9 @@ servicesAxios.interceptors.response.use(
     return response;
   },
   (error) => {
-    return error.response;
+    if (isAxiosError(error) && error.response) {
+      return error.response;
+    }
+    throw error;
   }
 );

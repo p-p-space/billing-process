@@ -4,7 +4,6 @@ import { CssBaseline } from '@mui/material';
 import { useEffect, useCallback } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 // Internal app
-import { browserAxios } from '@/libs';
 import theme from '@/theme/theme-default';
 import { RootLayout } from '@/interfaces';
 import { handleRefresh } from '@/utils/constans';
@@ -16,7 +15,7 @@ import { handleRefresh } from '@/utils/constans';
  */
 export default function MuiProvider({ children }: Readonly<RootLayout>): JSX.Element {
   const handleBeforeUnload = useCallback(() => {
-    browserAxios.get('/logout');
+    // TODO: Implement logout browserAxios.get('/logout');
   }, []);
 
   const handleKeyDown = useCallback(

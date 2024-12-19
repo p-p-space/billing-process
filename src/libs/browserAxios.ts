@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { importSPKI } from 'jose';
 // Internal app
 import * as jwt from '@/handlers/handleJwt';
@@ -11,12 +11,48 @@ import {
   webJweSecretString,
   webJwsSecretString,
   jwsToken,
+  baseAppURL,
+  pathServ,
+  appBodyContent,
 } from '@/utils/constans';
+import { webRequestSchema } from '@/schemas';
+import { AxiosConfig, WebRequest } from '@/interfaces';
+
+export async function manageBrowserRequest(webRequest: WebRequest) {
+  const parsedData = webRequestSchema.safeParse(webRequest);
+
+  if (!parsedData.success) {
+    throw new Error(`Invalid browser request: ${JSON.stringify(parsedData.error)}`);
+  }
+
+  const { method, pathUrl, dataRequest } = parsedData.data;
+  const url = `${baseAppURL}${pathServ}${pathUrl}`;
+  const axiosConfig: AxiosConfig = {
+    timeout: 59800,
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+  };
+  axiosConfig.headers[appBodyContent] = !!dataRequest;
+
+  const { data } = await browserAxios({ url, method, data: dataRequest, ...axiosConfig });
+  const { code, message } = data;
+  console.log({ code, message });
+
+  return data;
+}
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
-export const browserAxios = axios.create();
+const browserAxios = axios.create({
+  timeout: 59850,
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
+});
 
 /**
  * Interceptor for handling request encryption and signing.
@@ -76,13 +112,10 @@ browserAxios.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.error(new Error(`browserAxios: ${(error as Error).message}`));
-    const { response } = error;
-
-    if (response.data.error) {
-      console.error(response.data.error);
+    if (isAxiosError(error) && error.response) {
+      return error.response;
     }
 
-    return error;
+    throw error;
   }
 );
