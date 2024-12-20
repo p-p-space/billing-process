@@ -2,7 +2,7 @@ import { importPKCS8 } from 'jose';
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
 import { ServRequest } from '@/interfaces';
-import * as jwt from '@/handlers/tokenHandler';
+import * as jwt from '@/utils/tokenHandler';
 import { jwtAlgs, webKeys, baseURLs, servKeys, headersKey, apiVersions, apiPaths } from '@/utils/constans';
 
 /**
