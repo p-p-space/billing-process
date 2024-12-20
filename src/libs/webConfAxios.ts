@@ -4,27 +4,19 @@ import { importSPKI } from 'jose';
 import * as jwt from '@/utils/tokenHandler';
 import { jwtAlgs, webKeys, baseURLs, headersKey, apiPaths } from '@/utils/constans';
 import { webRequestSchema } from '@/schemas';
-import { AxiosConfig, WebRequest } from '@/interfaces';
+import { WebRequest } from '@/interfaces';
 
 export async function manageBrowserRequest(webRequest: WebRequest) {
   const parsedData = webRequestSchema.safeParse(webRequest);
 
   if (!parsedData.success) {
-    throw new Error(`Invalid browser request: ${JSON.stringify(parsedData.error)}`);
+    throw new Error(`Invalid web request: ${JSON.stringify(parsedData.error)}`);
   }
 
   const { method, pathUrl, dataRequest } = parsedData.data;
   const url = `${baseURLs.app}${apiPaths.servPath}${pathUrl}`;
-  const axiosConfig: AxiosConfig = {
-    timeout: 59800,
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-  };
-  axiosConfig.headers[headersKey.appBodyContent] = !!dataRequest;
 
-  const { data } = await browserAxios({ url, method, data: dataRequest, ...axiosConfig });
+  const { data } = await browserAxios({ url, method, data: dataRequest });
   const { code, message } = data;
   console.log({ code, message });
 
@@ -48,7 +40,8 @@ const browserAxios = axios.create({
  */
 browserAxios.interceptors.request.use(
   async (request) => {
-    const { data } = request;
+    const { data, headers } = request;
+    headers[headersKey.appBodyContent] = !!data;
 
     if (data) {
       try {
@@ -57,7 +50,7 @@ browserAxios.interceptors.request.use(
         const secretJws = jwt.encode(webKeys.secJwsStr);
         const signedData = await jwt.signData(payload, secretJws, jwtAlgs.jwsAlgSec);
         const authJws = jwt.disassembleJWS(signedData);
-        request.headers[headersKey.appJwsToken] = `JWS ${authJws}`;
+        headers[headersKey.appJwsToken] = `JWS ${authJws}`;
 
         request.data = { payload };
       } catch (error) {
