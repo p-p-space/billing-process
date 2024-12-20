@@ -2,17 +2,17 @@ import { type NextRequest, NextResponse } from 'next/server';
 // Internal App
 import { manageServicesRequest } from '@/libs';
 import { AxiosConfig, RequestBody, ServRequest } from '@/interfaces';
-import { appBodyContent, appOriginPath, creds } from '@/utils/constans';
+import { creds, headersKey } from '@/utils/constans';
 
 const serverTimeOut = 59650;
 
 export async function managerCoreServices(request: NextRequest) {
   const { headers, method } = request;
   const oauthToken = await getOauthBearer();
-  const pathUrl = headers.get(appOriginPath);
+  const pathUrl = headers.get(headersKey.appOriginPath);
   let dataRequest = undefined;
 
-  if (headers.get(appBodyContent) !== null) {
+  if (headers.get(headersKey.appBodyContent) !== null) {
     dataRequest = await request.json();
     dataRequest['cipher'] = true;
   }
@@ -21,10 +21,11 @@ export async function managerCoreServices(request: NextRequest) {
     timeout: serverTimeOut,
     headers: {
       Authorization: `Bearer ${oauthToken}`,
-      'X-Tenant-Id': creds.tenantId,
-      'X-Request-Id': 'e30b625a-e085-42a5-aac2-3d52f73ad8fe',
     },
   };
+
+  axiosConfig.headers[headersKey.servTenantId] = creds.tenantId;
+  axiosConfig.headers[headersKey.servReqId] = 'e30b625a-e085-42a5-aac2-3d52f73ad8fe';
 
   const requestConfig = {
     method: method.toLowerCase(),

@@ -4,21 +4,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { ServRequest } from '@/interfaces';
 import * as jwt from '@/handlers/handleJwt';
 import { createJWT, verifyJwt } from '@/handlers';
-import {
-  webJwePrivateKey,
-  jwtAlgs,
-  webJwsPrivateKey,
-  webKeys,
-  appBodyContent,
-  pathApp,
-  servicesApi,
-  jwsToken,
-  baseURLs,
-  apiVersionServ,
-  apiVersionApp,
-  appApis,
-  appOriginPath,
-} from '@/utils/constans';
+import { jwtAlgs, webKeys, baseURLs, servKeys, headersKey, apiVersions, apiPaths } from '@/utils/constans';
 
 /**
  * Handles customer requests by verifying and decrypting the payload,
@@ -36,19 +22,19 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
   try {
     let decrypt = undefined;
 
-    if (headers.get(appBodyContent) !== null) {
+    if (headers.get(headersKey.appBodyContent) !== null) {
       const data = await request.json();
       const { payload } = data;
-      const tokenApp = headers.get(jwsToken) ?? '';
+      const tokenApp = headers.get(headersKey.appJwsToken) ?? '';
       const signedData = jwt.assembleJWS(tokenApp, payload);
-      const secretJws = jwt.encode(webKeys.jwsSecString);
+      const secretJws = jwt.encode(webKeys.secJwsStr);
       const signatureVerified = await jwt.verifySignature(signedData, secretJws);
-      const secretJwe = await importPKCS8(webJwePrivateKey, jwtAlgs.jweAlgRsa);
+      const secretJwe = await importPKCS8(servKeys.webJwePrivKey, jwtAlgs.jweAlgRsa);
       decrypt = await jwt.decryptData(signatureVerified, secretJwe);
 
       // Temporary statements for JWT creation and verification
-      const jwtTemp = await createJWT(decrypt, webJwsPrivateKey);
-      await verifyJwt(jwtTemp, webKeys.jwsPublicKey);
+      const jwtTemp = await createJWT(decrypt, servKeys.webJwsPrivKey);
+      await verifyJwt(jwtTemp, webKeys.webJwsPubKey);
     }
 
     const requestConfig = {
@@ -80,11 +66,11 @@ async function requestApi({ dataRequest, method, pathUrl, originPath }: ServRequ
     'Content-Type': 'application/json',
     Accept: 'application/json',
   });
-  headers.append(appOriginPath, `${originPath}`);
+  headers.append(headersKey.appOriginPath, `${originPath}`);
   let authJws = '';
 
   if (body) {
-    headers.append(appBodyContent, 'true');
+    headers.append(headersKey.appBodyContent, 'true');
   }
 
   try {
@@ -94,9 +80,9 @@ async function requestApi({ dataRequest, method, pathUrl, originPath }: ServRequ
 
     if (data.payload) {
       const { payload } = data;
-      const secretJwe = jwt.encode(webKeys.jweSecString);
+      const secretJwe = jwt.encode(webKeys.secJweStr);
       const encrypt = await jwt.encryptData(payload, secretJwe, jwtAlgs.jweAlgSec);
-      const secretJws = await importPKCS8(webJwsPrivateKey, jwtAlgs.jwsAlgRsa);
+      const secretJws = await importPKCS8(servKeys.webJwsPrivKey, jwtAlgs.jwsAlgRsa);
       const signedData = await jwt.signData(encrypt, secretJws, jwtAlgs.jwsAlgRsa);
       authJws = jwt.disassembleJWS(signedData);
 
@@ -104,7 +90,7 @@ async function requestApi({ dataRequest, method, pathUrl, originPath }: ServRequ
     }
 
     const response = NextResponse.json(data, { status });
-    response.headers.set(jwsToken, `JWS ${authJws}`);
+    response.headers.set(headersKey.appJwsToken, `JWS ${authJws}`);
 
     return response;
   } catch (error) {
@@ -123,10 +109,10 @@ async function requestApi({ dataRequest, method, pathUrl, originPath }: ServRequ
  */
 function urlTransform(uriPath: string): string {
   const neededPart = uriPath.split('/')[3];
-  let appUrl = `${baseURLs.app}${uriPath.replace(apiVersionServ, apiVersionApp)}`;
+  let appUrl = `${baseURLs.app}${uriPath.replace(apiVersions.serv, apiVersions.app)}`;
 
-  if (!appApis.includes(neededPart)) {
-    appUrl = `${baseURLs.app}${pathApp}/${servicesApi}`;
+  if (!apiPaths.appApis.includes(neededPart)) {
+    appUrl = `${baseURLs.app}${apiPaths.appPath}/${apiPaths.servApi}`;
   }
 
   return appUrl;

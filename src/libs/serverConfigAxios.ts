@@ -4,7 +4,7 @@ import { importPKCS8, importSPKI } from 'jose';
 import { ServRequest } from '@/interfaces';
 import * as jwt from '@/handlers/handleJwt';
 import { servRequestSchema } from '@/schemas';
-import { jwtAlgs, servJwePublicKey, servJwsPrivateKey, servJwePrivateKey, baseURLs } from '@/utils/constans';
+import { jwtAlgs, baseURLs, servKeys, headersKey } from '@/utils/constans';
 
 export async function manageServicesRequest(servRequest: ServRequest) {
   const parsedData = servRequestSchema.safeParse(servRequest);
@@ -43,12 +43,12 @@ servicesAxios.interceptors.request.use(
       delete data.cipher;
 
       try {
-        const secretJwe = await importSPKI(servJwePublicKey, jwtAlgs.jweAlgRsa);
+        const secretJwe = await importSPKI(servKeys.servJwePubKey, jwtAlgs.jweAlgRsa);
         const payload = await jwt.encryptData(data, secretJwe, jwtAlgs.jweAlgRsa);
-        const secretJws = await importPKCS8(servJwsPrivateKey, jwtAlgs.jwsAlgRsa);
+        const secretJws = await importPKCS8(servKeys.servJwsPrivKey, jwtAlgs.jwsAlgRsa);
         const signedData = await jwt.signData(payload, secretJws, jwtAlgs.jwsAlgRsa);
         const authJws = jwt.disassembleJWS(signedData);
-        request.headers['X-Token'] = `JWS ${authJws}`;
+        request.headers[headersKey.servJwsToken] = `JWS ${authJws}`;
 
         request.data = payload;
       } catch (error) {
@@ -75,7 +75,7 @@ servicesAxios.interceptors.response.use(
       const { data } = response.data;
 
       try {
-        const secretJwe = await importPKCS8(servJwePrivateKey, jwtAlgs.jweAlgRsa);
+        const secretJwe = await importPKCS8(servKeys.servJwePrivKey, jwtAlgs.jweAlgRsa);
         const decrypt = await jwt.decryptData(data, secretJwe);
 
         response.data.data = decrypt;

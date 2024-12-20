@@ -35,34 +35,21 @@ export const jwtConfig = {
 
 // Web Keys and Secrets (Publicly Exposed)
 export const webKeys = {
-  jweSecString: process.env.NEXT_PUBLIC_SECRET_JWE ?? '',
-  jwsSecString: process.env.NEXT_PUBLIC_SECRET_JWS ?? '',
-  jwePublicKey: process.env.NEXT_PUBLIC_WEB_JWE_PUBLIC_KEY ?? '',
-  jwsPublicKey: process.env.NEXT_PUBLIC_WEB_JWS_PUBLIC_KEY ?? '',
+  secJweStr: process.env.NEXT_PUBLIC_SECRET_JWE_STR ?? '',
+  secJwsStr: process.env.NEXT_PUBLIC_SECRET_JWS_STR ?? '',
+  webJwePubKey: process.env.NEXT_PUBLIC_WEB_JWE_PUBLIC_KEY ?? '',
+  webJwsPubKey: process.env.NEXT_PUBLIC_WEB_JWS_PUBLIC_KEY ?? '',
 };
-
-// Services Keys and Secrets (Not Publicly Exposed)
-export const webJwePrivateKey = process.env.WEB_JWE_PRIVATE_KEY ?? '';
-export const webJwsPrivateKey = process.env.WEB_JWS_PRIVATE_KEY ?? '';
-export const servJwePrivateKey = process.env.SERV_JWE_PRIVATE_KEY ?? '';
-export const servJwePublicKey = process.env.SERV_JWE_PUBLIC_KEY ?? '';
-export const servJwsPrivateKey = process.env.SERV_JWS_PRIVATE_KEY ?? '';
-export const servJwsPublicKey = process.env.SERV_JWS_PUBLIC_KEY ?? '';
 
 // Servevices Keys and Secrets (Not Publicly Exposed)
 export const servKeys = {
-  jwePrivateKey: process.env.WEB_JWE_PRIVATE_KEY ?? '',
-  jwsPrivateKey: process.env.WEB_JWS_PRIVATE_KEY ?? '',
-  servJwePrivateKey: process.env.SERV_JWE_PRIVATE_KEY ?? '',
-  servJwePublicKey: process.env.SERV_JWE_PUBLIC_KEY ?? '',
-  servJwsPrivateKey: process.env.SERV_JWS_PRIVATE_KEY ?? '',
-  servJwsPublicKey: process.env.SERV_JWS_PUBLIC_KEY ?? '',
+  webJwePrivKey: process.env.WEB_JWE_PRIVATE_KEY ?? '',
+  webJwsPrivKey: process.env.WEB_JWS_PRIVATE_KEY ?? '',
+  servJwePrivKey: process.env.SERV_JWE_PRIVATE_KEY ?? '',
+  servJwePubKey: process.env.SERV_JWE_PUBLIC_KEY ?? '',
+  servJwsPrivKey: process.env.SERV_JWS_PRIVATE_KEY ?? '',
+  servJwsPubKey: process.env.SERV_JWS_PUBLIC_KEY ?? '',
 };
-
-// Application Specific Constants
-export const appBodyContent = 'app-body-content';
-export const appOriginPath = 'app-origin-path';
-export const jwsToken = 'app-token';
 
 // Header keys used in API requests
 export const headersKey = {
@@ -74,14 +61,6 @@ export const headersKey = {
   servReqId: 'x-request-id', // Header key for service request ID
 };
 
-// API Versions and Paths
-export const apiVersionServ = 'v0';
-export const apiVersionApp = 'app-v1';
-export const pathServ = `/api/${apiVersionServ}`;
-export const pathApp = `/api/${apiVersionApp}`;
-export const servicesApi = 'services';
-export const appApis = ['language', 'logout', 'prueba'];
-
 // API Versions
 export const apiVersions = {
   serv: 'v0', // Version for service API
@@ -90,8 +69,8 @@ export const apiVersions = {
 
 // API Paths constructed using template literals
 export const apiPaths = {
-  pathServ: `/api/${apiVersions.serv}`, // Path for service API
-  pathApp: `/api/${apiVersions.app}`, // Path for application API
-  servicesApi: 'services', // Services API endpoint
+  servPath: `/api/${apiVersions.serv}`, // Path for service API
+  appPath: `/api/${apiVersions.app}`, // Path for application API
+  servApi: 'services', // Services API endpoint
   appApis: ['language', 'logout', 'prueba'], // List of application API endpoints
 };
