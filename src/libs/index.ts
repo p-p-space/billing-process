@@ -1,2 +1,3 @@
-export * from './serviceConfAxios';
-export * from './webConfAxios';
+export * from './appAxiosConfig';
+export * from './servAxiosConfig';
+export * from './webAxiosConfig';
