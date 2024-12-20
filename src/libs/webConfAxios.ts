@@ -68,7 +68,11 @@ browserAxios.interceptors.request.use(
     return request;
   },
   (error) => {
-    return Promise.reject(new Error(error));
+    if (isAxiosError(error) && error.response) {
+      return error.response;
+    }
+
+    throw error;
   }
 );
 

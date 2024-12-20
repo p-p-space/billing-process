@@ -1,2 +1,2 @@
-export * from './browserAxios';
-export * from './serverConfigAxios';
+export * from './serviceConfAxios';
+export * from './webConfAxios';
