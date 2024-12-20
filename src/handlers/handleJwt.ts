@@ -2,7 +2,7 @@ import * as jose from 'jose';
 import type { JWTPayload, KeyLike } from 'jose';
 // Internal app
 import { RequestBody } from '@/interfaces';
-import { audience, expiresIn, issuer, JweEnc, JwtAlg } from '@/utils/constans';
+import { jwtAlgs, jwtConfig } from '@/utils/constans';
 
 /**
  * Encodes a given string into a Uint8Array using UTF-8 encoding.
@@ -30,7 +30,7 @@ export async function encryptData(payload: RequestBody, secret: KeyLike | Uint8A
   try {
     const plaintext = encode(JSON.stringify(payload));
     const jwe = await new jose.CompactEncrypt(plaintext)
-      .setProtectedHeader({ alg: JweAlg, enc: JweEnc, type: 'jwe' })
+      .setProtectedHeader({ alg: JweAlg, enc: jwtAlgs.jweEnc, type: 'jwe' })
       .encrypt(secret);
 
     return jwe;
@@ -102,13 +102,13 @@ export async function verifySignature(jws: string, secret: KeyLike | Uint8Array)
  */
 export async function createJWT(payload: JWTPayload, secret: string): Promise<string> {
   try {
-    const key = await jose.importPKCS8(secret, JwtAlg);
+    const key = await jose.importPKCS8(secret, jwtAlgs.jwtAlg);
     const jwt = await new jose.SignJWT(payload)
-      .setProtectedHeader({ alg: JwtAlg, type: 'jwt' })
+      .setProtectedHeader({ alg: jwtAlgs.jwtAlg, type: 'jwt' })
       .setIssuedAt()
-      .setIssuer(issuer)
-      .setAudience(audience)
-      .setExpirationTime(expiresIn)
+      .setIssuer(jwtConfig.issuer)
+      .setAudience(jwtConfig.audience)
+      .setExpirationTime(jwtConfig.expiresIn)
       .sign(key);
 
     return jwt;
@@ -126,10 +126,10 @@ export async function createJWT(payload: JWTPayload, secret: string): Promise<st
  */
 export async function verifyJwt(jwt: string, secret: string): Promise<JWTPayload> {
   try {
-    const key = await jose.importSPKI(secret, JwtAlg);
+    const key = await jose.importSPKI(secret, jwtAlgs.jwtAlg);
     const { payload } = await jose.jwtVerify(jwt, key, {
-      issuer: issuer,
-      audience: audience,
+      issuer: jwtConfig.issuer,
+      audience: jwtConfig.audience,
     });
 
     return payload;

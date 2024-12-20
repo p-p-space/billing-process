@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 // Internal App
 import { manageServicesRequest } from '@/libs';
 import { AxiosConfig, RequestBody, ServRequest } from '@/interfaces';
-import { appBodyContent, appOriginPath, credentialsKey, credentialsSecret, tenantId } from '@/utils/constans';
+import { appBodyContent, appOriginPath, creds } from '@/utils/constans';
 
 const serverTimeOut = 59650;
 
@@ -21,8 +21,8 @@ export async function managerCoreServices(request: NextRequest) {
     timeout: serverTimeOut,
     headers: {
       Authorization: `Bearer ${oauthToken}`,
+      'X-Tenant-Id': creds.tenantId,
       'X-Request-Id': 'e30b625a-e085-42a5-aac2-3d52f73ad8fe',
-      'X-Tenant-Id': tenantId,
     },
   };
 
@@ -44,8 +44,8 @@ export async function getOauthBearer() {
   if (!bearer) {
     const dataRequest: RequestBody = {
       grant_type: 'client_credentials',
-      client_id: credentialsKey,
-      client_secret: credentialsSecret,
+      client_id: creds.key,
+      client_secret: creds.secret,
       way: 'server',
     };
     const axiosConfig: AxiosConfig = {

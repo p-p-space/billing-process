@@ -6,7 +6,7 @@ import { ThemeProvider } from '@mui/material/styles';
 // Internal app
 import theme from '@/theme/theme-default';
 import { RootLayout } from '@/interfaces';
-import { handleRefresh } from '@/utils/constans';
+import { toggles } from '@/utils/constans';
 
 /**
  * Provider setting material ui theme
@@ -20,7 +20,7 @@ export default function MuiProvider({ children }: Readonly<RootLayout>): JSX.Ele
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
-      if (handleRefresh === 'ON') {
+      if (toggles.handleRefresh === 'ON') {
         const keyRegex = /^r$/i;
         const keyEvent = keyRegex.test(event.key);
         const isF5 = event.key === 'F5';
@@ -36,7 +36,7 @@ export default function MuiProvider({ children }: Readonly<RootLayout>): JSX.Ele
   );
 
   useEffect(() => {
-    if (handleRefresh === 'ON') {
+    if (toggles.handleRefresh === 'ON') {
       window.addEventListener('keydown', handleKeyDown);
       window.addEventListener('beforeunload', handleBeforeUnload);
 

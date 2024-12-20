@@ -4,14 +4,7 @@ import { importPKCS8, importSPKI } from 'jose';
 import { ServRequest } from '@/interfaces';
 import * as jwt from '@/handlers/handleJwt';
 import { servRequestSchema } from '@/schemas';
-import {
-  rsaAlgJwe,
-  jwsAlgRsa,
-  servJwePublicKey,
-  servJwsPrivateKey,
-  servJwePrivateKey,
-  baseServURL,
-} from '@/utils/constans';
+import { jwtAlgs, servJwePublicKey, servJwsPrivateKey, servJwePrivateKey, baseURLs } from '@/utils/constans';
 
 export async function manageServicesRequest(servRequest: ServRequest) {
   const parsedData = servRequestSchema.safeParse(servRequest);
@@ -21,7 +14,7 @@ export async function manageServicesRequest(servRequest: ServRequest) {
   }
 
   const { method, pathUrl, dataRequest, axiosConfig } = parsedData.data;
-  const url = `${baseServURL}${pathUrl}`;
+  const url = `${baseURLs.serv}${pathUrl}`;
 
   const response = await servicesAxios({ url, method, data: dataRequest, ...axiosConfig });
 
@@ -50,10 +43,10 @@ servicesAxios.interceptors.request.use(
       delete data.cipher;
 
       try {
-        const secretJwe = await importSPKI(servJwePublicKey, rsaAlgJwe);
-        const payload = await jwt.encryptData(data, secretJwe, rsaAlgJwe);
-        const secretJws = await importPKCS8(servJwsPrivateKey, jwsAlgRsa);
-        const signedData = await jwt.signData(payload, secretJws, jwsAlgRsa);
+        const secretJwe = await importSPKI(servJwePublicKey, jwtAlgs.jweAlgRsa);
+        const payload = await jwt.encryptData(data, secretJwe, jwtAlgs.jweAlgRsa);
+        const secretJws = await importPKCS8(servJwsPrivateKey, jwtAlgs.jwsAlgRsa);
+        const signedData = await jwt.signData(payload, secretJws, jwtAlgs.jwsAlgRsa);
         const authJws = jwt.disassembleJWS(signedData);
         request.headers['X-Token'] = `JWS ${authJws}`;
 
@@ -82,7 +75,7 @@ servicesAxios.interceptors.response.use(
       const { data } = response.data;
 
       try {
-        const secretJwe = await importPKCS8(servJwePrivateKey, rsaAlgJwe);
+        const secretJwe = await importPKCS8(servJwePrivateKey, jwtAlgs.jweAlgRsa);
         const decrypt = await jwt.decryptData(data, secretJwe);
 
         response.data.data = decrypt;

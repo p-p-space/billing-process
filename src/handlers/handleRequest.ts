@@ -5,19 +5,15 @@ import { ServRequest } from '@/interfaces';
 import * as jwt from '@/handlers/handleJwt';
 import { createJWT, verifyJwt } from '@/handlers';
 import {
-  webJwsSecretString,
   webJwePrivateKey,
-  rsaAlgJwe,
+  jwtAlgs,
   webJwsPrivateKey,
-  webJwsPublicKey,
-  webJweSecretString,
-  JweAlgSec,
-  jwsAlgRsa,
+  webKeys,
   appBodyContent,
   pathApp,
   servicesApi,
   jwsToken,
-  baseAppURL,
+  baseURLs,
   apiVersionServ,
   apiVersionApp,
   appApis,
@@ -45,14 +41,14 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
       const { payload } = data;
       const tokenApp = headers.get(jwsToken) ?? '';
       const signedData = jwt.assembleJWS(tokenApp, payload);
-      const secretJws = jwt.encode(webJwsSecretString);
+      const secretJws = jwt.encode(webKeys.jwsSecString);
       const signatureVerified = await jwt.verifySignature(signedData, secretJws);
-      const secretJwe = await importPKCS8(webJwePrivateKey, rsaAlgJwe);
+      const secretJwe = await importPKCS8(webJwePrivateKey, jwtAlgs.jweAlgRsa);
       decrypt = await jwt.decryptData(signatureVerified, secretJwe);
 
       // Temporary statements for JWT creation and verification
       const jwtTemp = await createJWT(decrypt, webJwsPrivateKey);
-      await verifyJwt(jwtTemp, webJwsPublicKey);
+      await verifyJwt(jwtTemp, webKeys.jwsPublicKey);
     }
 
     const requestConfig = {
@@ -98,10 +94,10 @@ async function requestApi({ dataRequest, method, pathUrl, originPath }: ServRequ
 
     if (data.payload) {
       const { payload } = data;
-      const secretJwe = jwt.encode(webJweSecretString);
-      const encrypt = await jwt.encryptData(payload, secretJwe, JweAlgSec);
-      const secretJws = await importPKCS8(webJwsPrivateKey, jwsAlgRsa);
-      const signedData = await jwt.signData(encrypt, secretJws, jwsAlgRsa);
+      const secretJwe = jwt.encode(webKeys.jweSecString);
+      const encrypt = await jwt.encryptData(payload, secretJwe, jwtAlgs.jweAlgSec);
+      const secretJws = await importPKCS8(webJwsPrivateKey, jwtAlgs.jwsAlgRsa);
+      const signedData = await jwt.signData(encrypt, secretJws, jwtAlgs.jwsAlgRsa);
       authJws = jwt.disassembleJWS(signedData);
 
       data.payload = encrypt;
@@ -127,13 +123,11 @@ async function requestApi({ dataRequest, method, pathUrl, originPath }: ServRequ
  */
 function urlTransform(uriPath: string): string {
   const neededPart = uriPath.split('/')[3];
-  let appUrl = `${baseAppURL}${uriPath.replace(apiVersionServ, apiVersionApp)}`;
+  let appUrl = `${baseURLs.app}${uriPath.replace(apiVersionServ, apiVersionApp)}`;
 
   if (!appApis.includes(neededPart)) {
-    appUrl = `${baseAppURL}${pathApp}/${servicesApi}`;
+    appUrl = `${baseURLs.app}${pathApp}/${servicesApi}`;
   }
-
-  console.log(appUrl);
 
   return appUrl;
 }

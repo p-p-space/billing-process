@@ -2,19 +2,7 @@ import axios, { isAxiosError } from 'axios';
 import { importSPKI } from 'jose';
 // Internal app
 import * as jwt from '@/handlers/handleJwt';
-import {
-  rsaAlgJwe,
-  webJwePublicKey,
-  jwsAlgRsa,
-  secretAlgJws,
-  webJwsPublicKey,
-  webJweSecretString,
-  webJwsSecretString,
-  jwsToken,
-  baseAppURL,
-  pathServ,
-  appBodyContent,
-} from '@/utils/constans';
+import { jwtAlgs, webKeys, jwsToken, baseURLs, pathServ, appBodyContent } from '@/utils/constans';
 import { webRequestSchema } from '@/schemas';
 import { AxiosConfig, WebRequest } from '@/interfaces';
 
@@ -26,7 +14,7 @@ export async function manageBrowserRequest(webRequest: WebRequest) {
   }
 
   const { method, pathUrl, dataRequest } = parsedData.data;
-  const url = `${baseAppURL}${pathServ}${pathUrl}`;
+  const url = `${baseURLs.app}${pathServ}${pathUrl}`;
   const axiosConfig: AxiosConfig = {
     timeout: 59800,
     headers: {
@@ -64,10 +52,10 @@ browserAxios.interceptors.request.use(
 
     if (data) {
       try {
-        const secretJwe = await importSPKI(webJwePublicKey, rsaAlgJwe);
-        const payload = await jwt.encryptData(data, secretJwe, rsaAlgJwe);
-        const secretJws = jwt.encode(webJwsSecretString);
-        const signedData = await jwt.signData(payload, secretJws, secretAlgJws);
+        const secretJwe = await importSPKI(webKeys.jwePublicKey, jwtAlgs.jweAlgRsa);
+        const payload = await jwt.encryptData(data, secretJwe, jwtAlgs.jweAlgRsa);
+        const secretJws = jwt.encode(webKeys.jwsSecString);
+        const signedData = await jwt.signData(payload, secretJws, jwtAlgs.jwsAlgSec);
         const authJws = jwt.disassembleJWS(signedData);
         request.headers[jwsToken] = `JWS ${authJws}`;
 
@@ -98,9 +86,9 @@ browserAxios.interceptors.response.use(
       try {
         const tokenApp = headers[jwsToken];
         const signedData = jwt.assembleJWS(tokenApp, payload);
-        const secretJws = await importSPKI(webJwsPublicKey, jwsAlgRsa);
+        const secretJws = await importSPKI(webKeys.jwsPublicKey, jwtAlgs.jwsAlgRsa);
         const signatureVerified = await jwt.verifySignature(signedData, secretJws);
-        const secretJwe = jwt.encode(webJweSecretString);
+        const secretJwe = jwt.encode(webKeys.jweSecString);
         const decrypt = await jwt.decryptData(signatureVerified, secretJwe);
 
         response.data.payload = decrypt;
