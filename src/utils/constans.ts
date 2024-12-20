@@ -41,7 +41,7 @@ export const webKeys = {
   jwsPublicKey: process.env.NEXT_PUBLIC_WEB_JWS_PUBLIC_KEY ?? '',
 };
 
-// Server Keys and Secrets (Not Publicly Exposed)
+// Services Keys and Secrets (Not Publicly Exposed)
 export const webJwePrivateKey = process.env.WEB_JWE_PRIVATE_KEY ?? '';
 export const webJwsPrivateKey = process.env.WEB_JWS_PRIVATE_KEY ?? '';
 export const servJwePrivateKey = process.env.SERV_JWE_PRIVATE_KEY ?? '';
@@ -49,20 +49,7 @@ export const servJwePublicKey = process.env.SERV_JWE_PUBLIC_KEY ?? '';
 export const servJwsPrivateKey = process.env.SERV_JWS_PRIVATE_KEY ?? '';
 export const servJwsPublicKey = process.env.SERV_JWS_PUBLIC_KEY ?? '';
 
-// Application Specific Constants
-export const appBodyContent = 'app-body-content';
-export const appOriginPath = 'app-origin-path';
-export const jwsToken = 'app-token';
-export const servicesApi = 'services';
-export const appApis = ['language', 'logout', 'prueba'];
-
-// API Versions and Paths
-export const apiVersionServ = 'v0';
-export const apiVersionApp = 'app-v1';
-export const pathServ = `/api/${apiVersionServ}`;
-export const pathApp = `/api/${apiVersionApp}`;
-
-// Server Keys and Secrets (Not Publicly Exposed)
+// Servevices Keys and Secrets (Not Publicly Exposed)
 export const servKeys = {
   jwePrivateKey: process.env.WEB_JWE_PRIVATE_KEY ?? '',
   jwsPrivateKey: process.env.WEB_JWS_PRIVATE_KEY ?? '',
@@ -71,6 +58,11 @@ export const servKeys = {
   servJwsPrivateKey: process.env.SERV_JWS_PRIVATE_KEY ?? '',
   servJwsPublicKey: process.env.SERV_JWS_PUBLIC_KEY ?? '',
 };
+
+// Application Specific Constants
+export const appBodyContent = 'app-body-content';
+export const appOriginPath = 'app-origin-path';
+export const jwsToken = 'app-token';
 
 // Header keys used in API requests
 export const headersKey = {
@@ -81,6 +73,14 @@ export const headersKey = {
   servTenantId: 'x-tenant-id', // Header key for service tenant ID
   servReqId: 'x-request-id', // Header key for service request ID
 };
+
+// API Versions and Paths
+export const apiVersionServ = 'v0';
+export const apiVersionApp = 'app-v1';
+export const pathServ = `/api/${apiVersionServ}`;
+export const pathApp = `/api/${apiVersionApp}`;
+export const servicesApi = 'services';
+export const appApis = ['language', 'logout', 'prueba'];
 
 // API Versions
 export const apiVersions = {
