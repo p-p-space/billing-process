@@ -1,7 +1,7 @@
 import axios, { isAxiosError } from 'axios';
 import { importSPKI } from 'jose';
 // Internal app
-import * as jwt from '@/handlers/handleJwt';
+import * as jwt from '@/handlers/tokenHandler';
 import { jwtAlgs, webKeys, baseURLs, headersKey, apiPaths } from '@/utils/constans';
 import { webRequestSchema } from '@/schemas';
 import { AxiosConfig, WebRequest } from '@/interfaces';

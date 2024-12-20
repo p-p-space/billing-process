@@ -2,7 +2,7 @@ import axios, { isAxiosError } from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
 import { ServRequest } from '@/interfaces';
-import * as jwt from '@/handlers/handleJwt';
+import * as jwt from '@/handlers/tokenHandler';
 import { servRequestSchema } from '@/schemas';
 import { jwtAlgs, baseURLs, servKeys, headersKey } from '@/utils/constans';
 

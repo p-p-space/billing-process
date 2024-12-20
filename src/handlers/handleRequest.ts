@@ -2,8 +2,7 @@ import { importPKCS8 } from 'jose';
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
 import { ServRequest } from '@/interfaces';
-import * as jwt from '@/handlers/handleJwt';
-import { createJWT, verifyJwt } from '@/handlers';
+import * as jwt from '@/handlers/tokenHandler';
 import { jwtAlgs, webKeys, baseURLs, servKeys, headersKey, apiVersions, apiPaths } from '@/utils/constans';
 
 /**
@@ -33,8 +32,8 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
       decrypt = await jwt.decryptData(signatureVerified, secretJwe);
 
       // Temporary statements for JWT creation and verification
-      const jwtTemp = await createJWT(decrypt, servKeys.webJwsPrivKey);
-      await verifyJwt(jwtTemp, webKeys.webJwsPubKey);
+      const jwtTemp = await jwt.createJWT(decrypt, servKeys.webJwsPrivKey);
+      await jwt.verifyJwt(jwtTemp, webKeys.webJwsPubKey);
     }
 
     const requestConfig = {
