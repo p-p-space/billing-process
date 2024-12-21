@@ -4,21 +4,19 @@ import { manageServicesRequest } from '@/libs';
 import { AxiosConfig, RequestBody, ServRequest } from '@/interfaces';
 import { creds, headersKey } from '@/utils/constans';
 
-const serverTimeOut = 59650;
-
 export async function managerCoreServices(request: NextRequest) {
   const { headers, method } = request;
   const oauthToken = await getOauthBearer();
   const pathUrl = headers.get(headersKey.appOriginPath);
   let dataRequest = undefined;
 
-  if (headers.get(headersKey.appBodyContent) !== null) {
+  if (headers.get(headersKey.appContentSecurity) !== null) {
     dataRequest = await request.json();
     dataRequest['cipher'] = true;
   }
 
   const axiosConfig: AxiosConfig = {
-    timeout: serverTimeOut,
+    timeout: 59700,
     headers: {
       Authorization: `Bearer ${oauthToken}`,
     },
@@ -50,7 +48,7 @@ export async function getOauthBearer() {
       way: 'server',
     };
     const axiosConfig: AxiosConfig = {
-      timeout: serverTimeOut,
+      timeout: 59750,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },

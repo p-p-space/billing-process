@@ -1,31 +1,37 @@
+import { importPKCS8 } from 'jose';
 import axios, { isAxiosError } from 'axios';
 // Internal app
-import { baseURLs, apiPaths } from '@/utils/constans';
-import { webRequestSchema } from '@/schemas';
-import { WebRequest } from '@/interfaces';
+import { AppRequest } from '@/interfaces';
+import * as jwt from '@/utils/tokenHandler';
+import { appRequestSchema } from '@/schemas';
+import { headersKey, jwtAlgs, servKeys, webKeys } from '@/utils/constans';
 
-export async function manageAppRequest(webRequest: WebRequest) {
-  const parsedData = webRequestSchema.safeParse(webRequest);
+export async function manageAppRequest(appRequest: AppRequest) {
+  const parseAppRequest = appRequestSchema.safeParse(appRequest);
 
-  if (!parsedData.success) {
-    throw new Error(`Invalid web request: ${JSON.stringify(parsedData.error)}`);
+  try {
+    if (!parseAppRequest.success) {
+      throw new Error(`Invalid app request: ${JSON.stringify(parseAppRequest.error)}`);
+    }
+
+    const { method, pathUrl, dataRequest, axiosConfig } = parseAppRequest.data;
+    const response = await appAxios({ url: `${pathUrl}`, method, data: dataRequest, ...axiosConfig });
+
+    return response;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+
+    throw error;
   }
-
-  const { method, pathUrl, dataRequest } = parsedData.data;
-  const url = `${baseURLs.app}${apiPaths.appPath}${pathUrl}`;
-
-  const { data } = await browserAxios({ url, method, data: dataRequest });
-  const { code, message } = data;
-  console.log({ code, message });
-
-  return data;
 }
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
-const browserAxios = axios.create({
-  timeout: 59850,
+const appAxios = axios.create({
+  timeout: 59800,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -36,8 +42,27 @@ const browserAxios = axios.create({
  * Interceptor for handling request encryption and signing.
  * Encrypts the request data and signs it before sending.
  */
-browserAxios.interceptors.request.use(
+appAxios.interceptors.request.use(
   async (request) => {
+    const { data, headers } = request;
+    const appContentSec = !!headers.get(headersKey.appContentSecurity);
+
+    if (data && appContentSec) {
+      try {
+        let { payload } = data;
+        const tokenApp = request.headers.get(headersKey.appJwsToken) as string;
+        const signedData = jwt.assembleJWS(tokenApp, payload);
+        const secretJws = jwt.encode(webKeys.secJwsStr);
+        const signatureVerified = await jwt.verifySignature(signedData, secretJws);
+        const secretJwe = await importPKCS8(servKeys.webJwePrivKey, jwtAlgs.jweAlgRsa);
+        payload = await jwt.decryptData(signatureVerified, secretJwe);
+
+        request.data = payload;
+      } catch (error) {
+        return Promise.reject(new Error(`Client Interceptor Request: ${(error as Error).message}`));
+      }
+    }
+
     return request;
   },
   (error) => {
@@ -53,8 +78,21 @@ browserAxios.interceptors.request.use(
  * Interceptor for handling response decryption and verification.
  * Verifies the response signature and decrypts the data.
  */
-browserAxios.interceptors.response.use(
+appAxios.interceptors.response.use(
   async (response) => {
+    const { data } = response;
+
+    if (data.payload) {
+      let { payload } = data;
+      const secretJwe = jwt.encode(webKeys.secJweStr);
+      payload = await jwt.encryptData(payload, secretJwe, jwtAlgs.jweAlgSec);
+      const secretJws = await importPKCS8(servKeys.webJwsPrivKey, jwtAlgs.jwsAlgRsa);
+      const signedData = await jwt.signData(payload, secretJws, jwtAlgs.jwsAlgRsa);
+      const authJws = jwt.disassembleJWS(signedData);
+
+      response.data = { ...data, payload, authJws };
+    }
+
     return response;
   },
   (error) => {

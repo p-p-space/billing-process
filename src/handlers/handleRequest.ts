@@ -1,9 +1,9 @@
-import { importPKCS8 } from 'jose';
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
-import { ServRequest } from '@/interfaces';
-import * as jwt from '@/utils/tokenHandler';
-import { jwtAlgs, webKeys, baseURLs, servKeys, headersKey, apiVersions, apiPaths } from '@/utils/constans';
+import { manageAppRequest } from '@/libs';
+import { AppRequest } from '@/interfaces';
+import { baseURLs, headersKey, apiVersions, apiPaths } from '@/utils/constans';
+import { createAxiosConfig } from '@/utils/toolHelpers';
 
 /**
  * Handles customer requests by verifying and decrypting the payload,
@@ -16,85 +16,34 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
   const { headers, method, nextUrl } = request;
   const { pathname, search } = nextUrl;
   const originPath = `${pathname}${search}`;
+  const axiosConfig = createAxiosConfig({ headers });
   const pathUrl = urlTransform(originPath);
 
-  try {
-    let decrypt = undefined;
+  axiosConfig.headers[headersKey.appOriginPath] = originPath;
 
-    if (headers.get(headersKey.appBodyContent) !== null) {
-      const data = await request.json();
-      const { payload } = data;
-      const tokenApp = headers.get(headersKey.appJwsToken) ?? '';
-      const signedData = jwt.assembleJWS(tokenApp, payload);
-      const secretJws = jwt.encode(webKeys.secJwsStr);
-      const signatureVerified = await jwt.verifySignature(signedData, secretJws);
-      const secretJwe = await importPKCS8(servKeys.webJwePrivKey, jwtAlgs.jweAlgRsa);
-      decrypt = await jwt.decryptData(signatureVerified, secretJwe);
-
-      // Temporary statements for JWT creation and verification
-      const jwtTemp = await jwt.createJWT(decrypt, servKeys.webJwsPrivKey);
-      await jwt.verifyJwt(jwtTemp, webKeys.webJwsPubKey);
-    }
-
-    const requestConfig = {
-      method,
-      pathUrl,
-      dataRequest: decrypt,
-      originPath,
-    } as ServRequest;
-
-    return await requestApi(requestConfig);
-  } catch (error) {
-    return NextResponse.json(
-      { code: '500.00.000', message: `customerRequest: ${(error as Error).message}` },
-      { status: 500 }
-    );
-  }
-}
-
-/**
- * Sends a request to the API with the provided data, encrypts the response,
- * and returns it as a signed JWT.
- *
- * @param {ServRequest} requestConfig - The data request object containing dataRequest, method, and url.
- * @returns {Promise<NextResponse>} - The response from the API or an error response.
- */
-async function requestApi({ dataRequest, method, pathUrl, originPath }: ServRequest): Promise<NextResponse> {
-  const body = dataRequest ? JSON.stringify(dataRequest) : null;
-  const headers = new Headers({
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-  });
-  headers.append(headersKey.appOriginPath, `${originPath}`);
-  let authJws = '';
-
-  if (body) {
-    headers.append(headersKey.appBodyContent, 'true');
-  }
+  const requestConfig = {
+    method: method.toLowerCase(),
+    pathUrl,
+    dataRequest: undefined,
+    axiosConfig,
+    originPath,
+  } as AppRequest;
 
   try {
-    const responseApi = await fetch(pathUrl, { method, body, headers });
-    const { status } = responseApi;
-    const data = await responseApi.json();
-
-    if (data.payload) {
-      const { payload } = data;
-      const secretJwe = jwt.encode(webKeys.secJweStr);
-      const encrypt = await jwt.encryptData(payload, secretJwe, jwtAlgs.jweAlgSec);
-      const secretJws = await importPKCS8(servKeys.webJwsPrivKey, jwtAlgs.jwsAlgRsa);
-      const signedData = await jwt.signData(encrypt, secretJws, jwtAlgs.jwsAlgRsa);
-      authJws = jwt.disassembleJWS(signedData);
-
-      data.payload = encrypt;
+    if (headers.get(headersKey.appContentSecurity) !== null) {
+      requestConfig.dataRequest = await request.json();
     }
 
+    const { status, data } = await manageAppRequest(requestConfig);
+    const authJws = data.authJws;
+    delete data.authJws;
     const response = NextResponse.json(data, { status });
     response.headers.set(headersKey.appJwsToken, `JWS ${authJws}`);
 
     return response;
   } catch (error) {
     return NextResponse.json(
-      { code: '500.00.000', message: `requestApi: ${(error as Error).message}` },
+      { code: '500.00.000', message: `customerRequest: ${(error as Error).message}` },
       { status: 500 }
     );
   }

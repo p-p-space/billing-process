@@ -59,7 +59,15 @@ servicesAxios.interceptors.request.use(
     return request;
   },
   (error) => {
-    return Promise.reject(new Error(error));
+    if (isAxiosError(error) && error.response) {
+      const { data } = error.response;
+      const errorResponse = { ...data, error: data?.error || `${(error as Error).message}` };
+      error.response.data = errorResponse;
+
+      return error;
+    }
+
+    throw error;
   }
 );
 
@@ -76,9 +84,14 @@ servicesAxios.interceptors.response.use(
 
       try {
         const secretJwe = await importPKCS8(servKeys.servJwePrivKey, jwtAlgs.jweAlgRsa);
-        const decrypt = await jwt.decryptData(data, secretJwe);
+        const payload = await jwt.decryptData(data, secretJwe);
+        const responseServ = {
+          code: response.data.code,
+          message: response.data.message,
+          payload,
+        };
 
-        response.data.data = decrypt;
+        response.data = responseServ;
       } catch (error) {
         return Promise.reject(new Error(`Client Interceptor Response: ${(error as Error).message}`));
       }
@@ -88,7 +101,11 @@ servicesAxios.interceptors.response.use(
   },
   (error) => {
     if (isAxiosError(error) && error.response) {
-      return error.response;
+      const { data } = error.response;
+      const errorResponse = { ...data, error: data?.error || `${(error as Error).message}` };
+      error.response.data = errorResponse;
+
+      return error;
     }
     throw error;
   }

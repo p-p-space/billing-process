@@ -41,7 +41,7 @@ const browserAxios = axios.create({
 browserAxios.interceptors.request.use(
   async (request) => {
     const { data, headers } = request;
-    headers[headersKey.appBodyContent] = !!data;
+    headers[headersKey.appContentSecurity] = data ? 'enc' : null;
 
     if (data) {
       try {
