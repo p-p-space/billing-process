@@ -3,17 +3,13 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { cookieValues } from './utils';
 import { apiPaths } from './utils/constans';
 import { langCookieName, availableValueCookie } from './i18n';
-import { customerRequest, getOauthBearer, oauthToken } from './handlers';
+import { customerRequest } from './handlers';
 
 export async function middleware(request: NextRequest) {
   const responseNext = NextResponse.next();
   const { cookies, nextUrl } = request;
 
   if (nextUrl.pathname.startsWith(apiPaths.servPath)) {
-    if (!oauthToken.bearer) {
-      await getOauthBearer();
-    }
-
     const responseApi = await customerRequest(request);
 
     return responseApi;

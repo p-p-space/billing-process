@@ -5,21 +5,21 @@ import { createHttpConfig } from '@/utils/toolHelpers';
 import manageServicesRequest from '@/libs/servAxiosConfig';
 import { RequestBody, RequestContent } from '@/interfaces';
 
-export const oauthToken: { bearer?: string } = {
+const oauthToken: { bearer?: string } = {
   bearer: undefined,
 };
 
 export async function managerCoreServices(request: NextRequest) {
   const { headers, method } = request;
-  const { bearer } = oauthToken;
   const pathUrl = headers.get(headersKey.appOriginPath);
+  const bearer = await getOauthBearer();
   let dataRequest = undefined;
 
   if (headers.get(headersKey.appContentSecurity) !== null) {
     dataRequest = await request.json();
   }
 
-  const httpConfig = createHttpConfig({ timeout: 59700, headers });
+  const httpConfig = createHttpConfig({ timeout: 59700 });
   httpConfig.headers[headersKey.authorization] = `Bearer ${bearer}`;
   httpConfig.headers[headersKey.servTenantId] = creds.tenantId;
   httpConfig.headers[headersKey.servReqId] = 'e30b625a-e085-42a5-aac2-3d52f73ad8fe';
@@ -63,4 +63,6 @@ export async function getOauthBearer() {
       oauthToken.bearer = undefined;
     }, data.expires_in * 1000 - 5000);
   }
+
+  return oauthToken.bearer;
 }
