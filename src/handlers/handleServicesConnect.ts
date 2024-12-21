@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal App
-import { creds, headersKey } from '@/utils/constans';
+import { baseURLs, creds, headersKey } from '@/utils/constans';
 import { createHttpConfig } from '@/utils/toolHelpers';
 import manageServicesRequest from '@/libs/servAxiosConfig';
 import { RequestBody, RequestContent } from '@/interfaces';
@@ -51,12 +51,13 @@ export async function getOauthBearer() {
 
     const requestConfig = {
       method: 'post',
-      pathUrl: `/oauth2/v1/token`,
+      pathUrl: `${baseURLs.serv}/oauth2/v1/token`,
       dataRequest,
       httpConfig,
     } as RequestContent;
 
     const { data } = await manageServicesRequest(requestConfig);
+    console.log({ data });
     oauthToken.bearer = data.access_token;
 
     setTimeout(() => {

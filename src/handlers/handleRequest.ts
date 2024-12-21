@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { RequestContent } from '@/interfaces';
 import manageAppRequest from '@/libs/appAxiosConfig';
 import { createHttpConfig } from '@/utils/toolHelpers';
-import { baseURLs, headersKey, apiVersions, apiPaths } from '@/utils/constans';
+import { headersKey, apiPaths } from '@/utils/constans';
 
 /**
  * Handles customer requests by verifying and decrypting the payload,
@@ -15,11 +15,10 @@ import { baseURLs, headersKey, apiVersions, apiPaths } from '@/utils/constans';
 export async function customerRequest(request: NextRequest): Promise<NextResponse> {
   const { headers, method, nextUrl } = request;
   const { pathname, search } = nextUrl;
-  const originPath = `${pathname}${search}`;
+  const { pathUrl, servPath } = urlTransform(`${pathname}${search}`);
   const httpConfig = createHttpConfig({ headers });
-  const pathUrl = urlTransform(originPath);
 
-  httpConfig.headers[headersKey.appOriginPath] = originPath;
+  httpConfig.headers[headersKey.appOriginPath] = servPath.replace(apiPaths.servPath, '');
 
   const requestConfig = {
     method: method.toLowerCase(),
@@ -55,13 +54,14 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
  * @param {string} uriPath - The pathname from the request URL.
  * @returns {string} - The transformed URL.
  */
-function urlTransform(uriPath: string): string {
+function urlTransform(uriPath: string): Record<string, string> {
   const neededPart = uriPath.split('/')[3];
-  let appUrl = `${baseURLs.app}${uriPath.replace(apiVersions.serv, apiVersions.app)}`;
+  const servPath = uriPath.replace(apiPaths.servPath, '');
+  let pathUrl = servPath;
 
   if (!apiPaths.appApis.includes(neededPart)) {
-    appUrl = `${baseURLs.app}${apiPaths.appPath}/${apiPaths.servApi}`;
+    pathUrl = `/${apiPaths.servApi}`;
   }
 
-  return appUrl;
+  return { pathUrl, servPath };
 }

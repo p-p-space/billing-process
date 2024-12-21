@@ -15,9 +15,8 @@ export default async function manageBrowserRequest(webRequest: WebRequest) {
     }
 
     const { method, pathUrl, dataRequest } = parsedData.data;
-    const url = `${baseURLs.app}${apiPaths.servPath}${pathUrl}`;
 
-    return await browserAxios({ url, method, data: dataRequest });
+    return await browserAxios({ url: `${pathUrl}`, method, data: dataRequest });
   } catch (error) {
     if (isAxiosError(error) && error.response) {
       throw new Error(error.response.data.error);
@@ -31,6 +30,7 @@ export default async function manageBrowserRequest(webRequest: WebRequest) {
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
 const browserAxios = axios.create({
+  baseURL: `${baseURLs.app}${apiPaths.servPath}`,
   timeout: 59850,
   headers: {
     Accept: 'application/json',

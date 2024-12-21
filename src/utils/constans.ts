@@ -53,14 +53,14 @@ export const servKeys = {
 
 // Header keys used in API requests
 export const headersKey = {
-  contentType: 'Content-Type', // Header key for content type
-  authorization: 'Authorization', // Header key for content type
-  appContentSecurity: 'App-Content-Security', // Header key for content security status
-  appOriginPath: 'App-Origin-Path', // Header key for application origin path
-  appJwsToken: 'App-Token', // Header key for application JWS token
-  servJwsToken: 'X-Token', // Header key for service JWS token
-  servTenantId: 'X-tenant-Id', // Header key for service tenant ID
-  servReqId: 'X-Request-Id', // Header key for service request ID
+  contentType: 'content-type', // Header key for content type
+  authorization: 'authorization', // Header key for content type
+  appContentSecurity: 'app-content-security', // Header key for content security status
+  appOriginPath: 'app-origin-path', // Header key for application origin path
+  appJwsToken: 'app-token', // Header key for application JWS token
+  servJwsToken: 'x-token', // Header key for service JWS token
+  servTenantId: 'x-tenant-id', // Header key for service tenant ID
+  servReqId: 'x-request-id', // Header key for service request ID
 };
 
 // API Versions

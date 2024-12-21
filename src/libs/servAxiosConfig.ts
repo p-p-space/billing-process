@@ -4,7 +4,7 @@ import { importPKCS8, importSPKI } from 'jose';
 import * as jwt from '@/utils/tokenHandler';
 import { RequestContent } from '@/interfaces';
 import { requestContentSchema } from '@/schemas';
-import { jwtAlgs, baseURLs, servKeys, headersKey } from '@/utils/constans';
+import { jwtAlgs, baseURLs, servKeys, headersKey, apiPaths } from '@/utils/constans';
 
 export default async function manageServicesRequest(servRequest: RequestContent) {
   const parsedData = requestContentSchema.safeParse(servRequest);
@@ -14,15 +14,15 @@ export default async function manageServicesRequest(servRequest: RequestContent)
   }
 
   const { method, pathUrl, dataRequest, httpConfig } = parsedData.data;
-  const url = `${baseURLs.serv}${pathUrl}`;
 
-  return await servicesAxios({ url, method, data: dataRequest, ...httpConfig });
+  return await servicesAxios({ url: `${pathUrl}`, method, data: dataRequest, ...httpConfig });
 }
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
 const servicesAxios = axios.create({
+  baseURL: `${baseURLs.serv}${apiPaths.servPath}`,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -57,11 +57,7 @@ servicesAxios.interceptors.request.use(
   },
   (error) => {
     if (isAxiosError(error) && error.response) {
-      const { data } = error.response;
-      const errorResponse = { ...data, error: data?.error || `${(error as Error).message}` };
-      error.response.data = errorResponse;
-
-      return error;
+      return error.response;
     }
 
     throw error;
@@ -98,12 +94,9 @@ servicesAxios.interceptors.response.use(
   },
   (error) => {
     if (isAxiosError(error) && error.response) {
-      const { data } = error.response;
-      const errorResponse = { ...data, error: data?.error || `${(error as Error).message}` };
-      error.response.data = errorResponse;
-
-      return error;
+      return error.response;
     }
+
     throw error;
   }
 );

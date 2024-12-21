@@ -4,7 +4,7 @@ import axios, { isAxiosError } from 'axios';
 import { RequestContent } from '@/interfaces';
 import * as jwt from '@/utils/tokenHandler';
 import { requestContentSchema } from '@/schemas';
-import { headersKey, jwtAlgs, servKeys, webKeys } from '@/utils/constans';
+import { apiPaths, baseURLs, headersKey, jwtAlgs, servKeys, webKeys } from '@/utils/constans';
 
 export default async function manageAppRequest(appRequest: RequestContent) {
   const parseAppRequest = requestContentSchema.safeParse(appRequest);
@@ -31,6 +31,7 @@ export default async function manageAppRequest(appRequest: RequestContent) {
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
 const appAxios = axios.create({
+  baseURL: `${baseURLs.app}${apiPaths.appPath}`,
   timeout: 59800,
   headers: {
     Accept: 'application/json',
