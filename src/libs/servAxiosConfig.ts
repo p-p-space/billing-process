@@ -1,12 +1,12 @@
 import axios, { isAxiosError } from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
-import { RequestContent } from '@/interfaces';
 import * as jwt from '@/utils/tokenHandler';
+import { RequestContent } from '@/interfaces';
 import { requestContentSchema } from '@/schemas';
 import { jwtAlgs, baseURLs, servKeys, headersKey } from '@/utils/constans';
 
-export async function manageServicesRequest(servRequest: RequestContent) {
+export default async function manageServicesRequest(servRequest: RequestContent) {
   const parsedData = requestContentSchema.safeParse(servRequest);
 
   if (!parsedData.success) {
@@ -93,8 +93,6 @@ servicesAxios.interceptors.response.use(
         return Promise.reject(new Error(`Client Interceptor Response: ${(error as Error).message}`));
       }
     }
-
-    console.log(response.data);
 
     return response;
   },

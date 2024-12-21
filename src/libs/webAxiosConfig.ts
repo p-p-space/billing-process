@@ -1,12 +1,12 @@
-import axios, { isAxiosError } from 'axios';
 import { importSPKI } from 'jose';
+import axios, { isAxiosError } from 'axios';
 // Internal app
 import { WebRequest } from '@/interfaces';
 import { webRequestSchema } from '@/schemas';
 import * as jwt from '@/utils/tokenHandler';
 import { jwtAlgs, webKeys, baseURLs, headersKey, apiPaths } from '@/utils/constans';
 
-export async function manageBrowserRequest(webRequest: WebRequest) {
+export default async function manageBrowserRequest(webRequest: WebRequest) {
   const parsedData = webRequestSchema.safeParse(webRequest);
 
   try {

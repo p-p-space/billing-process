@@ -1,13 +1,17 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal App
-import { manageServicesRequest } from '@/libs';
-import { RequestBody, RequestContent } from '@/interfaces';
 import { creds, headersKey } from '@/utils/constans';
 import { createHttpConfig } from '@/utils/toolHelpers';
+import manageServicesRequest from '@/libs/servAxiosConfig';
+import { RequestBody, RequestContent } from '@/interfaces';
+
+export const oauthToken: { bearer?: string } = {
+  bearer: undefined,
+};
 
 export async function managerCoreServices(request: NextRequest) {
   const { headers, method } = request;
-  const oauthToken = await getOauthBearer();
+  const { bearer } = oauthToken;
   const pathUrl = headers.get(headersKey.appOriginPath);
   let dataRequest = undefined;
 
@@ -16,7 +20,7 @@ export async function managerCoreServices(request: NextRequest) {
   }
 
   const httpConfig = createHttpConfig({ timeout: 59700, headers });
-  httpConfig.headers[headersKey.authorization] = `Bearer ${oauthToken}`;
+  httpConfig.headers[headersKey.authorization] = `Bearer ${bearer}`;
   httpConfig.headers[headersKey.servTenantId] = creds.tenantId;
   httpConfig.headers[headersKey.servReqId] = 'e30b625a-e085-42a5-aac2-3d52f73ad8fe';
 
@@ -33,7 +37,7 @@ export async function managerCoreServices(request: NextRequest) {
 }
 
 export async function getOauthBearer() {
-  let bearer = null;
+  const { bearer } = oauthToken;
 
   if (!bearer) {
     const dataRequest: RequestBody = {
@@ -53,9 +57,10 @@ export async function getOauthBearer() {
     } as RequestContent;
 
     const { data } = await manageServicesRequest(requestConfig);
+    oauthToken.bearer = data.access_token;
 
-    bearer = data.access_token;
+    setTimeout(() => {
+      oauthToken.bearer = undefined;
+    }, data.expires_in * 1000 - 5000);
   }
-
-  return bearer;
 }

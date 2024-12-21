@@ -6,7 +6,7 @@ import * as jwt from '@/utils/tokenHandler';
 import { requestContentSchema } from '@/schemas';
 import { headersKey, jwtAlgs, servKeys, webKeys } from '@/utils/constans';
 
-export async function manageAppRequest(appRequest: RequestContent) {
+export default async function manageAppRequest(appRequest: RequestContent) {
   const parseAppRequest = requestContentSchema.safeParse(appRequest);
 
   try {

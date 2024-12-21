@@ -1,7 +1,8 @@
+// Internal app
+import { headersKey } from './constans';
 import { WebRequest } from '@/interfaces';
 import { createHttpConfig } from './toolHelpers';
-import { headersKey } from './constans';
-import { manageBrowserRequest } from '@/libs';
+import manageBrowserRequest from '@/libs/webAxiosConfig';
 
 export async function createWebRequest(webRequest: WebRequest) {
   const { pathUrl, method, dataRequest } = webRequest;
