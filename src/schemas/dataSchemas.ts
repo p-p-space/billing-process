@@ -6,7 +6,7 @@ export const requestBodySchema = z.record(z.unknown());
 
 export const axiosConfigSchema = z.object({
   timeout: z.number().optional(),
-  headers: z.record(z.union([z.string(), z.boolean()])),
+  headers: z.record(z.union([z.string(), z.null()])),
 });
 
 export const webRequestSchema = z.object({
@@ -16,8 +16,11 @@ export const webRequestSchema = z.object({
 });
 
 export const servRequestSchema = webRequestSchema.extend({
-  originPath: z.string().optional(),
   axiosConfig: axiosConfigSchema,
+});
+
+export const appRequestSchema = servRequestSchema.extend({
+  originPath: z.string(),
 });
 
 export const responseApiSchema = z.object({

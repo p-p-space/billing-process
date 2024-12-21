@@ -8,6 +8,7 @@ import {
   servRequestSchema,
   axiosConfigSchema,
   requestBodySchema,
+  appRequestSchema,
 } from '@/schemas';
 
 /**
@@ -64,6 +65,11 @@ export type WebRequest = z.infer<typeof webRequestSchema>;
  * Represents the data structure for axios services request.
  */
 export type ServRequest = z.infer<typeof servRequestSchema>;
+
+/**
+ * Represents the data structure for axios services request.
+ */
+export type AppRequest = z.infer<typeof appRequestSchema>;
 
 /**
  * Represents the data structure for api response.
