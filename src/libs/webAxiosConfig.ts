@@ -1,26 +1,30 @@
 import axios, { isAxiosError } from 'axios';
 import { importSPKI } from 'jose';
 // Internal app
+import { WebRequest } from '@/interfaces';
+import { webRequestSchema } from '@/schemas';
 import * as jwt from '@/utils/tokenHandler';
 import { jwtAlgs, webKeys, baseURLs, headersKey, apiPaths } from '@/utils/constans';
-import { webRequestSchema } from '@/schemas';
-import { WebRequest } from '@/interfaces';
 
 export async function manageBrowserRequest(webRequest: WebRequest) {
   const parsedData = webRequestSchema.safeParse(webRequest);
 
-  if (!parsedData.success) {
-    throw new Error(`Invalid web request: ${JSON.stringify(parsedData.error)}`);
+  try {
+    if (!parsedData.success) {
+      throw new Error(`Invalid web request: ${JSON.stringify(parsedData.error)}`);
+    }
+
+    const { method, pathUrl, dataRequest } = parsedData.data;
+    const url = `${baseURLs.app}${apiPaths.servPath}${pathUrl}`;
+
+    return await browserAxios({ url, method, data: dataRequest });
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error);
+    }
+
+    throw error;
   }
-
-  const { method, pathUrl, dataRequest } = parsedData.data;
-  const url = `${baseURLs.app}${apiPaths.servPath}${pathUrl}`;
-
-  const { data } = await browserAxios({ url, method, data: dataRequest });
-  const { code, message } = data;
-  console.log({ code, message });
-
-  return data;
 }
 
 /**
@@ -62,7 +66,7 @@ browserAxios.interceptors.request.use(
   },
   (error) => {
     if (isAxiosError(error) && error.response) {
-      return error.response;
+      throw error.response;
     }
 
     throw error;
@@ -98,7 +102,7 @@ browserAxios.interceptors.response.use(
   },
   (error) => {
     if (isAxiosError(error) && error.response) {
-      return error.response;
+      throw error.response;
     }
 
     throw error;

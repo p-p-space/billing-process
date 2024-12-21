@@ -2,25 +2,21 @@ import { z } from 'zod';
 
 const codeRegex = /^codeHttp\.\d{2}\.\d{3}$/;
 
-export const requestBodySchema = z.record(z.unknown());
-
-export const axiosConfigSchema = z.object({
+export const httpConfigSchema = z.object({
   timeout: z.number().optional(),
   headers: z.record(z.union([z.string(), z.null()])),
 });
 
+export const requestBodySchema = z.record(z.unknown());
+
 export const webRequestSchema = z.object({
-  method: z.enum(['get', 'post', 'put', 'patch', 'delete', 'options', 'head']),
   pathUrl: z.string(),
+  method: z.enum(['get', 'post', 'put', 'patch', 'delete', 'options', 'head']),
   dataRequest: requestBodySchema.optional(),
 });
 
-export const servRequestSchema = webRequestSchema.extend({
-  axiosConfig: axiosConfigSchema,
-});
-
-export const appRequestSchema = servRequestSchema.extend({
-  originPath: z.string(),
+export const requestContentSchema = webRequestSchema.extend({
+  httpConfig: httpConfigSchema,
 });
 
 export const responseApiSchema = z.object({
@@ -30,4 +26,26 @@ export const responseApiSchema = z.object({
   datetime: z.string().datetime(),
   payload: z.unknown().optional(),
   error: z.unknown().optional(),
+});
+
+/**
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+
+export const servRequestSchema = webRequestSchema.extend({
+  axiosConfig: httpConfigSchema,
+});
+
+export const appRequestSchema = servRequestSchema.extend({
+  originPath: z.string(),
 });

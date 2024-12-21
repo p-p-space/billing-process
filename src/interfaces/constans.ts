@@ -6,10 +6,44 @@ import {
   webRequestSchema,
   responseApiSchema,
   servRequestSchema,
-  axiosConfigSchema,
   requestBodySchema,
   appRequestSchema,
+  httpConfigSchema,
+  requestContentSchema,
 } from '@/schemas';
+
+/**
+ * Represents the data structure for http configuration.
+ */
+export type HttpConfig = z.infer<typeof httpConfigSchema>;
+
+/**
+ * Represents the strcture for create Http config.
+ */
+export type HeaderConfig = {
+  timeout?: HttpConfig['timeout'];
+  headers?: Headers;
+};
+
+/**
+ * Represents the data structure for body data.
+ */
+export type RequestBody = z.infer<typeof requestBodySchema>;
+
+/**
+ * Represents the data structure for axios web request.
+ */
+export type WebRequest = z.infer<typeof webRequestSchema>;
+
+/**
+ * Represents the data structure for request content.
+ */
+export type RequestContent = z.infer<typeof requestContentSchema>;
+
+/**
+ * Represents the data structure for api response.
+ */
+export type ResponseApi = z.infer<typeof responseApiSchema>;
 
 /**
  * Represents the layout of the root component.
@@ -52,16 +86,13 @@ export type CookieValues = {
 };
 
 /**
- * Represents the data structure for body data.
- */
-export type RequestBody = z.infer<typeof requestBodySchema>;
-
-/**
- * Represents the data structure for axios web request.
- */
-export type WebRequest = z.infer<typeof webRequestSchema>;
-
-/**
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  * Represents the data structure for axios services request.
  */
 export type ServRequest = z.infer<typeof servRequestSchema>;
@@ -70,13 +101,3 @@ export type ServRequest = z.infer<typeof servRequestSchema>;
  * Represents the data structure for axios services request.
  */
 export type AppRequest = z.infer<typeof appRequestSchema>;
-
-/**
- * Represents the data structure for api response.
- */
-export type ResponseApi = z.infer<typeof responseApiSchema>;
-
-/**
- * Represents the data structure for api response.
- */
-export type AxiosConfig = z.infer<typeof axiosConfigSchema>;

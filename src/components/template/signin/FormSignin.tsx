@@ -7,9 +7,9 @@ import { useMutation } from '@tanstack/react-query';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Typography, Button } from '@mui/material';
 //Internal app
-import { manageBrowserRequest } from '@/libs';
 import { getSchema } from '@/config';
 import { WebRequest } from '@/interfaces';
+import { createWebRequest } from '@/utils/services';
 import { InputPass, InputText } from '@/components';
 
 type LoginData = {
@@ -31,12 +31,12 @@ export default function FormSignin() {
   });
 
   const { mutate } = useMutation({
-    mutationFn: manageBrowserRequest,
+    mutationFn: createWebRequest,
     onError: (error) => {
       console.error(error);
     },
     onSuccess: (data) => {
-      console.log(data.payload);
+      console.log(data);
       push('signin');
     },
   });

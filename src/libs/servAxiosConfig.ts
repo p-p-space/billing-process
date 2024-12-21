@@ -1,24 +1,22 @@
 import axios, { isAxiosError } from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
-import { ServRequest } from '@/interfaces';
+import { RequestContent } from '@/interfaces';
 import * as jwt from '@/utils/tokenHandler';
-import { servRequestSchema } from '@/schemas';
+import { requestContentSchema } from '@/schemas';
 import { jwtAlgs, baseURLs, servKeys, headersKey } from '@/utils/constans';
 
-export async function manageServicesRequest(servRequest: ServRequest) {
-  const parsedData = servRequestSchema.safeParse(servRequest);
+export async function manageServicesRequest(servRequest: RequestContent) {
+  const parsedData = requestContentSchema.safeParse(servRequest);
 
   if (!parsedData.success) {
     throw new Error(`Invalid server request: ${JSON.stringify(parsedData.error)}`);
   }
 
-  const { method, pathUrl, dataRequest, axiosConfig } = parsedData.data;
+  const { method, pathUrl, dataRequest, httpConfig } = parsedData.data;
   const url = `${baseURLs.serv}${pathUrl}`;
 
-  const response = await servicesAxios({ url, method, data: dataRequest, ...axiosConfig });
-
-  return response;
+  return await servicesAxios({ url, method, data: dataRequest, ...httpConfig });
 }
 
 /**
@@ -37,11 +35,10 @@ const servicesAxios = axios.create({
  */
 servicesAxios.interceptors.request.use(
   async (request) => {
-    const { data } = request;
+    const { data, headers } = request;
+    const appContentSec = !!headers[headersKey.appContentSecurity];
 
-    if (data?.cipher) {
-      delete data.cipher;
-
+    if (data && appContentSec) {
       try {
         const secretJwe = await importSPKI(servKeys.servJwePubKey, jwtAlgs.jweAlgRsa);
         const payload = await jwt.encryptData(data, secretJwe, jwtAlgs.jweAlgRsa);
@@ -96,6 +93,8 @@ servicesAxios.interceptors.response.use(
         return Promise.reject(new Error(`Client Interceptor Response: ${(error as Error).message}`));
       }
     }
+
+    console.log(response.data);
 
     return response;
   },

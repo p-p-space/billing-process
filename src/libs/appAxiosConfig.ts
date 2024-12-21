@@ -1,26 +1,26 @@
 import { importPKCS8 } from 'jose';
 import axios, { isAxiosError } from 'axios';
 // Internal app
-import { AppRequest } from '@/interfaces';
+import { RequestContent } from '@/interfaces';
 import * as jwt from '@/utils/tokenHandler';
-import { appRequestSchema } from '@/schemas';
+import { requestContentSchema } from '@/schemas';
 import { headersKey, jwtAlgs, servKeys, webKeys } from '@/utils/constans';
 
-export async function manageAppRequest(appRequest: AppRequest) {
-  const parseAppRequest = appRequestSchema.safeParse(appRequest);
+export async function manageAppRequest(appRequest: RequestContent) {
+  const parseAppRequest = requestContentSchema.safeParse(appRequest);
 
   try {
     if (!parseAppRequest.success) {
       throw new Error(`Invalid app request: ${JSON.stringify(parseAppRequest.error)}`);
     }
 
-    const { method, pathUrl, dataRequest, axiosConfig } = parseAppRequest.data;
-    const response = await appAxios({ url: `${pathUrl}`, method, data: dataRequest, ...axiosConfig });
+    const { method, pathUrl, dataRequest, httpConfig } = parseAppRequest.data;
+    const response = await appAxios({ url: `${pathUrl}`, method, data: dataRequest, ...httpConfig });
 
     return response;
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.error);
+      throw new Error(error.response.data);
     }
 
     throw error;
@@ -45,12 +45,12 @@ const appAxios = axios.create({
 appAxios.interceptors.request.use(
   async (request) => {
     const { data, headers } = request;
-    const appContentSec = !!headers.get(headersKey.appContentSecurity);
+    const appContentSec = !!headers[headersKey.appContentSecurity];
 
     if (data && appContentSec) {
       try {
         let { payload } = data;
-        const tokenApp = request.headers.get(headersKey.appJwsToken) as string;
+        const tokenApp = headers[headersKey.appJwsToken];
         const signedData = jwt.assembleJWS(tokenApp, payload);
         const secretJws = jwt.encode(webKeys.secJwsStr);
         const signatureVerified = await jwt.verifySignature(signedData, secretJws);

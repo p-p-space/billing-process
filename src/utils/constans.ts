@@ -53,6 +53,8 @@ export const servKeys = {
 
 // Header keys used in API requests
 export const headersKey = {
+  contentType: 'content-type', // Header key for content type
+  authorization: 'authorization', // Header key for content type
   appContentSecurity: 'app-content-security', // Header key for content security status
   appOriginPath: 'app-origin-path', // Header key for application origin path
   appJwsToken: 'app-token', // Header key for application JWS token

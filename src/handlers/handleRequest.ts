@@ -1,9 +1,9 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
 import { manageAppRequest } from '@/libs';
-import { AppRequest } from '@/interfaces';
+import { RequestContent } from '@/interfaces';
 import { baseURLs, headersKey, apiVersions, apiPaths } from '@/utils/constans';
-import { createAxiosConfig } from '@/utils/toolHelpers';
+import { createHttpConfig } from '@/utils/toolHelpers';
 
 /**
  * Handles customer requests by verifying and decrypting the payload,
@@ -16,18 +16,17 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
   const { headers, method, nextUrl } = request;
   const { pathname, search } = nextUrl;
   const originPath = `${pathname}${search}`;
-  const axiosConfig = createAxiosConfig({ headers });
+  const httpConfig = createHttpConfig({ headers });
   const pathUrl = urlTransform(originPath);
 
-  axiosConfig.headers[headersKey.appOriginPath] = originPath;
+  httpConfig.headers[headersKey.appOriginPath] = originPath;
 
   const requestConfig = {
     method: method.toLowerCase(),
     pathUrl,
     dataRequest: undefined,
-    axiosConfig,
-    originPath,
-  } as AppRequest;
+    httpConfig,
+  } as RequestContent;
 
   try {
     if (headers.get(headersKey.appContentSecurity) !== null) {
@@ -38,6 +37,7 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
     const authJws = data.authJws;
     delete data.authJws;
     const response = NextResponse.json(data, { status });
+
     response.headers.set(headersKey.appJwsToken, `JWS ${authJws}`);
 
     return response;

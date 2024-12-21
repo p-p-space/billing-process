@@ -1,20 +1,20 @@
-import { AxiosConfig } from '@/interfaces';
+import { HeaderConfig, HttpConfig } from '@/interfaces';
 import { headersKey } from './constans';
 
-export function createAxiosConfig({ timeout, headers }: { timeout?: number; headers?: Headers }): AxiosConfig {
-  const axiosConfig: AxiosConfig = {
+export function createHttpConfig({ timeout, headers }: HeaderConfig): HttpConfig {
+  const httpConfig: HttpConfig = {
     headers: {},
   };
 
   if (timeout) {
-    axiosConfig.timeout = timeout;
+    httpConfig.timeout = timeout;
   }
 
   if (headers) {
     Object.values(headersKey).forEach((header) => {
-      axiosConfig.headers[header] = headers.get(header) ?? null;
+      httpConfig.headers[header] = headers.get(header);
     });
   }
 
-  return axiosConfig;
+  return httpConfig;
 }
