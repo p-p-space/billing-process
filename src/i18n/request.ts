@@ -1,8 +1,8 @@
 import { getRequestConfig } from 'next-intl/server';
 // Internal app
 import { getAppLang } from './services';
-import { Lang, LangData, LangFiles } from '@/interfaces';
-import { apiPaths, baseURLs } from '@/utils/constans';
+import manageAppRequest from '@/libs/appAxiosConfig';
+import { Lang, LangData, LangFiles, RequestContent } from '@/interfaces';
 
 /**
  * Request configuration to fetch language messages.
@@ -10,14 +10,14 @@ import { apiPaths, baseURLs } from '@/utils/constans';
  */
 export default getRequestConfig(async () => {
   const { locale, tenant } = await getAppLang();
-  const request = { locale, tenant };
+  const dataRequest = { locale, tenant };
+  const requestConfig: RequestContent = {
+    method: 'post',
+    pathUrl: `/language`,
+    dataRequest,
+  };
 
-  const filesLang = await fetch(`${baseURLs.app}/${apiPaths.appPath}/language`, {
-    method: 'POST',
-    body: JSON.stringify(request),
-  });
-
-  const data = await filesLang.json();
+  const { data } = await manageAppRequest(requestConfig);
   const { messages } = await loadDataLang(data.language, locale, tenant);
 
   return {
