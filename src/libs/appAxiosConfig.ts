@@ -1,12 +1,11 @@
 import { importPKCS8 } from 'jose';
 import axios, { isAxiosError } from 'axios';
 // Internal app
-import * as jwt from '@/utils/tokenHandler';
 import { RequestContent } from '@/interfaces';
 import { requestContentSchema } from '@/schemas';
 import { createHttpConfig } from './helpersAxios';
-
 import { apiPaths, baseURLs, headersKey, jwtAlgs, servKeys, webKeys } from '@/utils/constans';
+import { assembleJWS, verifySignature, decryptData, encryptData, signData, disassembleJWS, encode } from '@/security';
 
 export default async function manageAppRequest(appRequest: RequestContent) {
   const parseAppRequest = requestContentSchema.safeParse(appRequest);
@@ -57,11 +56,11 @@ appAxios.interceptors.request.use(
       try {
         let { payload } = data;
         const tokenApp = headers[headersKey.appJwsToken];
-        const signedData = jwt.assembleJWS(tokenApp, payload);
-        const secretJws = jwt.encode(webKeys.secJwsStr);
-        const signatureVerified = await jwt.verifySignature(signedData, secretJws);
+        const signedData = assembleJWS(tokenApp, payload);
+        const secretJws = encode(webKeys.secJwsStr);
+        const signatureVerified = await verifySignature(signedData, secretJws);
         const secretJwe = await importPKCS8(servKeys.webJwePrivKey, jwtAlgs.jweAlgRsa);
-        payload = await jwt.decryptData(signatureVerified, secretJwe);
+        payload = await decryptData(signatureVerified, secretJwe);
 
         request.data = payload;
       } catch (error) {
@@ -90,11 +89,11 @@ appAxios.interceptors.response.use(
 
     if (data.payload) {
       let { payload } = data;
-      const secretJwe = jwt.encode(webKeys.secJweStr);
-      payload = await jwt.encryptData(payload, secretJwe, jwtAlgs.jweAlgSec);
+      const secretJwe = encode(webKeys.secJweStr);
+      payload = await encryptData(payload, secretJwe, jwtAlgs.jweAlgSec);
       const secretJws = await importPKCS8(servKeys.webJwsPrivKey, jwtAlgs.jwsAlgRsa);
-      const signedData = await jwt.signData(payload, secretJws, jwtAlgs.jwsAlgRsa);
-      const authJws = jwt.disassembleJWS(signedData);
+      const signedData = await signData(payload, secretJws, jwtAlgs.jwsAlgRsa);
+      const authJws = disassembleJWS(signedData);
 
       response.data = { ...data, payload, authJws };
     }
