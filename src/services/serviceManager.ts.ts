@@ -8,7 +8,7 @@ const oauthToken: { bearer?: string } = {
   bearer: undefined,
 };
 
-export async function managerCoreServices(request: NextRequest) {
+export async function connectServices(request: NextRequest) {
   const { headers, method } = request;
   const pathUrl = headers.get(headersKey.appOriginPath);
   const bearer = await getOauthBearer();

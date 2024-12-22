@@ -11,7 +11,7 @@ import { manageAppRequest, createHttpConfig } from '@/libs';
  * @param {NextRequest} request - The incoming request object.
  * @returns {Promise<NextResponse>} - The response from the API or an error response.
  */
-export async function customerRequest(request: NextRequest): Promise<NextResponse> {
+export async function handleCustomerRequest(request: NextRequest): Promise<NextResponse> {
   const { headers, method, nextUrl } = request;
   const { pathname, search } = nextUrl;
   const { pathUrl, servPath } = urlTransform(`${pathname}${search}`);
@@ -41,7 +41,7 @@ export async function customerRequest(request: NextRequest): Promise<NextRespons
     return response;
   } catch (error) {
     return NextResponse.json(
-      { code: '500.00.000', message: `customerRequest: ${(error as Error).message}` },
+      { code: '500.00.000', message: `handleCustomerRequest: ${(error as Error).message}` },
       { status: 500 }
     );
   }
