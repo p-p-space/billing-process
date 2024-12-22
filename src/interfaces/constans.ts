@@ -5,9 +5,7 @@ import { langs } from '@/i18n';
 import {
   webRequestSchema,
   responseApiSchema,
-  servRequestSchema,
   requestBodySchema,
-  appRequestSchema,
   httpConfigSchema,
   requestContentSchema,
 } from '@/schemas';
@@ -84,20 +82,3 @@ export type CookieOptions = Pick<ResponseCookie, 'name' | 'value' | 'path' | 'sa
 export type CookieValues = {
   cookieContent: ResponseCookie;
 };
-
-/**
- *
- *
- *
- *
- *
- *
- *
- * Represents the data structure for axios services request.
- */
-export type ServRequest = z.infer<typeof servRequestSchema>;
-
-/**
- * Represents the data structure for axios services request.
- */
-export type AppRequest = z.infer<typeof appRequestSchema>;

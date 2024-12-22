@@ -6,8 +6,8 @@ import { RequestContent } from '@/interfaces';
 import { requestContentSchema } from '@/schemas';
 import { jwtAlgs, baseURLs, servKeys, headersKey, apiPaths } from '@/utils/constans';
 
-export default async function manageServicesRequest(servRequest: RequestContent) {
-  const parsedData = requestContentSchema.safeParse(servRequest);
+export default async function manageServicesRequest(requestContent: RequestContent) {
+  const parsedData = requestContentSchema.safeParse(requestContent);
 
   if (!parsedData.success) {
     throw new Error(`Invalid server request: ${JSON.stringify(parsedData.error)}`);

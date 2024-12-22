@@ -27,25 +27,3 @@ export const responseApiSchema = z.object({
   payload: z.unknown().optional(),
   error: z.unknown().optional(),
 });
-
-/**
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
-
-export const servRequestSchema = webRequestSchema.extend({
-  axiosConfig: httpConfigSchema,
-});
-
-export const appRequestSchema = servRequestSchema.extend({
-  originPath: z.string(),
-});
