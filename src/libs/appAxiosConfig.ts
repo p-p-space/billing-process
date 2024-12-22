@@ -4,7 +4,8 @@ import axios, { isAxiosError } from 'axios';
 import * as jwt from '@/utils/tokenHandler';
 import { RequestContent } from '@/interfaces';
 import { requestContentSchema } from '@/schemas';
-import { createHttpConfig } from '@/utils/toolHelpers';
+import { createHttpConfig } from './helpersAxios';
+
 import { apiPaths, baseURLs, headersKey, jwtAlgs, servKeys, webKeys } from '@/utils/constans';
 
 export default async function manageAppRequest(appRequest: RequestContent) {

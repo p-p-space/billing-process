@@ -1,9 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
 import { RequestContent } from '@/interfaces';
-import manageAppRequest from '@/libs/appAxiosConfig';
-import { createHttpConfig } from '@/utils/toolHelpers';
 import { headersKey, apiPaths } from '@/utils/constans';
+import { manageAppRequest, createHttpConfig } from '@/libs';
 
 /**
  * Handles customer requests by verifying and decrypting the payload,

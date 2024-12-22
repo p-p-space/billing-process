@@ -1,9 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal App
 import { baseURLs, creds, headersKey } from '@/utils/constans';
-import { createHttpConfig } from '@/utils/toolHelpers';
-import manageServicesRequest from '@/libs/servAxiosConfig';
 import { RequestBody, RequestContent } from '@/interfaces';
+import { manageServicesRequest, createHttpConfig } from '@/libs';
 
 const oauthToken: { bearer?: string } = {
   bearer: undefined,

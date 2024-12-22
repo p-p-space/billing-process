@@ -1,5 +1,5 @@
 import { HeaderConfig, HttpConfig } from '@/interfaces';
-import { headersKey } from './constans';
+import { headersKey } from '@/utils/constans';
 
 export function createHttpConfig(config?: HeaderConfig): HttpConfig {
   const httpConfig: HttpConfig = {
