@@ -1,23 +1,26 @@
-import { type NextRequest } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
 import { connectServices } from '@/services';
 
-export async function GET(request: NextRequest) {
-  return connectServices(request);
+/**
+ * Handles requests to the services route.
+ *
+ * @param {NextRequest} request - The HTTP request.
+ * @returns {Promise<NextResponse>} - The response from the API or an error response.
+ */
+export async function handler(request: NextRequest): Promise<NextResponse> {
+  const { method } = request;
+
+  switch (method) {
+    case 'GET':
+    case 'POST':
+    case 'PUT':
+    case 'PATCH':
+    case 'DELETE':
+      return connectServices(request);
+    default:
+      return NextResponse.json({ error: `Method ${request.method} Not Allowed` }, { status: 405 });
+  }
 }
 
-export async function POST(request: NextRequest) {
-  return connectServices(request);
-}
-
-export async function PUT(request: NextRequest) {
-  return connectServices(request);
-}
-
-export async function PATCH(request: NextRequest) {
-  return connectServices(request);
-}
-
-export async function DELETE(request: NextRequest) {
-  return connectServices(request);
-}
+export { handler as GET, handler as POST, handler as PUT, handler as PATCH, handler as DELETE };
