@@ -1,16 +1,18 @@
 import { HeaderConfig, HttpConfig } from '@/interfaces';
 import { headersKey } from './constans';
 
-export function createHttpConfig({ timeout, headers }: HeaderConfig): HttpConfig {
+export function createHttpConfig(config?: HeaderConfig): HttpConfig {
   const httpConfig: HttpConfig = {
     headers: {},
   };
 
-  if (timeout) {
+  if (config?.timeout) {
+    const { timeout } = config;
     httpConfig.timeout = timeout;
   }
 
-  if (headers) {
+  if (config?.headers) {
+    const { headers } = config;
     Object.values(headersKey).forEach((header) => {
       httpConfig.headers[header] = headers.get(header);
     });

@@ -1,20 +1,21 @@
 import { importSPKI } from 'jose';
 import axios, { isAxiosError } from 'axios';
 // Internal app
-import { WebRequest } from '@/interfaces';
-import { webRequestSchema } from '@/schemas';
+import { RequestContent } from '@/interfaces';
 import * as jwt from '@/utils/tokenHandler';
+import { requestContentSchema } from '@/schemas';
+
 import { jwtAlgs, webKeys, baseURLs, headersKey, apiPaths } from '@/utils/constans';
 
-export default async function manageBrowserRequest(webRequest: WebRequest) {
-  const parsedData = webRequestSchema.safeParse(webRequest);
+export default async function manageBrowserRequest(requestContent: RequestContent) {
+  const parsedReqContent = requestContentSchema.safeParse(requestContent);
 
   try {
-    if (!parsedData.success) {
-      throw new Error(`Invalid web request: ${JSON.stringify(parsedData.error)}`);
+    if (!parsedReqContent.success) {
+      throw new Error(`Invalid web request: ${JSON.stringify(parsedReqContent.error)}`);
     }
 
-    const { method, pathUrl, dataRequest } = parsedData.data;
+    const { method, pathUrl, dataRequest } = parsedReqContent.data;
 
     return await browserAxios({ url: `${pathUrl}`, method, data: dataRequest });
   } catch (error) {

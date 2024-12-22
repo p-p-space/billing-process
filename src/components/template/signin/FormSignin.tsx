@@ -8,14 +8,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Typography, Button } from '@mui/material';
 //Internal app
 import { getSchema } from '@/config';
-import { WebRequest } from '@/interfaces';
 import { createWebRequest } from '@/utils/services';
 import { InputPass, InputText } from '@/components';
-
-type LoginData = {
-  email?: string;
-  password?: string;
-};
+import { RequestBody, RequestContent } from '@/interfaces';
 
 export default function FormSignin() {
   const t = useTranslations('signin');
@@ -41,8 +36,8 @@ export default function FormSignin() {
     },
   });
 
-  const handleLogin = (loginData: LoginData) => {
-    const dataLogin: WebRequest = {
+  const handleLogin = (loginData: RequestBody) => {
+    const dataLogin: RequestContent = {
       // pathUrl: '/onboarding/validate?consultantCode=000650714&countryCode=PE',
       // method: 'get',
       pathUrl: '/prueba',

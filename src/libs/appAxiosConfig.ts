@@ -1,20 +1,24 @@
 import { importPKCS8 } from 'jose';
 import axios, { isAxiosError } from 'axios';
 // Internal app
-import { RequestContent } from '@/interfaces';
 import * as jwt from '@/utils/tokenHandler';
+import { RequestContent } from '@/interfaces';
 import { requestContentSchema } from '@/schemas';
+import { createHttpConfig } from '@/utils/toolHelpers';
 import { apiPaths, baseURLs, headersKey, jwtAlgs, servKeys, webKeys } from '@/utils/constans';
 
 export default async function manageAppRequest(appRequest: RequestContent) {
   const parseAppRequest = requestContentSchema.safeParse(appRequest);
+  let httpConfig = createHttpConfig();
 
   try {
     if (!parseAppRequest.success) {
-      throw new Error(`Invalid app request: ${JSON.stringify(parseAppRequest.error)}`);
+      throw new Error(`Invalid application request: ${JSON.stringify(parseAppRequest.error)}`);
     }
 
-    const { method, pathUrl, dataRequest, httpConfig } = parseAppRequest.data;
+    const { method, pathUrl, dataRequest } = parseAppRequest.data;
+    httpConfig = parseAppRequest.data.httpConfig ?? httpConfig;
+
     const response = await appAxios({ url: `${pathUrl}`, method, data: dataRequest, ...httpConfig });
 
     return response;

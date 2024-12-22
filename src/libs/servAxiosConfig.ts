@@ -4,16 +4,19 @@ import { importPKCS8, importSPKI } from 'jose';
 import * as jwt from '@/utils/tokenHandler';
 import { RequestContent } from '@/interfaces';
 import { requestContentSchema } from '@/schemas';
+import { createHttpConfig } from '@/utils/toolHelpers';
 import { jwtAlgs, baseURLs, servKeys, headersKey, apiPaths } from '@/utils/constans';
 
 export default async function manageServicesRequest(requestContent: RequestContent) {
-  const parsedData = requestContentSchema.safeParse(requestContent);
+  const parsedReqContent = requestContentSchema.safeParse(requestContent);
+  let httpConfig = createHttpConfig();
 
-  if (!parsedData.success) {
-    throw new Error(`Invalid server request: ${JSON.stringify(parsedData.error)}`);
+  if (!parsedReqContent.success) {
+    throw new Error(`Invalid services request: ${JSON.stringify(parsedReqContent.error)}`);
   }
 
-  const { method, pathUrl, dataRequest, httpConfig } = parsedData.data;
+  const { method, pathUrl, dataRequest } = parsedReqContent.data;
+  httpConfig = parsedReqContent.data.httpConfig ?? httpConfig;
 
   return await servicesAxios({ url: `${pathUrl}`, method, data: dataRequest, ...httpConfig });
 }
