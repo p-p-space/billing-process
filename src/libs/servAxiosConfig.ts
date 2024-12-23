@@ -51,6 +51,8 @@ servicesAxios.interceptors.request.use(
     const appContentSec = !!headers[headersKey.appContentSecurity];
 
     if (data && appContentSec) {
+      headers.delete(headersKey.appContentSecurity);
+
       try {
         const secretJwe = await importSPKI(servKeys.servJwePubKey, jwtAlgs.jweAlgRsa);
         const payload = await encryptData(data, secretJwe, jwtAlgs.jweAlgRsa);
@@ -59,7 +61,7 @@ servicesAxios.interceptors.request.use(
         const authJws = disassembleJWS(signedData);
         request.headers[headersKey.servJwsToken] = `JWS ${authJws}`;
 
-        request.data = payload;
+        request.data = { data: payload };
       } catch (error) {
         return Promise.reject(new Error(`Client Interceptor Request: ${(error as Error).message}`));
       }

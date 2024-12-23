@@ -12,16 +12,15 @@ export async function connectServices(request: NextRequest) {
   const { headers, method } = request;
   const pathUrl = headers.get(headersKey.appOriginPath);
   const bearer = await getOauthBearer();
+  const httpConfig = createHttpConfig({ timeout: 59700, headers });
+  httpConfig.headers[headersKey.authorization] = `Bearer ${bearer}`;
+  httpConfig.headers[headersKey.servTenantId] = creds.tenantId;
+  httpConfig.headers[headersKey.servReqId] = 'e30b625a-e085-42a5-aac2-3d52f73ad8fe';
   let dataRequest = undefined;
 
   if (headers.get(headersKey.appContentSecurity) !== null) {
     dataRequest = await request.json();
   }
-
-  const httpConfig = createHttpConfig({ timeout: 59700 });
-  httpConfig.headers[headersKey.authorization] = `Bearer ${bearer}`;
-  httpConfig.headers[headersKey.servTenantId] = creds.tenantId;
-  httpConfig.headers[headersKey.servReqId] = 'e30b625a-e085-42a5-aac2-3d52f73ad8fe';
 
   const requestConfig = {
     method: method.toLowerCase(),
