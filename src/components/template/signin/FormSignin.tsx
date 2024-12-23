@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Typography, Button } from '@mui/material';
 //Internal app
 import { getSchema } from '@/config';
-import { createWebRequest } from '@/utils/services';
+import { createBrowserRequest } from '@/services';
 import { InputPass, InputText } from '@/components';
 import type { RequestBody, RequestContent } from '@/interfaces';
 
@@ -26,7 +26,7 @@ export default function FormSignin() {
   });
 
   const { mutate } = useMutation({
-    mutationFn: createWebRequest,
+    mutationFn: createBrowserRequest,
     onError: (error) => {
       console.error(error);
     },
