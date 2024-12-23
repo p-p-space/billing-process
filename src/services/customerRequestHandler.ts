@@ -5,19 +5,34 @@ import { headersKey, apiPaths } from '@/utils/constans';
 import { manageAppRequest, createHttpConfig } from '@/libs';
 
 /**
- * Handles customer requests by verifying and decrypting the payload,
- * and forwarding the request to the API.
+ * Handles customer requests by processing the incoming request, configuring the HTTP request,
+ * and managing the application request.
  *
  * @param {NextRequest} request - The incoming request object.
- * @returns {Promise<NextResponse>} - The response from the API or an error response.
+ * @returns {Promise<NextResponse>} - A promise that resolves to the response object.
+ *
+ * @remarks
+ * This function performs the following steps:
+ * 1. Extracts headers, method, and URL information from the request.
+ * 2. Constructs the URI path and determines the needed part of the path.
+ * 3. Configures the HTTP request headers and path URL.
+ * 4. Checks if the needed part of the path is included in the application APIs.
+ * 5. If the content security header is present, parses the request body as JSON.
+ * 6. Manages the application request and processes the response.
+ * 7. Sets the authorization JWS token in the response headers.
  */
 export async function handleCustomerRequest(request: NextRequest): Promise<NextResponse> {
   const { headers, method, nextUrl } = request;
   const { pathname, search } = nextUrl;
-  const { pathUrl, servPath } = urlTransform(`${pathname}${search}`);
+  const uriPath = `${pathname}${search}`;
+  const neededPart = uriPath.split('/')[3];
+  let pathUrl = uriPath.replace(apiPaths.servPath, '');
   const httpConfig = createHttpConfig({ headers });
+  httpConfig.headers[headersKey.appOriginPath] = pathUrl;
 
-  httpConfig.headers[headersKey.appOriginPath] = servPath.replace(apiPaths.servPath, '');
+  if (!apiPaths.appApis.includes(neededPart)) {
+    pathUrl = `/${apiPaths.servApi}`;
+  }
 
   const requestConfig = {
     method: method.toLowerCase(),
@@ -26,41 +41,16 @@ export async function handleCustomerRequest(request: NextRequest): Promise<NextR
     httpConfig,
   } as RequestContent;
 
-  try {
-    if (headers.get(headersKey.appContentSecurity) !== null) {
-      requestConfig.dataRequest = await request.json();
-    }
-
-    const { status, data } = await manageAppRequest(requestConfig);
-    const authJws = data.authJws;
-    delete data.authJws;
-    const response = NextResponse.json(data, { status });
-
-    response.headers.set(headersKey.appJwsToken, `JWS ${authJws}`);
-
-    return response;
-  } catch (error) {
-    return NextResponse.json(
-      { code: '500.00.000', message: `handleCustomerRequest: ${(error as Error).message}` },
-      { status: 500 }
-    );
-  }
-}
-
-/**
- * Transforms the URL based on the provided path and search parameters.
- *
- * @param {string} uriPath - The pathname from the request URL.
- * @returns {string} - The transformed URL.
- */
-function urlTransform(uriPath: string): Record<string, string> {
-  const neededPart = uriPath.split('/')[3];
-  const servPath = uriPath.replace(apiPaths.servPath, '');
-  let pathUrl = servPath;
-
-  if (!apiPaths.appApis.includes(neededPart)) {
-    pathUrl = `/${apiPaths.servApi}`;
+  if (headers.get(headersKey.appContentSecurity) !== null) {
+    requestConfig.dataRequest = await request.json();
   }
 
-  return { pathUrl, servPath };
+  const { status, data } = await manageAppRequest(requestConfig);
+  const authJws = data.authJws;
+  delete data.authJws;
+  const response = NextResponse.json(data, { status });
+
+  response.headers.set(headersKey.appJwsToken, `JWS ${authJws}`);
+
+  return response;
 }
