@@ -1,29 +1,33 @@
 import { importSPKI } from 'jose';
+import type { AxiosResponse } from 'axios';
 import axios, { isAxiosError } from 'axios';
 // Internal app
 import { RequestContent } from '@/interfaces';
 import { requestContentSchema } from '@/schemas';
+import { createHttpConfig } from './helpersAxios';
 import { jwtAlgs, webKeys, baseURLs, headersKey, apiPaths } from '@/utils/constans';
 import { encryptData, decryptData, signData, verifySignature, disassembleJWS, assembleJWS, encode } from '@/security';
 
-export default async function manageBrowserRequest(requestContent: RequestContent) {
+/**
+ * Manages HTTP requests for the browser.
+ * @param {RequestContent} requestContent - The content of the request.
+ * @returns {Promise<AxiosResponse>} The response from the service.
+ * @throws {Error} If the request content is invalid or the request fails.
+ */
+export default async function manageBrowserRequest(requestContent: RequestContent): Promise<AxiosResponse> {
   const parsedReqContent = requestContentSchema.safeParse(requestContent);
+  let httpConfig = createHttpConfig();
 
-  try {
-    if (!parsedReqContent.success) {
-      throw new Error(`Invalid web request: ${JSON.stringify(parsedReqContent.error)}`);
-    }
-
-    const { method, pathUrl, dataRequest } = parsedReqContent.data;
-
-    return await browserAxios({ url: `${pathUrl}`, method, data: dataRequest });
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.error);
-    }
-
-    throw error;
+  if (!parsedReqContent.success) {
+    throw new Error(`Invalid browser request: ${JSON.stringify(parsedReqContent.error)}`);
   }
+
+  const { method, pathUrl, dataRequest } = parsedReqContent.data;
+  httpConfig = parsedReqContent.data.httpConfig ?? httpConfig;
+
+  const responseBrowserReq = await browserAxios({ url: `${pathUrl}`, method, data: dataRequest, ...httpConfig });
+
+  return responseBrowserReq;
 }
 
 /**
@@ -45,7 +49,6 @@ const browserAxios = axios.create({
 browserAxios.interceptors.request.use(
   async (request) => {
     const { data, headers } = request;
-    headers[headersKey.appContentSecurity] = data ? 'enc' : null;
 
     if (data) {
       try {

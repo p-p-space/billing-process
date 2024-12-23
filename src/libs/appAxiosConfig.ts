@@ -1,4 +1,5 @@
 import { importPKCS8 } from 'jose';
+import type { AxiosResponse } from 'axios';
 import axios, { isAxiosError } from 'axios';
 // Internal app
 import { RequestContent } from '@/interfaces';
@@ -7,28 +8,26 @@ import { createHttpConfig } from './helpersAxios';
 import { apiPaths, baseURLs, headersKey, jwtAlgs, servKeys, webKeys } from '@/utils/constans';
 import { assembleJWS, verifySignature, decryptData, encryptData, signData, disassembleJWS, encode } from '@/security';
 
-export default async function manageAppRequest(appRequest: RequestContent) {
-  const parseAppRequest = requestContentSchema.safeParse(appRequest);
+/**
+ * Manages HTTP requests for the application.
+ * @param {RequestContent} requestContent
+ * @returns {Promise<AxiosResponse>} The response from the service.
+ * @throws {Error} If the request content is invalid or the request fails.
+ */
+export default async function manageAppRequest(requestContent: RequestContent): Promise<AxiosResponse> {
+  const parsedReqContent = requestContentSchema.safeParse(requestContent);
   let httpConfig = createHttpConfig();
 
-  try {
-    if (!parseAppRequest.success) {
-      throw new Error(`Invalid application request: ${JSON.stringify(parseAppRequest.error)}`);
-    }
-
-    const { method, pathUrl, dataRequest } = parseAppRequest.data;
-    httpConfig = parseAppRequest.data.httpConfig ?? httpConfig;
-
-    const response = await appAxios({ url: `${pathUrl}`, method, data: dataRequest, ...httpConfig });
-
-    return response;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data);
-    }
-
-    throw error;
+  if (!parsedReqContent.success) {
+    throw new Error(`Invalid application request: ${JSON.stringify(parsedReqContent.error)}`);
   }
+
+  const { method, pathUrl, dataRequest } = parsedReqContent.data;
+  httpConfig = parsedReqContent.data.httpConfig ?? httpConfig;
+
+  const responseAppReq = await appAxios({ url: `${pathUrl}`, method, data: dataRequest, ...httpConfig });
+
+  return responseAppReq;
 }
 
 /**
@@ -44,8 +43,8 @@ const appAxios = axios.create({
 });
 
 /**
- * Interceptor for handling request encryption and signing.
- * Encrypts the request data and signs it before sending.
+ * Interceptor for handling request decryption and verification.
+ * Verifies the request signature and decrypts the data.
  */
 appAxios.interceptors.request.use(
   async (request) => {
@@ -80,8 +79,8 @@ appAxios.interceptors.request.use(
 );
 
 /**
- * Interceptor for handling response decryption and verification.
- * Verifies the response signature and decrypts the data.
+ * Interceptor for handling response encryption and signing.
+ * Encrypts the response data and signs it before sending.
  */
 appAxios.interceptors.response.use(
   async (response) => {
