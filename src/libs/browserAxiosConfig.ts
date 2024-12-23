@@ -2,7 +2,7 @@ import { importSPKI } from 'jose';
 import type { AxiosResponse } from 'axios';
 import axios, { isAxiosError } from 'axios';
 // Internal app
-import { RequestContent } from '@/interfaces';
+import type { RequestContent } from '@/interfaces';
 import { requestContentSchema } from '@/schemas';
 import { createHttpConfig } from './helpersAxios';
 import { jwtAlgs, webKeys, baseURLs, headersKey, apiPaths } from '@/utils/constans';

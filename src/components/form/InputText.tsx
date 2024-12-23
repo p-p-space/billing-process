@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Controller } from 'react-hook-form';
 import { FormControl, FormHelperText, InputAdornment, FormLabel, OutlinedInput } from '@mui/material';
 //Internal app
-import { TextFieldProps } from '@/interfaces';
+import type { TextFieldProps } from '@/interfaces';
 
 function InputMUI(props: Readonly<TextFieldProps>): JSX.Element {
   const { name, label, labelError, type, optional, error, value, onChange, ...restProps } = props;

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 //Internal app
-import { NavbarStoreProps } from '@/interfaces';
+import type { NavbarStoreProps } from '@/interfaces';
 
 /**
  * Zustand store for managing the state of the navbar.

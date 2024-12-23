@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal App
-import { ResponseApi } from '@/interfaces';
+import type { ResponseApi } from '@/interfaces';
 
 const status: number = 200;
 

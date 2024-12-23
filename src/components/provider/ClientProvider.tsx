@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Box, CircularProgress, Container } from '@mui/material';
 //Internal app
-import { RootLayout } from '@/interfaces';
+import type { RootLayout } from '@/interfaces';
 
 const queryClient = new QueryClient();
 

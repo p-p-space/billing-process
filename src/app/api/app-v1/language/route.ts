@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
-import { LangFiles } from '@/interfaces';
+import type { LangFiles } from '@/interfaces';
 
 /**
  * Handles POST requests to fetch language files.

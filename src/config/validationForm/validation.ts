@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 //Internal app
 import { validationRules } from './rules';
-import { Field, ValidationShape } from '@/interfaces';
+import type { Field, ValidationShape } from '@/interfaces';
 
 /**
  * Generates a yup validation schema based on an array of form fields.

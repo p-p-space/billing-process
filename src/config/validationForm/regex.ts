@@ -1,5 +1,5 @@
 //Internal app
-import { RegularExpressions } from '@/interfaces';
+import type { RegularExpressions } from '@/interfaces';
 
 /**
  * Regular expressions

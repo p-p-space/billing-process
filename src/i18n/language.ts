@@ -1,5 +1,5 @@
 //Internal app
-import { Lang } from '@/interfaces';
+import type { Lang } from '@/interfaces';
 
 export const langCookieName = 'app_lang';
 export const langs = ['en', 'es'] as const;

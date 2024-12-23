@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Box } from '@mui/material';
 //Internal app
 import { useMenuStore } from '@/store';
-import { RootLayout } from '@/interfaces';
+import type { RootLayout } from '@/interfaces';
 import { Navbar, Sidebar } from '@/components';
 
 export default function Template({ children }: Readonly<RootLayout>): JSX.Element {

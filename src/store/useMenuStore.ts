@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 //Internal app
-import { MenuStoreProps } from '@/interfaces';
+import type { MenuStoreProps } from '@/interfaces';
 
 /**
  * Store for navMenu

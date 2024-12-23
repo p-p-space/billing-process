@@ -4,7 +4,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 //Internal app
-import { RootLayout } from '@/interfaces';
+import type { RootLayout } from '@/interfaces';
 import { ClientProvider, GlobalError, MuiProvider, GlobalSuccess, Lang } from '@/components';
 
 export async function generateMetadata(): Promise<Metadata> {

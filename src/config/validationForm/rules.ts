@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 //Internal app
 import { regularExpressions } from './regex';
-import { ValidationRule } from '@/interfaces';
+import type { ValidationRule } from '@/interfaces';
 
 /**
  * Regular expressions

@@ -1,7 +1,7 @@
 import type { KeyLike } from 'jose';
 import { CompactEncrypt, compactDecrypt } from 'jose';
 // Internal App
-import { RequestBody } from '@/interfaces';
+import type { RequestBody } from '@/interfaces';
 import { jwtAlgs } from '@/utils/constans';
 
 /**

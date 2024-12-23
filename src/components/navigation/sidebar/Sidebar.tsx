@@ -2,7 +2,7 @@
 
 import { Box, Drawer } from '@mui/material';
 //Internal app
-import { SidebarProps } from '@/interfaces';
+import type { SidebarProps } from '@/interfaces';
 import ListSidebar from './components/ListSidebar';
 
 /**

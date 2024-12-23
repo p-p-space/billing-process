@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 // Internal app imports
-import { CookieOptions, CookieValues } from '@/interfaces';
+import type { CookieOptions, CookieValues } from '@/interfaces';
 
 // Define constants for default values
 const DEFAULT_PATH = '/';

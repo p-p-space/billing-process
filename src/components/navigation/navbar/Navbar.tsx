@@ -5,7 +5,7 @@ import { Typography, AppBar, Toolbar, IconButton, Box, useTheme, Grid2, Button }
 //Internal app
 import UserInfo from './UserInfo';
 import { useNavbarStore } from '@/store';
-import { DrawerToggleProps } from '@/interfaces';
+import type { DrawerToggleProps } from '@/interfaces';
 
 export default function Navbar(props: Readonly<DrawerToggleProps>): JSX.Element {
   const { handleDrawerToggle } = props;

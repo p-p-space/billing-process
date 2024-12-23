@@ -2,7 +2,7 @@ import type { AxiosResponse } from 'axios';
 import axios, { isAxiosError } from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
-import { RequestContent } from '@/interfaces';
+import type { RequestContent } from '@/interfaces';
 import { requestContentSchema } from '@/schemas';
 import { createHttpConfig } from './helpersAxios';
 import { decryptData, disassembleJWS, encryptData, signData } from '@/security';

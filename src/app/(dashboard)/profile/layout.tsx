@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 //Internal app
-import { RootLayout } from '@/interfaces';
+import type { RootLayout } from '@/interfaces';
 import { getTranslations } from 'next-intl/server';
 
 export async function generateMetadata(): Promise<Metadata> {

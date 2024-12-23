@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 // Internal app
-import { LangFiles } from '@/interfaces';
+import type { LangFiles } from '@/interfaces';
 
 const privateKey = process.env.SERV_JWS_PRIVATE_KEY;
 

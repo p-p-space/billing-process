@@ -2,7 +2,7 @@ import { getRequestConfig } from 'next-intl/server';
 // Internal app
 import { getAppLang } from './services';
 import manageAppRequest from '@/libs/appAxiosConfig';
-import { Lang, LangData, LangFiles, RequestContent } from '@/interfaces';
+import type { Lang, LangData, LangFiles, RequestContent } from '@/interfaces';
 
 /**
  * Request configuration to fetch language messages.

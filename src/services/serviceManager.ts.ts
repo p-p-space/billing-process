@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal App
 import { baseURLs, creds, headersKey } from '@/utils/constans';
-import { RequestBody, RequestContent } from '@/interfaces';
+import type { RequestBody, RequestContent } from '@/interfaces';
 import { manageServicesRequest, createHttpConfig } from '@/libs';
 
 const oauthToken: { bearer?: string } = {

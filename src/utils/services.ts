@@ -1,6 +1,6 @@
 // Internal app
 import { headersKey } from './constans';
-import { RequestContent } from '@/interfaces';
+import type { RequestContent } from '@/interfaces';
 import { manageBrowserRequest, createHttpConfig } from '@/libs';
 
 export async function createWebRequest(requestContent: RequestContent) {

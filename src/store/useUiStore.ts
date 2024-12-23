@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 //Internal app
-import { UiStore } from '@/interfaces';
+import type { UiStore } from '@/interfaces';
 
 /**
  * Store and change states for show/hide elements in UI.

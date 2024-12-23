@@ -5,7 +5,7 @@ import { useEffect, useCallback } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 // Internal app
 import theme from '@/theme/theme-default';
-import { RootLayout } from '@/interfaces';
+import type { RootLayout } from '@/interfaces';
 import { toggles } from '@/utils/constans';
 
 /**
