@@ -42,11 +42,11 @@ export default function FormSignin() {
       // method: 'get',
 
       // pathUrl: '/users/credentials',
+      // method: 'post',
       // dataRequest: {
       //   userId: 'b2da31b6-15d6-4fd7-bbb4-4485bb9dba7e',
       //   password: '+JxyYGdP0ZMs8ZM33cn/PQ==',
       // },
-      // method: 'post',
 
       pathUrl: '/prueba',
       method: 'post',
