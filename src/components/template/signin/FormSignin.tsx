@@ -40,6 +40,14 @@ export default function FormSignin() {
     const dataLogin: RequestContent = {
       // pathUrl: '/onboarding/validate?consultantCode=000650714&countryCode=PE',
       // method: 'get',
+
+      // pathUrl: '/users/credentials',
+      // dataRequest: {
+      //   userId: 'b2da31b6-15d6-4fd7-bbb4-4485bb9dba7e',
+      //   password: '+JxyYGdP0ZMs8ZM33cn/PQ==',
+      // },
+      // method: 'post',
+
       pathUrl: '/prueba',
       method: 'post',
       dataRequest: loginData,
