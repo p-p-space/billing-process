@@ -1,34 +1,8 @@
 import { importPKCS8 } from 'jose';
-import type { AxiosResponse } from 'axios';
 import axios, { isAxiosError } from 'axios';
 // Internal app
-import type { RequestContent } from '@/interfaces';
-import { requestContentSchema } from '@/schemas';
-import { createHttpConfig } from './helpersAxios';
 import { apiPaths, baseURLs, headersKey, jwtAlgs, servKeys, webKeys } from '@/utils/constans';
 import { assembleJWS, verifySignature, decryptData, encryptData, signData, disassembleJWS, encode } from '@/security';
-
-/**
- * Manages HTTP requests for the application.
- * @param {RequestContent} requestContent
- * @returns {Promise<AxiosResponse>} The response from the service.
- * @throws {Error} If the request content is invalid or the request fails.
- */
-export default async function manageAppRequest(requestContent: RequestContent): Promise<AxiosResponse> {
-  const parsedReqContent = requestContentSchema.safeParse(requestContent);
-  let httpConfig = createHttpConfig();
-
-  if (!parsedReqContent.success) {
-    throw new Error(`Invalid application request: ${JSON.stringify(parsedReqContent.error)}`);
-  }
-
-  const { method, pathUrl, dataRequest } = parsedReqContent.data;
-  httpConfig = parsedReqContent.data.httpConfig ?? httpConfig;
-
-  const responseAppReq = await appAxios({ url: `${pathUrl}`, method, data: dataRequest, ...httpConfig });
-
-  return responseAppReq;
-}
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
@@ -63,7 +37,7 @@ appAxios.interceptors.request.use(
 
         request.data = payload;
       } catch (error) {
-        return Promise.reject(new Error(`Client Interceptor Request: ${(error as Error).message}`));
+        return Promise.reject(new Error(`Aplication Interceptor Request: ${(error as Error).message}`));
       }
     }
 
@@ -71,7 +45,7 @@ appAxios.interceptors.request.use(
   },
   (error) => {
     if (isAxiosError(error) && error.response) {
-      return error.response;
+      throw error.response;
     }
 
     throw error;
@@ -86,24 +60,30 @@ appAxios.interceptors.response.use(
   async (response) => {
     const { data } = response;
 
-    if (data.payload) {
-      let { payload } = data;
-      const secretJwe = encode(webKeys.secJweStr);
-      payload = await encryptData(payload, secretJwe, jwtAlgs.jweAlgSec);
-      const secretJws = await importPKCS8(servKeys.webJwsPrivKey, jwtAlgs.jwsAlgRsa);
-      const signedData = await signData(payload, secretJws, jwtAlgs.jwsAlgRsa);
-      const authJws = disassembleJWS(signedData);
+    try {
+      if (data.payload) {
+        let { payload } = data;
+        const secretJwe = encode(webKeys.secJweStr);
+        payload = await encryptData(payload, secretJwe, jwtAlgs.jweAlgSec);
+        const secretJws = await importPKCS8(servKeys.webJwsPrivKey, jwtAlgs.jwsAlgRsa);
+        const signedData = await signData(payload, secretJws, jwtAlgs.jwsAlgRsa);
+        const authJws = disassembleJWS(signedData);
 
-      response.data = { ...data, payload, authJws };
+        response.data = { ...data, payload, authJws };
+      }
+    } catch (error) {
+      return Promise.reject(new Error(`Aplication Interceptor Response: ${(error as Error).message}`));
     }
 
     return response;
   },
   (error) => {
     if (isAxiosError(error) && error.response) {
-      return error.response;
+      throw error.response;
     }
 
     throw error;
   }
 );
+
+export default appAxios;

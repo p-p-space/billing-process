@@ -4,6 +4,8 @@ const codeRegex = /^codeHttp\.\d{2}\.\d{3}$/;
 
 export const requestBodySchema = z.record(z.unknown());
 
+export const requestTypeSchema = z.enum(['browser', 'application', 'services']);
+
 export const httpConfigSchema = z.object({
   timeout: z.number().optional(),
   headers: z.record(z.union([z.string(), z.null()])),

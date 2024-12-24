@@ -1,34 +1,8 @@
 import { importSPKI } from 'jose';
-import type { AxiosResponse } from 'axios';
 import axios, { isAxiosError } from 'axios';
 // Internal app
-import type { RequestContent } from '@/interfaces';
-import { requestContentSchema } from '@/schemas';
-import { createHttpConfig } from './helpersAxios';
 import { jwtAlgs, webKeys, baseURLs, headersKey, apiPaths } from '@/utils/constans';
 import { encryptData, decryptData, signData, verifySignature, disassembleJWS, assembleJWS, encode } from '@/security';
-
-/**
- * Manages HTTP requests for the browser.
- * @param {RequestContent} requestContent - The content of the request.
- * @returns {Promise<AxiosResponse>} The response from the service.
- * @throws {Error} If the request content is invalid or the request fails.
- */
-export default async function manageBrowserRequest(requestContent: RequestContent): Promise<AxiosResponse> {
-  const parsedReqContent = requestContentSchema.safeParse(requestContent);
-  let httpConfig = createHttpConfig();
-
-  if (!parsedReqContent.success) {
-    throw new Error(`Invalid browser request: ${JSON.stringify(parsedReqContent.error)}`);
-  }
-
-  const { method, pathUrl, dataRequest } = parsedReqContent.data;
-  httpConfig = parsedReqContent.data.httpConfig ?? httpConfig;
-
-  const responseBrowserReq = await browserAxios({ url: `${pathUrl}`, method, data: dataRequest, ...httpConfig });
-
-  return responseBrowserReq;
-}
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
@@ -61,7 +35,7 @@ browserAxios.interceptors.request.use(
 
         request.data = { payload };
       } catch (error) {
-        return Promise.reject(new Error(`Client Interceptor Request: ${(error as Error).message}`));
+        return Promise.reject(new Error(`Browser Interceptor Request: ${(error as Error).message}`));
       }
     }
 
@@ -97,7 +71,7 @@ browserAxios.interceptors.response.use(
 
         response.data.payload = decrypt;
       } catch (error) {
-        return Promise.reject(new Error(`Client Interceptor Response: ${(error as Error).message}`));
+        return Promise.reject(new Error(`Browser Interceptor Response: ${(error as Error).message}`));
       }
     }
 
@@ -111,3 +85,5 @@ browserAxios.interceptors.response.use(
     throw error;
   }
 );
+
+export default browserAxios;

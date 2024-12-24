@@ -1,34 +1,8 @@
-import type { AxiosResponse } from 'axios';
 import axios, { isAxiosError } from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
-import type { RequestContent } from '@/interfaces';
-import { requestContentSchema } from '@/schemas';
-import { createHttpConfig } from './helpersAxios';
 import { decryptData, disassembleJWS, encryptData, signData } from '@/security';
 import { jwtAlgs, baseURLs, servKeys, headersKey, apiPaths } from '@/utils/constans';
-
-/**
- * Manages HTTP requests for services.
- * @param {RequestContent} requestContent - The content of the request.
- * @returns {Promise<AxiosResponse>} The response from the service.
- * @throws {Error} If the request content is invalid or the request fails.
- */
-export default async function manageServicesRequest(requestContent: RequestContent): Promise<AxiosResponse> {
-  const parsedReqContent = requestContentSchema.safeParse(requestContent);
-  let httpConfig = createHttpConfig();
-
-  if (!parsedReqContent.success) {
-    throw new Error(`Invalid application request: ${JSON.stringify(parsedReqContent.error)}`);
-  }
-
-  const { method, pathUrl, dataRequest } = parsedReqContent.data;
-  httpConfig = parsedReqContent.data.httpConfig ?? httpConfig;
-
-  const responseServReq = await servicesAxios({ url: `${pathUrl}`, method, data: dataRequest, ...httpConfig });
-
-  return responseServReq;
-}
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
@@ -63,7 +37,7 @@ servicesAxios.interceptors.request.use(
 
         request.data = { data: payload };
       } catch (error) {
-        return Promise.reject(new Error(`Client Interceptor Request: ${(error as Error).message}`));
+        return Promise.reject(new Error(`Services Interceptor Request: ${(error as Error).message}`));
       }
     }
 
@@ -100,7 +74,7 @@ servicesAxios.interceptors.response.use(
 
         response.data = responseServ;
       } catch (error) {
-        return Promise.reject(new Error(`Client Interceptor Response: ${(error as Error).message}`));
+        return Promise.reject(new Error(`Services Interceptor Response: ${(error as Error).message}`));
       }
     }
 
@@ -114,3 +88,5 @@ servicesAxios.interceptors.response.use(
     throw error;
   }
 );
+
+export default servicesAxios;

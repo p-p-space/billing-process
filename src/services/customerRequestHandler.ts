@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
 import type { RequestContent } from '@/interfaces';
 import { headersKey, apiPaths } from '@/utils/constans';
-import { manageAppRequest, createHttpConfig } from '@/libs';
+import { createHttpConfig, manageRequest } from '@/libs';
 
 /**
  * Handles customer requests by processing the incoming request, configuring the HTTP request,
@@ -40,12 +40,13 @@ export async function handleCustomerRequest(request: NextRequest): Promise<NextR
     dataRequest: undefined,
     httpConfig,
   } as RequestContent;
+  const requestType = 'application';
 
   if (headers.get(headersKey.appContentSecurity) !== null) {
     requestConfig.dataRequest = await request.json();
   }
 
-  const { status, data } = await manageAppRequest(requestConfig);
+  const { status, data } = await manageRequest(requestConfig, requestType);
   const authJws = data.authJws;
   delete data.authJws;
   const response = NextResponse.json(data, { status });

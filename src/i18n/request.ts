@@ -1,7 +1,7 @@
 import { getRequestConfig } from 'next-intl/server';
 // Internal app
+import { manageRequest } from '@/libs';
 import { getAppLang } from './services';
-import manageAppRequest from '@/libs/appAxiosConfig';
 import type { Lang, LangData, LangFiles, RequestContent } from '@/interfaces';
 
 /**
@@ -16,8 +16,9 @@ export default getRequestConfig(async () => {
     pathUrl: `/language`,
     dataRequest,
   };
+  const requestType = 'application';
 
-  const { data } = await manageAppRequest(requestConfig);
+  const { data } = await manageRequest(requestConfig, requestType);
   const { messages } = await loadDataLang(data.language, locale, tenant);
 
   return {

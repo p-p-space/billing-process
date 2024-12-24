@@ -2,7 +2,13 @@ import { z } from 'zod';
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 // Internal app
 import { langs } from '@/i18n';
-import { responseApiSchema, requestBodySchema, httpConfigSchema, requestContentSchema } from '@/schemas';
+import {
+  responseApiSchema,
+  requestBodySchema,
+  httpConfigSchema,
+  requestContentSchema,
+  requestTypeSchema,
+} from '@/schemas';
 
 /**
  * Represents the data structure for http configuration.
@@ -21,6 +27,11 @@ export type HeaderConfig = {
  * Represents the data structure for body data.
  */
 export type RequestBody = z.infer<typeof requestBodySchema>;
+
+/**
+ * Represents the data structure for request type.
+ */
+export type RequestType = z.infer<typeof requestTypeSchema>;
 
 /**
  * Represents the data structure for request content.

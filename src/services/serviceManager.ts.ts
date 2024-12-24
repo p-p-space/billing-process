@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 // Internal App
 import { baseURLs, creds, headersKey } from '@/utils/constans';
 import type { RequestBody, RequestContent } from '@/interfaces';
-import { manageServicesRequest, createHttpConfig } from '@/libs';
+import { manageServicesRequest, createHttpConfig, manageRequest } from '@/libs';
 
 const oauthToken: { bearer?: string } = {
   bearer: undefined,
@@ -53,8 +53,9 @@ export async function getOauthBearer() {
       dataRequest,
       httpConfig,
     } as RequestContent;
+    const requestType = 'services';
 
-    const { data } = await manageServicesRequest(requestConfig);
+    const { data } = await manageRequest(requestConfig, requestType);
     console.log({ data });
     oauthToken.bearer = data.access_token;
 

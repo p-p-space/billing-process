@@ -1,7 +1,7 @@
 // Internal app
 import { headersKey } from '@/utils/constans';
 import type { RequestContent } from '@/interfaces';
-import { manageBrowserRequest, createHttpConfig } from '@/libs';
+import { createHttpConfig, manageRequest } from '@/libs';
 import { isAxiosError } from 'axios';
 
 export async function createBrowserRequest(requestContent: RequestContent) {
@@ -14,7 +14,8 @@ export async function createBrowserRequest(requestContent: RequestContent) {
 
   try {
     const requestConfig = { pathUrl, method, dataRequest, httpConfig };
-    const responseWebRequest = await manageBrowserRequest(requestConfig);
+    const requestType = 'browser';
+    const responseWebRequest = await manageRequest(requestConfig, requestType);
 
     const { data } = responseWebRequest;
     const { code, message, payload } = data;
