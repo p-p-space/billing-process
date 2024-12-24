@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 // Internal App
 import { baseURLs, creds, headersKey } from '@/utils/constans';
 import type { RequestBody, RequestContent } from '@/interfaces';
-import { manageServicesRequest, createHttpConfig, manageRequest } from '@/libs';
+import { createHttpConfig, manageRequest } from '@/libs';
 
 const oauthToken: { bearer?: string } = {
   bearer: undefined,
@@ -28,8 +28,8 @@ export async function connectServices(request: NextRequest) {
     dataRequest,
     httpConfig,
   } as RequestContent;
-
-  const { status, data } = await manageServicesRequest(requestConfig);
+  const requestType = 'services';
+  const { status, data } = await manageRequest(requestConfig, requestType);
 
   return NextResponse.json(data, { status });
 }
@@ -56,7 +56,6 @@ export async function getOauthBearer() {
     const requestType = 'services';
 
     const { data } = await manageRequest(requestConfig, requestType);
-    console.log({ data });
     oauthToken.bearer = data.access_token;
 
     setTimeout(() => {
