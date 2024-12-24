@@ -8,7 +8,7 @@ import { connectServices } from '@/services';
  * @param {NextRequest} request - The HTTP request.
  * @returns {Promise<NextResponse>} - The response from the API or an error response.
  */
-export async function handler(request: NextRequest): Promise<NextResponse> {
+async function handler(request: NextRequest): Promise<NextResponse> {
   const { method } = request;
 
   switch (method) {
