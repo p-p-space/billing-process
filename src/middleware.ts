@@ -6,7 +6,6 @@ import { handleCustomerRequest } from './services';
 import { langCookieName, availableValueCookie } from './i18n';
 
 export async function middleware(request: NextRequest) {
-  const responseNext = NextResponse.next();
   const { cookies, nextUrl } = request;
 
   if (nextUrl.pathname.startsWith(apiPaths.servPath)) {
@@ -14,14 +13,15 @@ export async function middleware(request: NextRequest) {
 
     return responseApi;
   } else {
+    const responsePages = NextResponse.next();
     const lang = cookies.get(langCookieName)?.value;
     const cookieValue = await availableValueCookie(lang);
     const { cookieContent } = cookieValues({ name: langCookieName, value: cookieValue });
 
-    responseNext.cookies.set(cookieContent);
-  }
+    responsePages.cookies.set(cookieContent);
 
-  return responseNext;
+    return responsePages;
+  }
 }
 
 export const config = {
