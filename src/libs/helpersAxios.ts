@@ -1,11 +1,16 @@
-import { AxiosResponse } from 'axios';
+import { AxiosInstance } from 'axios';
+import type { AxiosResponse } from 'axios';
 import { headersKey } from '@/utils/constans';
 import { requestContentSchema } from '@/schemas';
+import { applicationAxios, browserAxios, servicesAxios } from './';
 import type { HeaderConfig, HttpConfig, RequestContent, RequestType } from '@/interfaces';
-import browserAxios from './browserAxiosConfig';
-import appAxios from './appAxiosConfig';
-import servicesAxios from './servAxiosConfig';
 
+/**
+ * Creates an HTTP configuration object.
+ *
+ * @param {HeaderConfig} [config] - Optional configuration for headers and timeout.
+ * @returns {HttpConfig} The HTTP configuration object.
+ */
 export function createHttpConfig(config?: HeaderConfig): HttpConfig {
   const httpConfig: HttpConfig = {
     headers: {},
@@ -19,13 +24,23 @@ export function createHttpConfig(config?: HeaderConfig): HttpConfig {
   if (config?.headers) {
     const { headers } = config;
     Object.values(headersKey).forEach((header) => {
-      httpConfig.headers[header] = headers.get(header);
+      if (headers.has(header)) {
+        httpConfig.headers[header] = `${headers.get(header)}`;
+      }
     });
   }
 
   return httpConfig;
 }
 
+/**
+ * Manages an HTTP request.
+ *
+ * @param {RequestContent} requestContent - The content of the request.
+ * @param {RequestType} requestType - The type of the request.
+ * @returns {Promise<AxiosResponse>} The response from the Axios request.
+ * @throws Will throw an error if the request content is invalid.
+ */
 export async function manageRequest(requestContent: RequestContent, requestType: RequestType): Promise<AxiosResponse> {
   const parsedReqContent = requestContentSchema.safeParse(requestContent);
   let httpConfig = createHttpConfig();
@@ -43,10 +58,16 @@ export async function manageRequest(requestContent: RequestContent, requestType:
   return response;
 }
 
-function createAxiosInstance(requestType: RequestType) {
+/**
+ * Creates an Axios instance with the given configuration.
+ *
+ * @param {RequestType} requestType - The type of the request.
+ * @returns {AxiosInstance} The Axios instance.
+ */
+function createAxiosInstance(requestType: RequestType): AxiosInstance {
   const axiostInstance = {
     browser: browserAxios,
-    application: appAxios,
+    application: applicationAxios,
     services: servicesAxios,
   };
 

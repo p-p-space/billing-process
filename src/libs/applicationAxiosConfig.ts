@@ -7,7 +7,7 @@ import { assembleJWS, verifySignature, decryptData, encryptData, signData, disas
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
-const appAxios = axios.create({
+const applicationAxios = axios.create({
   baseURL: `${baseURLs.app}${apiPaths.appPath}`,
   timeout: 59800,
   headers: {
@@ -20,7 +20,7 @@ const appAxios = axios.create({
  * Interceptor for handling request decryption and verification.
  * Verifies the request signature and decrypts the data.
  */
-appAxios.interceptors.request.use(
+applicationAxios.interceptors.request.use(
   async (request) => {
     const { data, headers } = request;
     const appContentSec = !!headers[headersKey.appContentSecurity];
@@ -56,7 +56,7 @@ appAxios.interceptors.request.use(
  * Interceptor for handling response encryption and signing.
  * Encrypts the response data and signs it before sending.
  */
-appAxios.interceptors.response.use(
+applicationAxios.interceptors.response.use(
   async (response) => {
     const { data } = response;
 
@@ -86,4 +86,4 @@ appAxios.interceptors.response.use(
   }
 );
 
-export default appAxios;
+export default applicationAxios;

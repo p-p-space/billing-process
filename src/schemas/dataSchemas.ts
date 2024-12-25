@@ -8,7 +8,7 @@ export const requestTypeSchema = z.enum(['browser', 'application', 'services']);
 
 export const httpConfigSchema = z.object({
   timeout: z.number().optional(),
-  headers: z.record(z.union([z.string(), z.null()])),
+  headers: z.record(z.string(), z.string()),
 });
 
 export const requestContentSchema = z.object({
