@@ -11,7 +11,16 @@ const oauthToken: { bearer?: string } = {
 export async function connectServices(request: NextRequest) {
   const { headers, method } = request;
   const pathUrl = headers.get(headersKey.appOriginPath);
-  const bearer = await getOauthBearer();
+
+  if (!oauthToken.bearer) {
+    const responseBearer = await getOauthBearer();
+
+    if (!responseBearer.ok) {
+      return responseBearer;
+    }
+  }
+
+  const { bearer } = oauthToken;
   const httpConfig = createHttpConfig({ timeout: 59700, headers });
   httpConfig.headers[headersKey.authorization] = `Bearer ${bearer}`;
   httpConfig.headers[headersKey.servTenantId] = creds.tenantId;
@@ -35,33 +44,34 @@ export async function connectServices(request: NextRequest) {
 }
 
 export async function getOauthBearer() {
-  const { bearer } = oauthToken;
+  const dataRequest: RequestBody = {
+    grant_type: 'client_credentials',
+    client_id: creds.key,
+    client_secret: creds.secret,
+  };
 
-  if (!bearer) {
-    const dataRequest: RequestBody = {
-      grant_type: 'client_credentials',
-      client_id: creds.key,
-      client_secret: creds.secret,
-    };
+  const httpConfig = createHttpConfig({ timeout: 59750 });
+  httpConfig.headers[headersKey.contentType] = 'application/x-www-form-urlencoded';
 
-    const httpConfig = createHttpConfig({ timeout: 59750 });
-    httpConfig.headers[headersKey.contentType] = 'application/x-www-form-urlencoded';
+  const requestConfig = {
+    method: 'post',
+    pathUrl: `${baseURLs.serv}/oauth2/v1/token`,
+    dataRequest,
+    httpConfig,
+  } as RequestContent;
+  const requestType = 'services';
 
-    const requestConfig = {
-      method: 'post',
-      pathUrl: `${baseURLs.serv}/oauth2/v1/token`,
-      dataRequest,
-      httpConfig,
-    } as RequestContent;
-    const requestType = 'services';
+  const { data, status } = await manageRequest(requestConfig, requestType);
 
-    const { data } = await manageRequest(requestConfig, requestType);
+  if (status === 200) {
     oauthToken.bearer = data.access_token;
 
     setTimeout(() => {
       oauthToken.bearer = undefined;
     }, data.expires_in * 1000 - 5000);
+
+    return NextResponse.next();
   }
 
-  return oauthToken.bearer;
+  return NextResponse.json(data, { status });
 }
