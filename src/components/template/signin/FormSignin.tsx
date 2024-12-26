@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Typography, Button } from '@mui/material';
 //Internal app
 import { getSchema } from '@/config';
-import { createBrowserRequest } from '@/services';
+import { useBrowserRequest } from '@/hooks';
 import { InputPass, InputText } from '@/components';
 import type { RequestBody, RequestContent } from '@/interfaces';
 
@@ -16,6 +16,7 @@ export default function FormSignin() {
   const t = useTranslations('signin');
   const { push } = useRouter();
   const schema = getSchema(['email', 'password']);
+  const { createBrowserRequest } = useBrowserRequest();
 
   const { control, handleSubmit } = useForm({
     defaultValues: {
