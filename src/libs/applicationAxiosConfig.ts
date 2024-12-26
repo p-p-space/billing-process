@@ -14,6 +14,9 @@ const applicationAxios = axios.create({
     Accept: 'application/json',
     'Content-Type': 'application/json',
   },
+  validateStatus: function (status) {
+    return (status >= 200 && status < 300) || (status >= 400 && status <= 500);
+  },
 });
 
 /**
@@ -79,7 +82,7 @@ applicationAxios.interceptors.response.use(
   },
   (error) => {
     if (isAxiosError(error) && error.response) {
-      throw error.response;
+      return error.response;
     }
 
     throw error;
