@@ -24,11 +24,12 @@ export function useBrowserRequest() {
         const requestType = 'browser';
         const responseWebRequest = await manageRequest(requestConfig, requestType);
         const { data, status } = responseWebRequest;
-        const { code, message, payload } = data;
-        console.log({ code, message });
+        const { message, payload } = data;
+        console.log('createBrowserRequest:', { data, status });
+
         setLoadingScreen(false);
 
-        if (status >= 400 && status <= 500) {
+        if (status < 200 || status >= 300) {
           throw new Error(message);
         }
 
