@@ -1,5 +1,5 @@
 import { importPKCS8 } from 'jose';
-import axios, { isAxiosError } from 'axios';
+import axios from 'axios';
 // Internal app
 import { apiPaths, baseURLs, headersKey, jwtAlgs, servKeys, webKeys } from '@/utils/constans';
 import { assembleJWS, verifySignature, decryptData, encryptData, signData, disassembleJWS, encode } from '@/security';
@@ -9,51 +9,34 @@ import { assembleJWS, verifySignature, decryptData, encryptData, signData, disas
  */
 const applicationAxios = axios.create({
   baseURL: `${baseURLs.app}${apiPaths.appPath}`,
-  timeout: 59800,
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  },
-  validateStatus: function (status) {
-    return (status >= 200 && status < 300) || (status >= 400 && status <= 500);
-  },
 });
 
 /**
  * Interceptor for handling request decryption and verification.
  * Verifies the request signature and decrypts the data.
  */
-applicationAxios.interceptors.request.use(
-  async (request) => {
-    const { data, headers } = request;
-    const appContentSec = !!headers[headersKey.appContentSecurity];
+applicationAxios.interceptors.request.use(async (request) => {
+  const { data, headers } = request;
+  const appContentSec = !!headers[headersKey.appContentSecurity];
 
-    if (data && appContentSec) {
-      try {
-        let { payload } = data;
-        const tokenApp = headers[headersKey.appJwsToken];
-        const signedData = assembleJWS(tokenApp, payload);
-        const secretJws = encode(webKeys.secJwsStr);
-        const signatureVerified = await verifySignature(signedData, secretJws);
-        const secretJwe = await importPKCS8(servKeys.webJwePrivKey, jwtAlgs.jweAlgRsa);
-        payload = await decryptData(signatureVerified, secretJwe);
+  if (data && appContentSec) {
+    try {
+      let { payload } = data;
+      const tokenApp = headers[headersKey.appJwsToken];
+      const signedData = assembleJWS(tokenApp, payload);
+      const secretJws = encode(webKeys.secJwsStr);
+      const signatureVerified = await verifySignature(signedData, secretJws);
+      const secretJwe = await importPKCS8(servKeys.webJwePrivKey, jwtAlgs.jweAlgRsa);
+      payload = await decryptData(signatureVerified, secretJwe);
 
-        request.data = payload;
-      } catch (error) {
-        return Promise.reject(new Error(`Aplication Request: ${(error as Error).message}`));
-      }
+      request.data = payload;
+    } catch (error) {
+      throw new Error(`applicationAxios Request (${(error as Error).message})`);
     }
-
-    return request;
-  },
-  (error) => {
-    if (isAxiosError(error) && error.response) {
-      throw error.response;
-    }
-
-    throw error;
   }
-);
+
+  return request;
+});
 
 /**
  * Interceptor for handling response encryption and signing.
@@ -61,7 +44,14 @@ applicationAxios.interceptors.request.use(
  */
 applicationAxios.interceptors.response.use(
   async (response) => {
-    const { data } = response;
+    const { data, status } = response;
+
+    if (status >= 300 && !data.message) {
+      response.data = {
+        code: `${status}.00.000`,
+        message: status === 404 ? data.fault.faultstring : `Request failed with status code ${status}`,
+      };
+    }
 
     try {
       if (data.payload) {
@@ -75,16 +65,12 @@ applicationAxios.interceptors.response.use(
         response.data = { ...data, payload, authJws };
       }
     } catch (error) {
-      return Promise.reject(new Error(`Aplication Response: ${(error as Error).message}`));
+      throw new Error(`applicationAxios Response (${(error as Error).message})`);
     }
 
     return response;
   },
   (error) => {
-    if (isAxiosError(error) && error.response) {
-      return error.response;
-    }
-
     return error;
   }
 );

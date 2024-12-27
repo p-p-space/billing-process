@@ -21,7 +21,7 @@ export async function connectServices(request: NextRequest) {
   }
 
   const { bearer } = oauthToken;
-  const httpConfig = createHttpConfig({ timeout: 59700, headers });
+  const httpConfig = createHttpConfig({ timeout: 59500, headers });
   httpConfig.headers[headersKey.authorization] = `Bearer ${bearer}`;
   httpConfig.headers[headersKey.servTenantId] = creds.tenantId;
   httpConfig.headers[headersKey.servReqId] = 'e30b625a-e085-42a5-aac2-3d52f73ad8fe';
@@ -50,7 +50,7 @@ export async function getOauthBearer() {
     client_secret: creds.secret,
   };
 
-  const httpConfig = createHttpConfig({ timeout: 59750 });
+  const httpConfig = createHttpConfig({ timeout: 59600 });
   httpConfig.headers[headersKey.contentType] = 'application/x-www-form-urlencoded';
 
   const requestConfig = {

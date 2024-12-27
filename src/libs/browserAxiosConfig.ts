@@ -9,49 +9,32 @@ import { encryptData, decryptData, signData, verifySignature, disassembleJWS, as
  */
 const browserAxios = axios.create({
   baseURL: `${baseURLs.app}${apiPaths.servPath}`,
-  timeout: 59850,
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  },
-  validateStatus: function (status) {
-    return (status >= 200 && status < 300) || (status >= 400 && status <= 500);
-  },
 });
 
 /**
  * Interceptor for handling request encryption and signing.
  * Encrypts the request data and signs it before sending.
  */
-browserAxios.interceptors.request.use(
-  async (request) => {
-    const { data, headers } = request;
+browserAxios.interceptors.request.use(async (request) => {
+  const { data, headers } = request;
 
-    if (data) {
-      try {
-        const secretJwe = await importSPKI(webKeys.webJwePubKey, jwtAlgs.jweAlgRsa);
-        const payload = await encryptData(data, secretJwe, jwtAlgs.jweAlgRsa);
-        const secretJws = encode(webKeys.secJwsStr);
-        const signedData = await signData(payload, secretJws, jwtAlgs.jwsAlgSec);
-        const authJws = disassembleJWS(signedData);
-        headers[headersKey.appJwsToken] = `JWS ${authJws}`;
+  if (data) {
+    try {
+      const secretJwe = await importSPKI(webKeys.webJwePubKey, jwtAlgs.jweAlgRsa);
+      const payload = await encryptData(data, secretJwe, jwtAlgs.jweAlgRsa);
+      const secretJws = encode(webKeys.secJwsStr);
+      const signedData = await signData(payload, secretJws, jwtAlgs.jwsAlgSec);
+      const authJws = disassembleJWS(signedData);
+      headers[headersKey.appJwsToken] = `JWS ${authJws}`;
 
-        request.data = { payload };
-      } catch (error) {
-        return Promise.reject(new Error(`Browser Request: ${(error as Error).message}`));
-      }
+      request.data = { payload };
+    } catch (error) {
+      throw new Error(`browserAxios Request (${(error as Error).message})`);
     }
-
-    return request;
-  },
-  (error) => {
-    if (isAxiosError(error) && error.request) {
-      return error.request;
-    }
-
-    return error;
   }
-);
+
+  return request;
+});
 
 /**
  * Interceptor for handling response decryption and verification.
@@ -74,7 +57,7 @@ browserAxios.interceptors.response.use(
 
         response.data.payload = decrypt;
       } catch (error) {
-        return Promise.reject(new Error(`Browser Response: ${(error as Error).message}`));
+        throw new Error(`browserAxios Response ${(error as Error).message}`);
       }
     }
 
@@ -82,10 +65,21 @@ browserAxios.interceptors.response.use(
   },
   (error) => {
     if (isAxiosError(error) && error.response) {
+      error.response.data = {
+        code: `${error.status}.00.000`,
+        message: error.message,
+      };
+
       return error.response;
     }
 
-    return error;
+    return {
+      status: 500,
+      data: {
+        code: `500.00.00`,
+        message: `${(error as Error).message}`,
+      },
+    };
   }
 );
 

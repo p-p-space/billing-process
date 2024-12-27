@@ -13,7 +13,14 @@ import type { HeaderConfig, HttpConfig, RequestContent, RequestType } from '@/in
  */
 export function createHttpConfig(config?: HeaderConfig): HttpConfig {
   const httpConfig: HttpConfig = {
-    headers: {},
+    timeout: 59800,
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+    },
+    validateStatus: function (status) {
+      return (status >= 200 && status < 300) || (status >= 400 && status <= 503);
+    },
   };
 
   if (config?.timeout) {

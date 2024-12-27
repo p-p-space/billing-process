@@ -27,7 +27,7 @@ export async function handleCustomerRequest(request: NextRequest): Promise<NextR
   const uriPath = `${pathname}${search}`;
   const neededPart = uriPath.split('/')[3];
   let pathUrl = uriPath.replace(apiPaths.servPath, '');
-  const httpConfig = createHttpConfig({ headers });
+  const httpConfig = createHttpConfig({ timeout: 59700, headers });
   httpConfig.headers[headersKey.appOriginPath] = pathUrl;
 
   if (!apiPaths.appApis.includes(neededPart)) {
