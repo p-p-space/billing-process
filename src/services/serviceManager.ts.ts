@@ -21,7 +21,7 @@ export async function connectServices(request: NextRequest) {
   }
 
   const { bearer } = oauthToken;
-  const httpConfig = createHttpConfig({ timeout: 59500, headers });
+  const httpConfig = createHttpConfig({ timeout: 59500 });
   httpConfig.headers[headersKey.authorization] = `Bearer ${bearer}`;
   httpConfig.headers[headersKey.servTenantId] = creds.tenantId;
   httpConfig.headers[headersKey.servReqId] = 'e30b625a-e085-42a5-aac2-3d52f73ad8fe';
@@ -29,6 +29,7 @@ export async function connectServices(request: NextRequest) {
 
   if (headers.get(headersKey.appContentSecurity) !== null) {
     dataRequest = await request.json();
+    httpConfig.headers[headersKey.appContentSecurity] = 'enc';
   }
 
   const requestConfig = {
