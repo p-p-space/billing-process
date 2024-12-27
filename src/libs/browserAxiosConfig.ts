@@ -57,7 +57,11 @@ browserAxios.interceptors.response.use(
 
         response.data.payload = decrypt;
       } catch (error) {
-        throw new Error(`browserAxios Response ${(error as Error).message}`);
+        response.status = 500;
+        response.data = {
+          code: `500.00.00`,
+          message: `browserAxios Response (${(error as Error).message})`,
+        };
       }
     }
 

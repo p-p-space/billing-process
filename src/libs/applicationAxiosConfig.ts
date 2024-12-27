@@ -1,5 +1,5 @@
 import { importPKCS8 } from 'jose';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 // Internal app
 import { apiPaths, baseURLs, headersKey, jwtAlgs, servKeys, webKeys } from '@/utils/constans';
 import { assembleJWS, verifySignature, decryptData, encryptData, signData, disassembleJWS, encode } from '@/security';
@@ -54,7 +54,7 @@ applicationAxios.interceptors.response.use(
     }
 
     try {
-      if (data.payload) {
+      if (data?.payload) {
         let { payload } = data;
         const secretJwe = encode(webKeys.secJweStr);
         payload = await encryptData(payload, secretJwe, jwtAlgs.jweAlgSec);
@@ -65,13 +65,27 @@ applicationAxios.interceptors.response.use(
         response.data = { ...data, payload, authJws };
       }
     } catch (error) {
-      throw new Error(`applicationAxios Response (${(error as Error).message})`);
+      response.status = 500;
+      response.data = {
+        code: `500.00.00`,
+        message: `applicationAxios Response (${(error as Error).message})`,
+      };
     }
 
     return response;
   },
   (error) => {
-    return error;
+    if (isAxiosError(error) && error.response) {
+      return error.response;
+    }
+
+    return {
+      status: 500,
+      data: {
+        code: `500.00.00`,
+        message: `${(error as Error).message}`,
+      },
+    };
   }
 );
 

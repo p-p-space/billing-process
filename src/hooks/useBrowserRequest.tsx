@@ -18,8 +18,8 @@ export function useBrowserRequest() {
         httpConfig.headers[headersKey.appContentSecurity] = 'enc';
       }
 
-      setLoadingScreen(true);
       try {
+        setLoadingScreen(true);
         const requestConfig = { pathUrl, method, dataRequest, httpConfig };
         const requestType = 'browser';
         const responseWebRequest = await manageRequest(requestConfig, requestType);

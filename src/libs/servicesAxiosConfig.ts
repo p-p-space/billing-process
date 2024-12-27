@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
 import { decryptData, disassembleJWS, encryptData, signData } from '@/security';
@@ -32,7 +32,7 @@ servicesAxios.interceptors.request.use(async (request) => {
 
       request.data = { data: payload };
     } catch (error) {
-      throw new Error(`servicesAxios: (${(error as Error).message})`);
+      throw new Error(`servicesAxios Request: (${(error as Error).message})`);
     }
   }
 
@@ -56,14 +56,28 @@ servicesAxios.interceptors.response.use(
 
         response.data = { code, datetime, message, payload };
       } catch (error) {
-        throw new Error(`servicesAxios: (${(error as Error).message})`);
+        response.status = 500;
+        response.data = {
+          code: `500.00.00`,
+          message: `servicesAxios Response (${(error as Error).message})`,
+        };
       }
     }
 
     return response;
   },
   (error) => {
-    return error;
+    if (isAxiosError(error) && error.response) {
+      return error.response;
+    }
+
+    return {
+      status: 500,
+      data: {
+        code: `500.00.00`,
+        message: `${(error as Error).message}`,
+      },
+    };
   }
 );
 
