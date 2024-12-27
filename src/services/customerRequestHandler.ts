@@ -47,6 +47,7 @@ export async function handleCustomerRequest(request: NextRequest): Promise<NextR
   }
 
   const { status, data } = await manageRequest(requestConfig, requestType);
+
   const authJws = data.authJws;
   delete data.authJws;
   const response = NextResponse.json(data, { status });

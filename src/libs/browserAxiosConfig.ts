@@ -38,18 +38,18 @@ browserAxios.interceptors.request.use(
 
         request.data = { payload };
       } catch (error) {
-        return Promise.reject(new Error(`Browser Interceptor Request: ${(error as Error).message}`));
+        return Promise.reject(new Error(`Browser Request: ${(error as Error).message}`));
       }
     }
 
     return request;
   },
   (error) => {
-    if (isAxiosError(error) && error.response) {
-      throw error.response;
+    if (isAxiosError(error) && error.request) {
+      return error.request;
     }
 
-    throw error;
+    return error;
   }
 );
 
@@ -74,7 +74,7 @@ browserAxios.interceptors.response.use(
 
         response.data.payload = decrypt;
       } catch (error) {
-        return Promise.reject(new Error(`Browser Interceptor Response: ${(error as Error).message}`));
+        return Promise.reject(new Error(`Browser Response: ${(error as Error).message}`));
       }
     }
 
@@ -82,10 +82,10 @@ browserAxios.interceptors.response.use(
   },
   (error) => {
     if (isAxiosError(error) && error.response) {
-      throw error.response.data;
+      return error.response;
     }
 
-    throw error;
+    return error;
   }
 );
 

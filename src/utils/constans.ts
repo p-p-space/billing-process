@@ -76,3 +76,8 @@ export const apiPaths = {
   servApi: 'services', // Services API endpoint
   appApis: ['language', 'logout', 'prueba'], // List of application API endpoints
 };
+
+// HTTP Status Codes
+export const httpCodes = {
+  statusCodes: [400, 401, 402, 403, 404],
+};

@@ -2,7 +2,7 @@ import axios, { isAxiosError } from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
 import { decryptData, disassembleJWS, encryptData, signData } from '@/security';
-import { jwtAlgs, baseURLs, servKeys, headersKey, apiPaths } from '@/utils/constans';
+import { jwtAlgs, baseURLs, servKeys, headersKey, apiPaths, httpCodes } from '@/utils/constans';
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
@@ -40,7 +40,7 @@ servicesAxios.interceptors.request.use(
 
         request.data = { data: payload };
       } catch (error) {
-        return Promise.reject(new Error(`Services Interceptor Request: ${(error as Error).message}`));
+        return Promise.reject(new Error(`Services Request: ${(error as Error).message}`));
       }
     }
 
@@ -51,7 +51,7 @@ servicesAxios.interceptors.request.use(
       return error.response;
     }
 
-    throw error;
+    return error;
   }
 );
 
@@ -61,34 +61,46 @@ servicesAxios.interceptors.request.use(
  */
 servicesAxios.interceptors.response.use(
   async (response) => {
-    const { data } = response;
+    const { data, status } = response;
 
     if (data?.data) {
-      const { data } = response.data;
+      const { code, message, datetime, ...dataServ } = data.data;
 
       try {
         const secretJwe = await importPKCS8(servKeys.servJwePrivKey, jwtAlgs.jweAlgRsa);
-        const payload = await decryptData(data, secretJwe);
-        const responseServ = {
-          code: response.data.code,
-          message: response.data.message,
+        const payload = await decryptData(dataServ, secretJwe);
+
+        response.data = {
+          code,
+          datetime,
+          message,
           payload,
         };
-
-        response.data = responseServ;
       } catch (error) {
-        return Promise.reject(new Error(`Services Interceptor Response: ${(error as Error).message}`));
+        return Promise.reject(new Error(`Services Response: ${(error as Error).message}`));
       }
+    }
+
+    if (httpCodes.statusCodes.includes(status) && !data.message) {
+      response.data = {
+        code: `${status}.00.000`,
+        message: status === 404 ? data.fault.faultstring : `Request failed with status code ${status}`,
+      };
     }
 
     return response;
   },
   (error) => {
     if (isAxiosError(error) && error.response) {
+      error.response.data = {
+        code: `${error.status}.00.000`,
+        message: error.message,
+      };
+
       return error.response;
     }
 
-    throw error;
+    return error;
   }
 );
 

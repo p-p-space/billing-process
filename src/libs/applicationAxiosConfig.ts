@@ -40,7 +40,7 @@ applicationAxios.interceptors.request.use(
 
         request.data = payload;
       } catch (error) {
-        return Promise.reject(new Error(`Aplication Interceptor Request: ${(error as Error).message}`));
+        return Promise.reject(new Error(`Aplication Request: ${(error as Error).message}`));
       }
     }
 
@@ -75,7 +75,7 @@ applicationAxios.interceptors.response.use(
         response.data = { ...data, payload, authJws };
       }
     } catch (error) {
-      return Promise.reject(new Error(`Aplication Interceptor Response: ${(error as Error).message}`));
+      return Promise.reject(new Error(`Aplication Response: ${(error as Error).message}`));
     }
 
     return response;
@@ -85,7 +85,7 @@ applicationAxios.interceptors.response.use(
       return error.response;
     }
 
-    throw error;
+    return error;
   }
 );
 
