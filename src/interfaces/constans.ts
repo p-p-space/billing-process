@@ -8,6 +8,7 @@ import {
   httpConfigSchema,
   requestContentSchema,
   requestTypeSchema,
+  errorResponseApiSchema,
 } from '@/schemas';
 
 /**
@@ -42,6 +43,11 @@ export type RequestContent = z.infer<typeof requestContentSchema>;
  * Represents the data structure for api response.
  */
 export type ResponseApi = z.infer<typeof responseApiSchema>;
+
+/**
+ * Represents the data structure for api response.
+ */
+export type ErrorResponseApi = z.infer<typeof errorResponseApiSchema>;
 
 /**
  * Represents the layout of the root component.

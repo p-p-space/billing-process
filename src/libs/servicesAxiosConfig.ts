@@ -1,6 +1,7 @@
-import axios, { isAxiosError } from 'axios';
+import axios from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
+import { createErrorResponseApi, createResponseApi } from './helpersAxios';
 import { decryptData, disassembleJWS, encryptData, signData } from '@/security';
 import { jwtAlgs, baseURLs, servKeys, headersKey, apiPaths } from '@/utils/constans';
 
@@ -19,12 +20,13 @@ servicesAxios.interceptors.request.use(async (request) => {
   const { data, headers } = request;
   const appContentSec = !!headers[headersKey.appContentSecurity];
 
-  if (data && appContentSec) {
+  if (data?.payload && appContentSec) {
     headers.delete(headersKey.appContentSecurity);
 
     try {
+      let { payload } = data;
       const secretJwe = await importSPKI(servKeys.servJwePubKey, jwtAlgs.jweAlgRsa);
-      const payload = await encryptData(data, secretJwe, jwtAlgs.jweAlgRsa);
+      payload = await encryptData(payload, secretJwe, jwtAlgs.jweAlgRsa);
       const secretJws = await importPKCS8(servKeys.servJwsPrivKey, jwtAlgs.jwsAlgRsa);
       const signedData = await signData(payload, secretJws, jwtAlgs.jwsAlgRsa);
       const authJws = disassembleJWS(signedData);
@@ -57,27 +59,14 @@ servicesAxios.interceptors.response.use(
         response.data = { code, datetime, message, payload };
       } catch (error) {
         response.status = 500;
-        response.data = {
-          code: `500.00.00`,
-          message: `servicesAxios Response (${(error as Error).message})`,
-        };
+        response.data = createResponseApi({ message: `servicesAxios Response (${(error as Error).message})` });
       }
     }
 
     return response;
   },
   (error) => {
-    if (isAxiosError(error) && error.response) {
-      return error.response;
-    }
-
-    return {
-      status: 500,
-      data: {
-        code: `500.00.00`,
-        message: `${(error as Error).message}`,
-      },
-    };
+    return createErrorResponseApi(error);
   }
 );
 

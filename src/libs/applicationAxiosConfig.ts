@@ -1,6 +1,7 @@
+import axios from 'axios';
 import { importPKCS8 } from 'jose';
-import axios, { isAxiosError } from 'axios';
 // Internal app
+import { createErrorResponseApi, createResponseApi } from './helpersAxios';
 import { apiPaths, baseURLs, headersKey, jwtAlgs, servKeys, webKeys } from '@/utils/constans';
 import { assembleJWS, verifySignature, decryptData, encryptData, signData, disassembleJWS, encode } from '@/security';
 
@@ -19,7 +20,7 @@ applicationAxios.interceptors.request.use(async (request) => {
   const { data, headers } = request;
   const appContentSec = !!headers[headersKey.appContentSecurity];
 
-  if (data && appContentSec) {
+  if (data?.payload && appContentSec) {
     try {
       let { payload } = data;
       const tokenApp = headers[headersKey.appJwsToken];
@@ -29,7 +30,7 @@ applicationAxios.interceptors.request.use(async (request) => {
       const secretJwe = await importPKCS8(servKeys.webJwePrivKey, jwtAlgs.jweAlgRsa);
       payload = await decryptData(signatureVerified, secretJwe);
 
-      request.data = payload;
+      request.data.payload = payload;
     } catch (error) {
       throw new Error(`applicationAxios Request (${(error as Error).message})`);
     }
@@ -47,10 +48,12 @@ applicationAxios.interceptors.response.use(
     const { data, status } = response;
 
     if (status >= 300 && !data.message) {
-      response.data = {
+      const respApi = {
         code: `${status}.00.000`,
         message: status === 404 ? data.fault.faultstring : `Request failed with status code ${status}`,
       };
+
+      response.data = createResponseApi(respApi);
     }
 
     try {
@@ -65,27 +68,19 @@ applicationAxios.interceptors.response.use(
         response.data = { ...data, payload, authJws };
       }
     } catch (error) {
-      response.status = 500;
-      response.data = {
-        code: `500.00.00`,
+      const respApi = {
+        code: `500.00.000`,
         message: `applicationAxios Response (${(error as Error).message})`,
       };
+
+      response.status = 500;
+      response.data = createResponseApi(respApi);
     }
 
     return response;
   },
   (error) => {
-    if (isAxiosError(error) && error.response) {
-      return error.response;
-    }
-
-    return {
-      status: 500,
-      data: {
-        code: `500.00.00`,
-        message: `${(error as Error).message}`,
-      },
-    };
+    return createErrorResponseApi(error);
   }
 );
 

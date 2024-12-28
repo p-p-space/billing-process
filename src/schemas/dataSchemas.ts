@@ -25,5 +25,9 @@ export const responseApiSchema = z.object({
   info: z.string().optional(),
   datetime: z.string().datetime(),
   payload: z.unknown().optional(),
-  error: z.unknown().optional(),
+});
+
+export const errorResponseApiSchema = z.object({
+  status: z.number(),
+  data: responseApiSchema.pick({ code: true, message: true }),
 });

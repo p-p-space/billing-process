@@ -1,6 +1,7 @@
+import axios from 'axios';
 import { importSPKI } from 'jose';
-import axios, { isAxiosError } from 'axios';
 // Internal app
+import { createErrorResponseApi, createResponseApi } from './helpersAxios';
 import { jwtAlgs, webKeys, baseURLs, headersKey, apiPaths } from '@/utils/constans';
 import { encryptData, decryptData, signData, verifySignature, disassembleJWS, assembleJWS, encode } from '@/security';
 
@@ -58,32 +59,14 @@ browserAxios.interceptors.response.use(
         response.data.payload = decrypt;
       } catch (error) {
         response.status = 500;
-        response.data = {
-          code: `500.00.00`,
-          message: `browserAxios Response (${(error as Error).message})`,
-        };
+        response.data = createResponseApi({ message: `browserAxios Response (${(error as Error).message})` });
       }
     }
 
     return response;
   },
   (error) => {
-    if (isAxiosError(error) && error.response) {
-      error.response.data = {
-        code: `${error.status}.00.000`,
-        message: error.message,
-      };
-
-      return error.response;
-    }
-
-    return {
-      status: 500,
-      data: {
-        code: `500.00.00`,
-        message: `${(error as Error).message}`,
-      },
-    };
+    return createErrorResponseApi(error);
   }
 );
 

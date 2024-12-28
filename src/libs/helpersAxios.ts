@@ -1,9 +1,18 @@
-import { AxiosInstance } from 'axios';
-import type { AxiosResponse } from 'axios';
+import { AxiosInstance, isAxiosError } from 'axios';
+import type { AxiosError, AxiosResponse } from 'axios';
+// Internal App
 import { headersKey } from '@/utils/constans';
 import { requestContentSchema } from '@/schemas';
 import { applicationAxios, browserAxios, servicesAxios } from './';
-import type { HeaderConfig, HttpConfig, RequestContent, RequestType } from '@/interfaces';
+import type {
+  ErrorResponseApi,
+  HeaderConfig,
+  HttpConfig,
+  RequestBody,
+  RequestContent,
+  RequestType,
+  ResponseApi,
+} from '@/interfaces';
 
 /**
  * Creates an HTTP configuration object.
@@ -79,4 +88,43 @@ function createAxiosInstance(requestType: RequestType): AxiosInstance {
   };
 
   return axiostInstance[requestType];
+}
+
+/**
+ * Create an API response object.
+ *
+ * @param {RequestBody} dataResponse - The data to include in the response.
+ * @returns {ResponseApi} The response object.
+ */
+export function createResponseApi(dataResponse: RequestBody): ResponseApi {
+  let responseApi: ResponseApi = {
+    code: '500.00.00',
+    message: 'Internal Server Error',
+    datetime: new Date().toISOString(),
+  };
+
+  responseApi = { ...responseApi, ...dataResponse };
+
+  return responseApi;
+}
+
+/**
+ * Create an error response object.
+ *
+ * @param {AxiosError |Error} error - The error api response.
+ * @returns {AxiosResponse | ErrorResponseApi} The error response object.
+ */
+export function createErrorResponseApi(error: AxiosError | Error): AxiosResponse | ErrorResponseApi {
+  if (isAxiosError(error) && error.response) {
+    error.response.data = createResponseApi({ code: `${error.status}.00.000`, message: error.message });
+
+    return error.response;
+  }
+
+  const errorResponse = createResponseApi({ message: error.message });
+
+  return {
+    status: 500,
+    data: errorResponse,
+  };
 }
