@@ -33,8 +33,13 @@ export function cookieValues(options: CookieOptions): CookieValues {
     sameSite,
     secure: true,
     httpOnly: true,
-    expires,
   };
+
+  if (expires instanceof Date) {
+    cookieContent.expires = expires;
+  } else {
+    cookieContent.maxAge = expires;
+  }
 
   return { cookieContent };
 }
