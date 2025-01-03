@@ -7,7 +7,7 @@ import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemTex
 import { menu } from './menu';
 import ItemsSidebar from './ItemsSidebar';
 
-export default function SectionSidebar(): JSX.Element {
+export default function SectionSidebar() {
   const t = useTranslations('menu');
 
   const { push } = useRouter();
@@ -46,7 +46,7 @@ export default function SectionSidebar(): JSX.Element {
             <ListItemIcon sx={{ minWidth: 'auto', fontSize: 24 }}>
               <i className="ri-logout-circle-r-line"></i>
             </ListItemIcon>
-            <ListItemText primary={t('log-out')} primaryTypographyProps={{ fontWeight: 500 }} />
+            <ListItemText primary={t('log-out')} slotProps={{ primary: { fontWeight: 500 } }} />
           </ListItemButton>
         </ListItem>
       </Box>

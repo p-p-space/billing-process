@@ -6,7 +6,7 @@ import { Box } from '@mui/material';
 import logo from '%/images/logo.svg';
 import SectionSidebar from './SectionSidebar';
 
-export default function ListSidebar(): JSX.Element {
+export default function ListSidebar() {
   return (
     <>
       <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', height: 108 }}>

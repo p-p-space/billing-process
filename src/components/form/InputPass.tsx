@@ -7,7 +7,7 @@ import { FormControl, FormHelperText, InputAdornment, FormLabel, OutlinedInput, 
 //Internal app
 import type { TextFieldProps } from '@/interfaces';
 
-function InputMUI(props: Readonly<TextFieldProps>): JSX.Element {
+function InputMUI(props: Readonly<TextFieldProps>) {
   const { name, label, labelError, error, value, onChange, inputProperties } = props;
 
   const [passwordShown, setPasswordShown] = useState(false);

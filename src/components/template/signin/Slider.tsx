@@ -11,11 +11,11 @@ import screen2 from '%/images/screen2.svg';
 export default function Slider() {
   const t = useTranslations('carousel');
 
-  const timer = useRef<NodeJS.Timeout>();
+  const timer = useRef<NodeJS.Timeout | null>(null);
 
-  const slideContainer = useRef<HTMLDivElement>();
+  const slideContainer = useRef<HTMLDivElement>(null);
 
-  const paginationContainer = useRef<HTMLDivElement>();
+  const paginationContainer = useRef<HTMLDivElement>(null);
 
   const componentLoaded = useRef<boolean>(false);
 
@@ -36,7 +36,9 @@ export default function Slider() {
 
   const changeSlide = useCallback(
     (page: number) => {
-      clearTimeout(timer.current);
+      if (timer.current !== null) {
+        clearTimeout(timer.current);
+      }
       if (currentSlide + page > 1) {
         setCurrentSlide(0);
         return;

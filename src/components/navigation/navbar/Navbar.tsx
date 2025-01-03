@@ -7,7 +7,7 @@ import UserInfo from './UserInfo';
 import { useNavbarStore } from '@/store';
 import type { DrawerToggleProps } from '@/interfaces';
 
-export default function Navbar(props: Readonly<DrawerToggleProps>): JSX.Element {
+export default function Navbar(props: Readonly<DrawerToggleProps>) {
   const { handleDrawerToggle } = props;
 
   const navbarObject = useNavbarStore((state) => state.navbarObject);

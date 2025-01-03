@@ -6,7 +6,7 @@ import { FormControl, FormHelperText, InputAdornment, FormLabel, OutlinedInput }
 //Internal app
 import type { TextFieldProps } from '@/interfaces';
 
-function InputMUI(props: Readonly<TextFieldProps>): JSX.Element {
+function InputMUI(props: Readonly<TextFieldProps>) {
   const { name, label, labelError, type, optional, error, value, onChange, ...restProps } = props;
 
   const t = useTranslations('validation');

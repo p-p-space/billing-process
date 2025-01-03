@@ -9,8 +9,8 @@ import { useMenuStore } from '@/store';
 export default function ItemsSidebar({
   data,
 }: {
-  data: Array<{ id: string; url: string; enable: boolean; icon: string }>;
-}): JSX.Element {
+  readonly data: ReadonlyArray<{ id: string; url: string; enable: boolean; icon: string }>;
+}) {
   const t = useTranslations('menu');
 
   const currentItem = useMenuStore((state) => state.currentItem);
@@ -21,12 +21,12 @@ export default function ItemsSidebar({
 
   return (
     <>
-      {data.map((menu: { id: string; url: string; enable: boolean; icon: string }, i: number) => {
+      {data.map((menu: { id: string; url: string; enable: boolean; icon: string }) => {
         const currentItemMenu = currentItem === menu.id;
 
         return (
           <ListItem
-            key={i}
+            key={menu.id}
             disablePadding
             sx={{ display: menu.enable ? 'flex' : 'none' }}
             onClick={() => {
@@ -44,7 +44,7 @@ export default function ItemsSidebar({
               <ListItemIcon sx={{ minWidth: 'auto', fontSize: 24 }}>
                 <i className={menu.icon}></i>
               </ListItemIcon>
-              <ListItemText primary={t(menu.id)} primaryTypographyProps={{ fontWeight: 500 }} />
+              <ListItemText primary={t(menu.id)} slotProps={{ primary: { fontWeight: 500 } }} />
             </ListItemButton>
           </ListItem>
         );

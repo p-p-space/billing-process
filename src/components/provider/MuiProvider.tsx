@@ -13,7 +13,7 @@ import { toggles } from '@/utils/constans';
  *
  * @param children - Children element.
  */
-export default function MuiProvider({ children }: Readonly<RootLayout>): JSX.Element {
+export default function MuiProvider({ children }: Readonly<RootLayout>) {
   const handleBeforeUnload = useCallback(() => {
     // TODO: Implement logout browserAxios.get('/logout');
   }, []);

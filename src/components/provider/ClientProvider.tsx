@@ -8,7 +8,7 @@ import type { RootLayout } from '@/interfaces';
 
 const queryClient = new QueryClient();
 
-export default function ClientProvider({ children }: Readonly<RootLayout>): JSX.Element {
+export default function ClientProvider({ children }: Readonly<RootLayout>) {
   const [isHydrated, setIsHydrated] = useState<boolean>(true);
 
   useEffect(() => {
