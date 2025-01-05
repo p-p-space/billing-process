@@ -3,7 +3,7 @@ import { Box, CircularProgress, CssBaseline } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 // Internal app
-import theme from '@/theme/theme-default';
+import { createTenantTheme } from '@/tenants/themeTenant';
 import type { ChildrenProps, ThemeProps } from '@/interfaces';
 
 /**
@@ -12,7 +12,7 @@ import type { ChildrenProps, ThemeProps } from '@/interfaces';
  * @param children - Children element.
  */
 export default function MuiProvider({ children, TenantTheme }: ChildrenProps & ThemeProps) {
-  console.log({ TenantTheme });
+  const theme = createTenantTheme(TenantTheme);
   const [isHydrated, setIsHydrated] = useState(true);
 
   useEffect(() => {
