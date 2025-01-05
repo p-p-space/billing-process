@@ -1,51 +1,33 @@
 'use client';
-
-import { CssBaseline } from '@mui/material';
-import { useEffect, useCallback } from 'react';
+import { Box, CircularProgress, CssBaseline } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 // Internal app
 import theme from '@/theme/theme-default';
-import type { RootLayout } from '@/interfaces';
-import { toggles } from '@/utils/constans';
+import type { ChildrenProps, ThemeProps } from '@/interfaces';
 
 /**
  * Provider setting material ui theme
  *
  * @param children - Children element.
  */
-export default function MuiProvider({ children }: Readonly<RootLayout>) {
-  const handleBeforeUnload = useCallback(() => {
-    // TODO: Implement logout browserAxios.get('/logout');
-  }, []);
-
-  const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      if (toggles.handleRefresh === 'ON') {
-        const keyRegex = /^r$/i;
-        const keyEvent = keyRegex.test(event.key);
-        const isF5 = event.key === 'F5';
-        const isCtrlR = event.ctrlKey && keyEvent;
-        const isMetaR = event.metaKey && keyEvent;
-
-        if (isF5 || isCtrlR || isMetaR) {
-          window.removeEventListener('beforeunload', handleBeforeUnload);
-        }
-      }
-    },
-    [handleBeforeUnload]
-  );
+export default function MuiProvider({ children, TenantTheme }: ChildrenProps & ThemeProps) {
+  console.log({ TenantTheme });
+  const [isHydrated, setIsHydrated] = useState(true);
 
   useEffect(() => {
-    if (toggles.handleRefresh === 'ON') {
-      window.addEventListener('keydown', handleKeyDown);
-      window.addEventListener('beforeunload', handleBeforeUnload);
+    setIsHydrated(false);
+  }, []);
 
-      return () => {
-        window.removeEventListener('keydown', handleKeyDown);
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-      };
-    }
-  }, [handleKeyDown, handleBeforeUnload]);
+  if (isHydrated) {
+    return (
+      <ThemeProvider theme={theme}>
+        <Box sx={{ alignItems: 'center', display: 'flex', height: '100vh', width: '100%', justifyContent: 'center' }}>
+          <CircularProgress size="5rem" sx={{ color: 'primary.main' }} thickness={2} disableShrink />
+        </Box>
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider theme={theme}>

@@ -1,26 +1,46 @@
 'use client';
-
-import { useEffect, useState } from 'react';
+import { Container } from '@mui/material';
+import { useCallback, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Box, CircularProgress, Container } from '@mui/material';
 //Internal app
+import { toggles } from '@/utils/constans';
 import type { RootLayout } from '@/interfaces';
 
 const queryClient = new QueryClient();
 
 export default function ClientProvider({ children }: Readonly<RootLayout>) {
-  const [isHydrated, setIsHydrated] = useState<boolean>(true);
-
-  useEffect(() => {
-    setIsHydrated(false);
+  const handleBeforeUnload = useCallback(() => {
+    // TODO: Implement logout browserAxios.get('/logout');
   }, []);
 
-  if (isHydrated)
-    return (
-      <Box sx={{ alignItems: 'center', display: 'flex', height: '100vh', width: '100%', justifyContent: 'center' }}>
-        <CircularProgress size="5rem" sx={{ color: 'primary.main' }} thickness={2} disableShrink />
-      </Box>
-    );
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (toggles.handleRefresh === 'ON') {
+        const keyRegex = /^r$/i;
+        const keyEvent = keyRegex.test(event.key);
+        const isF5 = event.key === 'F5';
+        const isCtrlR = event.ctrlKey && keyEvent;
+        const isMetaR = event.metaKey && keyEvent;
+
+        if (isF5 || isCtrlR || isMetaR) {
+          window.removeEventListener('beforeunload', handleBeforeUnload);
+        }
+      }
+    },
+    [handleBeforeUnload]
+  );
+
+  useEffect(() => {
+    if (toggles.handleRefresh === 'ON') {
+      window.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('beforeunload', handleBeforeUnload);
+
+      return () => {
+        window.removeEventListener('keydown', handleKeyDown);
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }
+  }, [handleKeyDown, handleBeforeUnload]);
 
   return (
     <QueryClientProvider client={queryClient}>
