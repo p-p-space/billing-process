@@ -39,7 +39,7 @@ export default function SectionSidebar() {
         <ListItem disablePadding sx={{ display: 'flex' }}>
           <ListItemButton
             onClick={() => {
-              push('/signin');
+              push('signin');
             }}
             sx={{ width: '100%', display: 'flex', alignItems: 'center', gap: 1 }}
           >

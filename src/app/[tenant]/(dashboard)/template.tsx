@@ -7,7 +7,7 @@ import { useMenuStore } from '@/store';
 import type { RootLayout } from '@/interfaces';
 import { Navbar, Sidebar } from '@/components';
 
-export default function Template({ children }: Readonly<RootLayout>): JSX.Element {
+export default function Template({ children }: Readonly<RootLayout>) {
   const drawerWidth = 280;
   const { drawerStatus, setDrawerStatus } = useMenuStore();
   const [isClosing, setIsClosing] = useState<boolean>(false);

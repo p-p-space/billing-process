@@ -33,7 +33,7 @@ export default function FormSignin() {
     },
     onSuccess: (data) => {
       console.log(data);
-      push('signin');
+      push('companies');
     },
   });
 
