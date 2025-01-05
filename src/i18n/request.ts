@@ -1,7 +1,7 @@
 import { getRequestConfig } from 'next-intl/server';
 // Internal app
 import { manageRequest } from '@/libs';
-import { getAppLang } from './services';
+import { getAppLang } from './servI18n';
 import type { Lang, LangData, LangFiles, RequestContent } from '@/interfaces';
 
 /**

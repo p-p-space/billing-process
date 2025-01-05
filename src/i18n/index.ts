@@ -1,3 +1,3 @@
-export * from './language';
+export * from './langI18n';
 export * from './request';
-export * from './services';
+export * from './servI18n';

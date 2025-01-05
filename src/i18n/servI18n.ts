@@ -3,7 +3,7 @@
 // Internal app
 import type { Lang } from '@/interfaces';
 import { cookieValues, createCookie, readCookie } from '@/utils';
-import { langCookieName, defaultLang, langs } from './language';
+import { langCookieName, defaultLang, langs } from './';
 
 /**
  * Gets the application language from cookies.
