@@ -24,7 +24,6 @@ export default async function RootLayoutMain({ children, params }: ChildrenProps
   const { tenant } = await params;
   const lang = await getLocale();
   const messages = await getMessages();
-  console.log({ tenant });
 
   return (
     <html lang={lang} suppressHydrationWarning>
