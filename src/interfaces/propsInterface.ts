@@ -1,4 +1,4 @@
-import type { Tenant } from './appInterface';
+import type { StringMap, Tenant } from './appInterface';
 
 // Type definition for props that include React children
 export type ChildrenProps = Readonly<{
@@ -13,5 +13,5 @@ export type ParamsProps = {
 };
 
 export type ThemeProps = {
-  TenantTheme: Tenant;
+  themeVars: StringMap;
 };

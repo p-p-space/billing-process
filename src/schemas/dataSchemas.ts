@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 const codeRegex = /^codeHttp\.\d{2}\.\d{3}$/;
 
+export const stringMap = z.record(z.string(), z.string());
+
 export const tenantSchema = z.enum(['bt', 'pm']);
 
 export const requestBodySchema = z.record(z.unknown());

@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import { Box, Grid2 } from '@mui/material/';
 //Internal App
-import logo from '%/images/logo.svg';
 import { Slider } from '@/components';
 
 export default function Template({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -11,7 +10,14 @@ export default function Template({ children }: Readonly<{ children: React.ReactN
     <Grid2 container spacing={3} height="100vh">
       <Grid2 size={{ lg: 7 }} display={{ xs: 'none', lg: 'flex' }} alignItems="center" justifyContent="center">
         <Box sx={{ p: 3, display: 'block', position: 'absolute', top: 2, left: 2 }}>
-          <Image src={logo} width={176} height={40} style={{ margin: 'auto' }} alt={`Picture of the author`} priority />
+          <Image
+            src={`/images/bt/logo.svg`}
+            width={176}
+            height={40}
+            style={{ margin: 'auto' }}
+            alt={`Picture of the author`}
+            priority
+          />
         </Box>
         <Slider />
       </Grid2>
@@ -31,7 +37,7 @@ export default function Template({ children }: Readonly<{ children: React.ReactN
         <Box sx={{ width: '100%', maxWidth: 320 }}>
           <Box sx={{ p: 3, display: { xs: 'block', md: 'none' }, textAlign: 'center' }}>
             <Image
-              src={logo}
+              src={`/images/pm/logo.svg`}
               width={176}
               height={40}
               style={{ margin: 'auto' }}

@@ -1,12 +1,8 @@
 'use client';
-
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Box, Typography, IconButton, Divider } from '@mui/material';
-//Interal app
-import screen1 from '%/images/screen1.svg';
-import screen2 from '%/images/screen2.svg';
 
 export default function Slider() {
   const t = useTranslations('carousel');
@@ -25,12 +21,12 @@ export default function Slider() {
     {
       title: t('adapt-title'),
       description: t('adapt-content'),
-      image: screen1,
+      image: `/images/bt/screen1.svg`,
     },
     {
       title: t('scale-title'),
       description: t('scale-content'),
-      image: screen2,
+      image: `/images/pm/screen2.svg`,
     },
   ];
 
@@ -76,7 +72,14 @@ export default function Slider() {
             }}
             className="fade-in"
           >
-            <Image src={slide.image} alt={`Picture of the autor`} style={{ width: 'auto', height: 'auto' }} />
+            <Image
+              src={slide.image}
+              alt={`Picture of the autor`}
+              style={{ width: 'auto', height: 'auto' }}
+              width={220}
+              height={220}
+              priority
+            />
             <Typography variant="h2" sx={{ py: 4, fontWeight: 500 }}>
               {slide.title}
             </Typography>
