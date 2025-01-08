@@ -1,10 +1,10 @@
 import { SettingsApp, Tenant } from '@/interfaces';
 
-const petroMinTenant = 'pm' as Tenant;
+const customerTenant = 'pm' as Tenant;
 
 export const settings = {
-  tenant: petroMinTenant,
-  tenantTheme: petroMinTenant,
-  tenantImages: petroMinTenant,
-  Tenantdictionary: petroMinTenant,
+  tenant: customerTenant,
+  tenantTheme: customerTenant,
+  tenantImages: customerTenant,
+  tenantDictionary: customerTenant,
 } as SettingsApp;
