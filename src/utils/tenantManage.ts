@@ -1,0 +1,13 @@
+import { Tenant } from '@/interfaces';
+import { allowedTenants, defaultTenant } from '@/constants';
+
+/**
+ * Checks if the tenant value is an available tenant.
+ * @param {string | undefined} value - The url tenant.
+ * @returns {Tenant} The available tenant or the default tenant.
+ */
+export function availableTenant(value: string | undefined): Tenant {
+  const tenantUrl = value && allowedTenants.includes(value as Tenant) ? value : defaultTenant;
+
+  return tenantUrl as Tenant;
+}

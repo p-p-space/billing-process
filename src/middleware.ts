@@ -1,12 +1,12 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
-import { cookieValues } from './utils';
-import { apiPaths } from './utils/constans';
+import { apiPaths, AppCookieName } from './constants';
 import { handleCustomerRequest } from './services';
-import { langCookieName, availableValueCookie } from './i18n';
+import { langCookieName, availableLang } from './i18n';
+import { availableTenant, cookieValues } from './utils';
 
 export async function middleware(request: NextRequest) {
-  const { cookies, nextUrl } = request;
+  const { cookies, nextUrl, url } = request;
 
   if (nextUrl.pathname.startsWith(apiPaths.servPath)) {
     const responseApi = await handleCustomerRequest(request);
@@ -15,10 +15,14 @@ export async function middleware(request: NextRequest) {
   } else {
     const responsePages = NextResponse.next();
     const lang = cookies.get(langCookieName)?.value;
-    const cookieValue = await availableValueCookie(lang);
-    const { cookieContent } = cookieValues({ name: langCookieName, value: cookieValue });
+    const lagnValue = await availableLang(lang);
+    const tenantUrl = url.split('/')[3];
+    const tenantValue = availableTenant(tenantUrl);
+    const { cookieContent: cookieLang } = cookieValues({ name: langCookieName, value: lagnValue });
+    const { cookieContent: cookietenant } = cookieValues({ name: AppCookieName, value: tenantValue });
 
-    responsePages.cookies.set(cookieContent);
+    responsePages.cookies.set(cookieLang);
+    responsePages.cookies.set(cookietenant);
 
     return responsePages;
   }

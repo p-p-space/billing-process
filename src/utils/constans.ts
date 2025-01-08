@@ -62,17 +62,3 @@ export const headersKey = {
   servTenantId: 'x-tenant-id', // Header key for service tenant ID
   servReqId: 'x-request-id', // Header key for service request ID
 };
-
-// API Versions
-export const apiVersions = {
-  serv: 'v0', // Version for service API
-  app: 'app-v1', // Version for application API
-};
-
-// API Paths constructed using template literals
-export const apiPaths = {
-  servPath: `/api/${apiVersions.serv}`, // Path for service API
-  appPath: `/api/${apiVersions.app}`, // Path for application API
-  servApi: 'services', // Services API endpoint
-  appApis: ['language', 'logout', 'prueba'], // List of application API endpoints
-};

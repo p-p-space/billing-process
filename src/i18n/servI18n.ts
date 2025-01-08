@@ -11,7 +11,7 @@ import { langCookieName, defaultLang, langs } from './';
  */
 export async function getAppLang(): Promise<{ locale: Lang; tenant: string }> {
   const lang = await readCookie(langCookieName);
-  const locale = await availableValueCookie(lang);
+  const locale = await availableLang(lang);
   const tenant = 'bt';
 
   return { locale, tenant };
@@ -33,7 +33,7 @@ export async function setAppLang(lang: Lang): Promise<void> {
  * @param {string | undefined} value - The cookie value.
  * @returns {Promise<Lang>} The valid language or the default language.
  */
-export async function availableValueCookie(value: string | undefined): Promise<Lang> {
+export async function availableLang(value: string | undefined): Promise<Lang> {
   const cookieValue = value && langs.includes(value as Lang) ? value : defaultLang;
 
   return cookieValue as Lang;
