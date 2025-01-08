@@ -1,20 +1,59 @@
-import { StringMap } from '@/interfaces';
 import { createTheme } from '@mui/material';
 import type { Theme } from '@mui/material';
+// Internal App
+import { StringMap } from '@/interfaces';
 
-export function createTenantTheme(themeVars: StringMap) {
+/**
+ * Creates a tenant-specific theme using the provided theme variables.
+ *
+ * @param themeVars - An object containing theme variables as key-value pairs.
+ * @returns A MUI theme object customized for the tenant.
+ */
+export function createTenantTheme(themeVars: StringMap): Theme {
   const themeUi = {
     colorSchemes: { light: true, dark: true },
     cssVariables: {
       colorSchemeSelector: 'class',
     },
-    palette: getPalette(themeVars),
-    typography: getTypography(themeVars),
-    shape: getshape(themeVars),
     components: getComponents(themeVars),
+    palette: getPalette(themeVars),
+    shape: getShape(themeVars),
+    typography: getTypography(themeVars),
   };
 
   return createTheme(themeUi);
+}
+
+/**
+ * Retrieves the component overrides for the MUI theme.
+ *
+ * @param themeVars - An object containing theme variables as key-value pairs.
+ * @returns An object containing component overrides for the MUI theme.
+ */
+function getComponents(themeVars: StringMap) {
+  return {
+    MuiCssBaseline: getMuiCssBaseline(),
+    MuiContainer: getMuiContainer(),
+    MuiInputBase: getMuiInputBase(themeVars),
+    MuiOutlinedInput: getMuiOutlinedInput(themeVars),
+    MuiInputLabel: getMuiInputLabel(themeVars),
+    MuiFormLabel: getMuiFormLabel(themeVars),
+    MuiButton: getMuiButton(themeVars),
+    MuiAlert: getMuiAlert(),
+    MuiAppBar: getMuiAppBar(themeVars),
+    MuiAvatar: getMuiAvatar(themeVars),
+    MuiIconButton: getMuiIconButton(themeVars),
+    MuiDrawer: getMuiDrawer(),
+    MuiToolbar: getMuiToolbar(),
+    MuiMenu: getMuiMenu(themeVars),
+    MuiMenuItem: getMuiMenuItem(themeVars),
+    MuiListItemButton: getMuiListItemButton(themeVars),
+    MuiTooltip: getMuiTooltip(themeVars),
+    MuiCard: getMuiCard(themeVars),
+    MuiTabs: getMuiTabs(themeVars),
+    MuiCardHeader: getMuiCardHeader(),
+    MuiCardContent: getMuiCardContent(),
+  };
 }
 
 function getPalette(themeVars: StringMap) {
@@ -34,6 +73,12 @@ function getPalette(themeVars: StringMap) {
       300: themeVars.grey300,
       400: themeVars.grey400,
     },
+  };
+}
+
+function getShape(themeVars: StringMap) {
+  return {
+    borderRadius: Number(themeVars.borderRadius),
   };
 }
 
@@ -67,38 +112,6 @@ function getTypography(themeVars: StringMap) {
     caption: {
       fontSize: `${themeVars.small}px`,
     },
-  };
-}
-
-function getshape(themeVars: StringMap) {
-  return {
-    borderRadius: Number(themeVars.borderRadius),
-  };
-}
-
-function getComponents(themeVars: StringMap) {
-  return {
-    MuiCssBaseline: getMuiCssBaseline(),
-    MuiContainer: getMuiContainer(),
-    MuiInputBase: getMuiInputBase(themeVars),
-    MuiOutlinedInput: getMuiOutlinedInput(themeVars),
-    MuiInputLabel: getMuiInputLabel(themeVars),
-    MuiFormLabel: getMuiFormLabel(themeVars),
-    MuiButton: getMuiButton(themeVars),
-    MuiAlert: getMuiAlert(),
-    MuiAppBar: getMuiAppBar(themeVars),
-    MuiAvatar: getMuiAvatar(themeVars),
-    MuiIconButton: getMuiIconButton(themeVars),
-    MuiDrawer: getMuiDrawer(),
-    MuiToolbar: getMuiToolbar(),
-    MuiMenu: getMuiMenu(themeVars),
-    MuiMenuItem: getMuiMenuItem(themeVars),
-    MuiListItemButton: getMuiListItemButton(themeVars),
-    MuiTooltip: getMuiTooltip(themeVars),
-    MuiCard: getMuiCard(themeVars),
-    MuiTabs: getMuiTabs(themeVars),
-    MuiCardHeader: getMuiCardHeader(),
-    MuiCardContent: getMuiCardContent(),
   };
 }
 
