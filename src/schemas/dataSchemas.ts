@@ -6,7 +6,14 @@ export const stringMap = z.record(z.string(), z.string());
 
 export const tenantSchema = z.enum(['bt', 'pm']);
 
-export const settingsApp = z.record(z.string(), tenantSchema);
+export const settingsApp = z
+  .object({
+    tenant: tenantSchema,
+    tenantTheme: tenantSchema,
+    tenantImages: tenantSchema,
+    tenantDictionary: tenantSchema,
+  })
+  .catchall(z.string());
 
 export const requestBodySchema = z.record(z.unknown());
 
