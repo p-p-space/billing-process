@@ -1,6 +1,7 @@
 export * from './appInterface';
 export * from './constans';
 export * from './forms';
+export * from './httpInterface';
 export * from './navigation';
 export * from './propsInterface';
 export * from './stores';

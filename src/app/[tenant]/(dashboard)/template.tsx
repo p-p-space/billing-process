@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { Box } from '@mui/material';
 //Internal app
 import { useMenuStore } from '@/store';
-import type { RootLayout } from '@/interfaces';
+import type { ChildrenProps } from '@/interfaces';
 import { Navbar, Sidebar } from '@/components';
 
-export default function Template({ children }: Readonly<RootLayout>) {
+export default function Template({ children }: ChildrenProps) {
   const drawerWidth = 280;
   const { drawerStatus, setDrawerStatus } = useMenuStore();
   const [isClosing, setIsClosing] = useState<boolean>(false);

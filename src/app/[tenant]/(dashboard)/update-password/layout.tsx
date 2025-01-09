@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 //Internal app
-import type { RootLayout } from '@/interfaces';
+import type { ChildrenProps } from '@/interfaces';
 import { getTranslations } from 'next-intl/server';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -15,6 +15,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function UpdatePasswordlayout({ children }: Readonly<RootLayout>) {
+export default function UpdatePasswordlayout({ children }: ChildrenProps) {
   return <>{children}</>;
 }

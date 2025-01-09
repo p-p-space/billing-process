@@ -4,11 +4,11 @@ import { useCallback, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 //Internal app
 import { toggles } from '@/constans';
-import type { RootLayout } from '@/interfaces';
+import type { ChildrenProps } from '@/interfaces';
 
 const queryClient = new QueryClient();
 
-export default function ClientProvider({ children }: Readonly<RootLayout>) {
+export default function ClientProvider({ children }: ChildrenProps) {
   const handleBeforeUnload = useCallback(() => {
     // TODO: Implement logout browserAxios.get('/logout');
   }, []);
