@@ -10,7 +10,7 @@ export default function ListSidebar() {
     <>
       <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', height: 108 }}>
         <Image
-          src={`/images/logo.svg`}
+          src={`/images/bt/logo.svg`}
           width={176}
           height={40}
           style={{ margin: 'auto' }}
