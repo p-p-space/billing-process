@@ -18,8 +18,7 @@ const servicesAxios = axios.create({
  * Encrypts the request data and signs it before sending.
  */
 servicesAxios.interceptors.request.use(async (request) => {
-  const { data, headers, url, baseURL } = request;
-  console.log({ baseURL, url });
+  const { data, headers } = request;
   const appContentSec = !!headers[headersKey.appContentSecurity];
 
   if (data?.payload && appContentSec) {
