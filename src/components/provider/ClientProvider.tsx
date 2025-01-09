@@ -3,7 +3,7 @@ import { Container } from '@mui/material';
 import { useCallback, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 //Internal app
-import { toggles } from '@/utils/constans';
+import { toggles } from '@/constans';
 import type { RootLayout } from '@/interfaces';
 
 const queryClient = new QueryClient();

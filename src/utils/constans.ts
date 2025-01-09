@@ -1,8 +1,3 @@
-// Toggles for enabling/disabling features
-export const toggles = {
-  handleRefresh: process.env.NEXT_PUBLIC_HANDLE_REFRESH ?? 'OFF',
-};
-
 // Tenant and Credentials for authentication
 export const creds = {
   tenantId: process.env.TENANT_ID ?? '',

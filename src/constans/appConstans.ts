@@ -15,6 +15,11 @@ export const allowedTenants: Tenant[] = (process.env.ALLOED_TENANTS?.split(',').
   tenant.trim()
 ) as Tenant[]) ?? [tenant];
 
+// Toggles for enabling/disabling features
+export const toggles = {
+  handleRefresh: process.env.NEXT_PUBLIC_HANDLE_REFRESH ?? 'OFF',
+};
+
 // Base URLs for the application and services
 export const baseURLs = {
   app: process.env.NEXT_PUBLIC_WEB_URL ?? '',
