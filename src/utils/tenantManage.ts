@@ -1,5 +1,5 @@
 import { Tenant } from '@/interfaces';
-import { allowedTenants, defaultTenant } from '@/constants';
+import { allowedTenants, defaultTenant } from '@/constans';
 
 /**
  * Checks if the tenant value is an available tenant.

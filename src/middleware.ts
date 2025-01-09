@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
-import { apiVersions, AppCookieName } from './constants';
+import { apiVersions, AppCookieName } from './constans';
 import { handleCustomerRequest } from './services';
 import { langCookieName, availableLang } from './i18n';
 import { availableTenant, cookieValues } from './utils';

@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
 import type { RequestContent } from '@/interfaces';
 import { createHttpConfig, manageRequest } from '@/libs';
-import { apiPaths, apiVersions, headersKey } from '@/constants';
+import { apiPaths, apiVersions, headersKey } from '@/constans';
 
 /**
  * Handles customer requests by processing the incoming request, configuring the HTTP request,

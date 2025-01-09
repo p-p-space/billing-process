@@ -11,7 +11,7 @@ import { getSchema } from '@/config';
 import { useBrowserRequest } from '@/hooks';
 import { InputPass, InputText } from '@/components';
 import type { ReqResBody, RequestContent } from '@/interfaces';
-import { apiPaths } from '@/constants';
+import { apiPaths } from '@/constans';
 
 export default function FormSignin() {
   const t = useTranslations('signin');

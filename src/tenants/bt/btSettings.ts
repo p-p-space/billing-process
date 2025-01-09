@@ -1,4 +1,4 @@
-import { defaultTenant } from '@/constants';
+import { defaultTenant } from '@/constans';
 import { SettingsApp } from '@/interfaces';
 
 export const defaultSettings = {

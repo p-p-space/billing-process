@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
-import { baseURLs, jwtAlgs, headersKey } from '@/constants';
+import { baseURLs, jwtAlgs, headersKey } from '@/constans';
 import { createErrorResponseApi, createResponseApi } from './helpersAxios';
 import { decryptData, disassembleJWS, encryptData, signData } from '@/security';
 import { servKeys } from '@/utils/constans';

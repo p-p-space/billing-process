@@ -1,5 +1,5 @@
 // Internal App
-import { allowedTenants, defaultTenant } from '@/constants';
+import { allowedTenants, defaultTenant } from '@/constans';
 import { SettingsApp, StringMap, Tenant } from '@/interfaces';
 import { defaultSettings, defaultThemeVars } from './bt';
 

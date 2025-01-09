@@ -2,7 +2,7 @@
 import { Button } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 // Internal App
-import { apiPaths } from '@/constants';
+import { apiPaths } from '@/constans';
 import { useBrowserRequest } from '@/hooks';
 import { RequestContent } from '@/interfaces';
 
