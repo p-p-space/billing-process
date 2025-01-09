@@ -1,9 +1,3 @@
-// Base URLs for the application and services
-export const baseURLs = {
-  app: process.env.NEXT_PUBLIC_WEB_URL ?? '',
-  serv: process.env.SERV_URL ?? '',
-};
-
 // Toggles for enabling/disabling features
 export const toggles = {
   handleRefresh: process.env.NEXT_PUBLIC_HANDLE_REFRESH ?? 'OFF',

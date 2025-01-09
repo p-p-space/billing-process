@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
-import { apiPaths } from '@/constants';
+import { apiPaths, apiVersions } from '@/constants';
 import { headersKey } from '@/utils/constans';
 import type { RequestContent } from '@/interfaces';
 import { createHttpConfig, manageRequest } from '@/libs';
@@ -26,13 +26,13 @@ export async function handleCustomerRequest(request: NextRequest): Promise<NextR
   const { headers, method, nextUrl } = request;
   const { pathname, search } = nextUrl;
   const uriPath = `${pathname}${search}`;
-  const neededPart = uriPath.split('/')[3];
-  let pathUrl = uriPath.replace(apiPaths.servPath, '');
+  const apiApp = uriPath.split('/')[3];
+  let pathUrl = uriPath.replace(apiVersions.apiSearch, '/');
   const httpConfig = createHttpConfig({ timeout: 59700, headers });
-  httpConfig.headers[headersKey.appOriginPath] = pathUrl;
+  httpConfig.headers[headersKey.appOriginPath] = uriPath;
 
-  if (!apiPaths.appApis.includes(neededPart)) {
-    pathUrl = `/${apiPaths.servApi}`;
+  if (!apiPaths.appApis.includes(apiApp)) {
+    pathUrl = `/${apiPaths.appServApi}`;
   }
 
   const requestConfig = {

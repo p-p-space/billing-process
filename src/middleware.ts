@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
-import { apiPaths, AppCookieName } from './constants';
+import { apiVersions, AppCookieName } from './constants';
 import { handleCustomerRequest } from './services';
 import { langCookieName, availableLang } from './i18n';
 import { availableTenant, cookieValues } from './utils';
@@ -8,7 +8,7 @@ import { availableTenant, cookieValues } from './utils';
 export async function middleware(request: NextRequest) {
   const { cookies, nextUrl, url } = request;
 
-  if (nextUrl.pathname.startsWith(apiPaths.servPath)) {
+  if (apiVersions.apiServ.some((api) => nextUrl.pathname.startsWith(api))) {
     const responseApi = await handleCustomerRequest(request);
 
     return responseApi;

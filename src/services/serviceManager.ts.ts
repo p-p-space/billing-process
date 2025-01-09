@@ -1,8 +1,9 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 // Internal App
-import { baseURLs, creds, headersKey } from '@/utils/constans';
-import type { RequestBody, RequestContent } from '@/interfaces';
+import { creds, headersKey } from '@/utils/constans';
 import { createHttpConfig, manageRequest } from '@/libs';
+import type { RequestBody, RequestContent } from '@/interfaces';
 
 const oauthToken: { bearer?: string } = {
   bearer: undefined,
@@ -56,7 +57,7 @@ export async function getOauthBearer() {
 
   const requestConfig = {
     method: 'post',
-    pathUrl: `${baseURLs.serv}/oauth2/v1/token`,
+    pathUrl: `/oauth2/v1/token`,
     dataRequest,
     httpConfig,
   } as RequestContent;

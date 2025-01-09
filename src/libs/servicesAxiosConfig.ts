@@ -1,16 +1,16 @@
 import axios from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
-import { apiPaths } from '@/constants';
+import { baseURLs } from '@/constants';
 import { createErrorResponseApi, createResponseApi } from './helpersAxios';
 import { decryptData, disassembleJWS, encryptData, signData } from '@/security';
-import { jwtAlgs, baseURLs, servKeys, headersKey } from '@/utils/constans';
+import { jwtAlgs, servKeys, headersKey } from '@/utils/constans';
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
 const servicesAxios = axios.create({
-  baseURL: `${baseURLs.serv}${apiPaths.servPath}`,
+  baseURL: `${baseURLs.serv}`,
 });
 
 /**
@@ -18,7 +18,8 @@ const servicesAxios = axios.create({
  * Encrypts the request data and signs it before sending.
  */
 servicesAxios.interceptors.request.use(async (request) => {
-  const { data, headers } = request;
+  const { data, headers, url, baseURL } = request;
+  console.log({ baseURL, url });
   const appContentSec = !!headers[headersKey.appContentSecurity];
 
   if (data?.payload && appContentSec) {

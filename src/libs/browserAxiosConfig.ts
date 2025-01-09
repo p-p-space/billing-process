@@ -1,16 +1,16 @@
 import axios from 'axios';
 import { importSPKI } from 'jose';
 // Internal app
-import { apiPaths } from '@/constants';
+import { baseURLs } from '@/constants';
 import { createErrorResponseApi, createResponseApi } from './helpersAxios';
-import { jwtAlgs, webKeys, baseURLs, headersKey } from '@/utils/constans';
+import { jwtAlgs, webKeys, headersKey } from '@/utils/constans';
 import { encryptData, decryptData, signData, verifySignature, disassembleJWS, assembleJWS, encode } from '@/security';
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
 const browserAxios = axios.create({
-  baseURL: `${baseURLs.app}${apiPaths.servPath}`,
+  baseURL: `${baseURLs.app}`,
 });
 
 /**
