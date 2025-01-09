@@ -48,8 +48,8 @@ export async function connectServices(request: NextRequest) {
 export async function getOauthBearer() {
   const dataRequest: ReqResBody = {
     grant_type: 'client_credentials',
-    client_id: creds.key,
-    client_secret: creds.secret,
+    client_id: creds.clientId,
+    client_secret: creds.clientSecret,
   };
 
   const httpConfig = createHttpConfig({ timeout: 59600 });

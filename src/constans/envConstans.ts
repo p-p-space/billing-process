@@ -1,8 +1,11 @@
 // Tenant and Credentials for authentication
 export const creds = {
   tenantId: process.env.TENANT_ID ?? '',
-  key: process.env.CREDENTIALS_KEY ?? '',
-  secret: process.env.CREDENTIALS_SECRET ?? '',
+  clientId: process.env.CLIENT_ID ?? '',
+  clientSecret: process.env.CLIENT_SECRET ?? '',
+  awsRegion: process.env.AWS_REGION ?? '',
+  ptCognitoClientId: process.env.PT_COGNITO_CLIENT_ID ?? '',
+  ptCognitoClientSecret: process.env.PT_COGNITO_CLIENT_SECRET ?? '',
 };
 
 // Web Keys and Secrets (Publicly Exposed)
