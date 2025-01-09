@@ -10,23 +10,6 @@ export const creds = {
   secret: process.env.CREDENTIALS_SECRET ?? '',
 };
 
-// JWT and JWE Algorithms used for encryption and signing
-export const jwtAlgs = {
-  jweAlgRsa: 'RSA-OAEP-256', // RSA algorithm for JWE
-  jweAlgSec: 'A256KW', // Key wrapping algorithm for JWE
-  jweEnc: 'A256GCM', // Encryption algorithm for JWE
-  jwsAlgRsa: 'RS512', // RSA algorithm for JWS
-  jwsAlgSec: 'HS512', // HMAC algorithm for JWS
-  jwtAlg: 'PS512', // Algorithm for JWT
-};
-
-// JWT Configuration settings
-export const jwtConfig = {
-  audience: 'audience', // Audience for the JWT
-  issuer: 'issuer', // Issuer of the JWT
-  expiresIn: '2h', // Expiration time for the JWT
-};
-
 // Web Keys and Secrets (Publicly Exposed)
 export const webKeys = {
   secJweStr: process.env.NEXT_PUBLIC_SECRET_JWE_STR ?? '',

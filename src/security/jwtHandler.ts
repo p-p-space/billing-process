@@ -1,7 +1,7 @@
 import type { JWTPayload } from 'jose';
 import { SignJWT, jwtVerify, importPKCS8, importSPKI } from 'jose';
 // Internal App
-import { jwtAlgs, jwtConfig } from '@/utils/constans';
+import { jwtAlgs, jwtConfig } from '@/constants';
 
 /**
  * Creates a JWT with the given payload.

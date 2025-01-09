@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { importSPKI } from 'jose';
 // Internal app
-import { baseURLs } from '@/constants';
+import { baseURLs, jwtAlgs } from '@/constants';
 import { createErrorResponseApi, createResponseApi } from './helpersAxios';
-import { jwtAlgs, webKeys, headersKey } from '@/utils/constans';
+import { webKeys, headersKey } from '@/utils/constans';
 import { encryptData, decryptData, signData, verifySignature, disassembleJWS, assembleJWS, encode } from '@/security';
 
 /**

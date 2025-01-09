@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
-import { baseURLs } from '@/constants';
+import { baseURLs, jwtAlgs } from '@/constants';
 import { createErrorResponseApi, createResponseApi } from './helpersAxios';
 import { decryptData, disassembleJWS, encryptData, signData } from '@/security';
-import { jwtAlgs, servKeys, headersKey } from '@/utils/constans';
+import { servKeys, headersKey } from '@/utils/constans';
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.

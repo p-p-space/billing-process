@@ -1,8 +1,8 @@
 import type { KeyLike } from 'jose';
 import { CompactEncrypt, compactDecrypt } from 'jose';
 // Internal App
+import { jwtAlgs } from '@/constants';
 import type { ReqResBody } from '@/interfaces';
-import { jwtAlgs } from '@/utils/constans';
 
 /**
  * Encodes a given string into a Uint8Array using UTF-8 encoding.
