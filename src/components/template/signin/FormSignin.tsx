@@ -10,7 +10,7 @@ import { Box, Typography, Button } from '@mui/material';
 import { getSchema } from '@/config';
 import { useBrowserRequest } from '@/hooks';
 import { InputPass, InputText } from '@/components';
-import type { RequestBody, RequestContent } from '@/interfaces';
+import type { ReqResBody, RequestContent } from '@/interfaces';
 import { apiPaths } from '@/constants';
 
 export default function FormSignin() {
@@ -38,7 +38,7 @@ export default function FormSignin() {
     },
   });
 
-  const handleLogin = (loginData: RequestBody) => {
+  const handleLogin = (loginData: ReqResBody) => {
     const dataLogin: RequestContent = {
       pathUrl: `${apiPaths.browserPath}/prueba`,
       method: 'post',

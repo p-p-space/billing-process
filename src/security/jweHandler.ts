@@ -1,7 +1,7 @@
 import type { KeyLike } from 'jose';
 import { CompactEncrypt, compactDecrypt } from 'jose';
 // Internal App
-import type { RequestBody } from '@/interfaces';
+import type { ReqResBody } from '@/interfaces';
 import { jwtAlgs } from '@/utils/constans';
 
 /**
@@ -20,13 +20,13 @@ export const decode = TextDecoder.prototype.decode.bind(new TextDecoder());
 
 /**
  * Encrypts the given payload using JWE.
- * @param {RequestBody} payload - The data to be encrypted.
+ * @param {ReqResBody} payload - The data to be encrypted.
  * @param {KeyLike | Uint8Array} secret - The secret key used for encryption.
  * @param {string} JweAlg - The algorithm used for encryption.
  * @returns {Promise<string>} - The encrypted JWE string.
  * @throws {Error} - If encryption fails.
  */
-export async function encryptData(payload: RequestBody, secret: KeyLike | Uint8Array, JweAlg: string): Promise<string> {
+export async function encryptData(payload: ReqResBody, secret: KeyLike | Uint8Array, JweAlg: string): Promise<string> {
   try {
     const plaintext = encode(JSON.stringify(payload));
     const jwe = await new CompactEncrypt(plaintext)
@@ -43,10 +43,10 @@ export async function encryptData(payload: RequestBody, secret: KeyLike | Uint8A
  * Decrypts the given JWE string.
  * @param {string} jwe - The JWE string to be decrypted.
  * @param {KeyLike | Uint8Array} secret - The secret key used for decryption.
- * @returns {Promise<RequestBody>} - The decrypted data.
+ * @returns {Promise<ReqResBody>} - The decrypted data.
  * @throws {Error} - If decryption fails.
  */
-export async function decryptData(jwe: string, secret: KeyLike | Uint8Array): Promise<RequestBody> {
+export async function decryptData(jwe: string, secret: KeyLike | Uint8Array): Promise<ReqResBody> {
   try {
     const { plaintext } = await compactDecrypt(jwe, secret);
     const data = JSON.parse(decode(plaintext));

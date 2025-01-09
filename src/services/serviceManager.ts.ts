@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 // Internal App
 import { creds, headersKey } from '@/utils/constans';
 import { createHttpConfig, manageRequest } from '@/libs';
-import type { RequestBody, RequestContent } from '@/interfaces';
+import type { ReqResBody, RequestContent } from '@/interfaces';
 
 const oauthToken: { bearer?: string } = {
   bearer: undefined,
@@ -46,7 +46,7 @@ export async function connectServices(request: NextRequest) {
 }
 
 export async function getOauthBearer() {
-  const dataRequest: RequestBody = {
+  const dataRequest: ReqResBody = {
     grant_type: 'client_credentials',
     client_id: creds.key,
     client_secret: creds.secret,

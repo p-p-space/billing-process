@@ -4,7 +4,6 @@ import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { langs } from '@/i18n';
 import {
   responseApiSchema,
-  requestBodySchema,
   httpConfigSchema,
   requestContentSchema,
   requestTypeSchema,
@@ -23,11 +22,6 @@ export type HeaderConfig = {
   timeout?: HttpConfig['timeout'];
   headers?: Headers;
 };
-
-/**
- * Represents the data structure for body data.
- */
-export type RequestBody = z.infer<typeof requestBodySchema>;
 
 /**
  * Represents the data structure for request type.

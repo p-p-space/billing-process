@@ -8,7 +8,7 @@ import type {
   ErrorResponseApi,
   HeaderConfig,
   HttpConfig,
-  RequestBody,
+  ReqResBody,
   RequestContent,
   RequestType,
   ResponseApi,
@@ -93,10 +93,10 @@ function createAxiosInstance(requestType: RequestType): AxiosInstance {
 /**
  * Create an API response object.
  *
- * @param {RequestBody} dataResponse - The data to include in the response.
+ * @param {ReqResBody} dataResponse - The data to include in the response.
  * @returns {ResponseApi} The response object.
  */
-export function createResponseApi(dataResponse: RequestBody): ResponseApi {
+export function createResponseApi(dataResponse: ReqResBody): ResponseApi {
   let responseApi: ResponseApi = {
     code: '500.00.00',
     message: 'Internal Server Error',

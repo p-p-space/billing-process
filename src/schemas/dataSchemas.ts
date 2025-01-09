@@ -15,7 +15,7 @@ export const settingsApp = z
   })
   .catchall(z.string());
 
-export const requestBodySchema = z.record(z.unknown());
+export const reqResBodySchema = z.record(z.unknown());
 
 export const requestTypeSchema = z.enum(['browser', 'application', 'services']);
 
@@ -28,7 +28,7 @@ export const httpConfigSchema = z.object({
 export const requestContentSchema = z.object({
   pathUrl: z.string(),
   method: z.enum(['get', 'post', 'put', 'patch', 'delete', 'options', 'head']),
-  dataRequest: requestBodySchema.optional(),
+  dataRequest: reqResBodySchema.optional(),
   httpConfig: httpConfigSchema.optional(),
 });
 
