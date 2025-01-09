@@ -20,20 +20,18 @@ export default function MuiProvider({ children, themeVars }: ChildrenProps & The
     setIsHydrated(false);
   }, []);
 
-  if (isHydrated) {
-    return (
-      <ThemeProvider theme={theme}>
+  return (
+    <ThemeProvider theme={theme}>
+      {isHydrated ? (
         <Box sx={{ alignItems: 'center', display: 'flex', height: '100vh', width: '100%', justifyContent: 'center' }}>
           <CircularProgress size="5rem" sx={{ color: 'primary.main' }} thickness={2} disableShrink />
         </Box>
-      </ThemeProvider>
-    );
-  }
-
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      {children}
+      ) : (
+        <>
+          <CssBaseline />
+          {children}
+        </>
+      )}
     </ThemeProvider>
   );
 }
