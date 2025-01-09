@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { importPKCS8 } from 'jose';
 // Internal app
-import { apiPaths, baseURLs, jwtAlgs } from '@/constants';
+import { apiPaths, baseURLs, jwtAlgs, headersKey } from '@/constants';
 import { createErrorResponseApi, createResponseApi } from './helpersAxios';
-import { headersKey, servKeys, webKeys } from '@/utils/constans';
+import { servKeys, webKeys } from '@/utils/constans';
 import { assembleJWS, verifySignature, decryptData, encryptData, signData, disassembleJWS, encode } from '@/security';
 
 /**

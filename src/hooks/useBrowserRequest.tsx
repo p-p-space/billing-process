@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { isAxiosError } from 'axios';
 // Internal app
 import { useUiStore } from '@/store';
-import { headersKey } from '@/utils/constans';
+import { headersKey } from '@/constants';
 import type { RequestContent } from '@/interfaces';
 import { createHttpConfig, manageRequest } from '@/libs';
 

@@ -54,3 +54,15 @@ export const jwtConfig = {
   issuer: 'issuer', // Issuer of the JWT
   expiresIn: '2h', // Expiration time for the JWT
 };
+
+// Header keys used in API requests
+export const headersKey = {
+  contentType: 'content-type', // Header key for content type
+  authorization: 'authorization', // Header key for content type
+  appContentSecurity: 'app-content-security', // Header key for content security status
+  appOriginPath: 'app-origin-path', // Header key for application origin path
+  appJwsToken: 'app-token', // Header key for application JWS token
+  servJwsToken: 'x-token', // Header key for service JWS token
+  servTenantId: 'x-tenant-id', // Header key for service tenant ID
+  servReqId: 'x-request-id', // Header key for service request ID
+};

@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal App
-import { creds, headersKey } from '@/utils/constans';
+import { headersKey } from '@/constants';
+import { creds } from '@/utils/constans';
 import { createHttpConfig, manageRequest } from '@/libs';
 import type { ReqResBody, RequestContent } from '@/interfaces';
 
