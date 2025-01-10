@@ -3,37 +3,57 @@ import { Tenant } from '@/interfaces';
 const tenant: Tenant = 'bt';
 const apiString = 'api';
 
+/**
+ * Name of the application cookie.
+ */
 export const AppCookieName = 'app_tenant';
 
+/**
+ * Default tenant for the application.
+ */
 export const defaultTenant: Tenant = (process.env.TENANT_DEFAULT as Tenant) ?? tenant;
 
+/**
+ * List of available themes for the application.
+ */
 export const availableThemes: Tenant[] = (process.env.AVAILABLE_THEMES?.split(',').map((tenant) =>
   tenant.trim()
 ) as Tenant[]) ?? [tenant];
 
+/**
+ * List of allowed tenants for the application.
+ */
 export const allowedTenants: Tenant[] = (process.env.ALLOED_TENANTS?.split(',').map((tenant) =>
   tenant.trim()
 ) as Tenant[]) ?? [tenant];
 
-// Toggles for enabling/disabling features
+/**
+ * Toggles for enabling/disabling features.
+ */
 export const toggles = {
   handleRefresh: process.env.NEXT_PUBLIC_HANDLE_REFRESH ?? 'OFF',
 };
 
-// Base URLs for the application and services
+/**
+ * Base URLs for the application and services.
+ */
 export const baseURLs = {
   app: process.env.NEXT_PUBLIC_WEB_URL ?? '',
   serv: process.env.SERV_URL ?? '',
 };
 
-// API Versions
+/**
+ * API Versions.
+ */
 export const apiVersions = {
-  apiServ: [`/${apiString}/v1.0.0`, `/${apiString}/v0`, `/${apiString}/v1.3`], // Version for services API
-  apiApp: 'app-v1', // Version for application API,
+  apiServ: [`/${apiString}/v1.0.0`, `/${apiString}/v0`, `/${apiString}/v1.3`], // Versions for services API
+  apiApp: 'app-v1', // Version for application API
   apiSearch: /^\/api\/v\d+(\.\d+)*\//, // Regular expression for API search
 };
 
-// API Paths constructed using template literals
+/**
+ * API Paths constructed using template literals.
+ */
 export const apiPaths = {
   browserPath: `${apiVersions.apiServ[0]}`, // Path for browserPath API
   customerPath: `${apiVersions.apiServ[1]}`, // Path for customerPath API
@@ -43,7 +63,9 @@ export const apiPaths = {
   appApis: ['language', 'logout', 'prueba'], // List of application API endpoints
 };
 
-// JWT and JWE Algorithms used for encryption and signing
+/**
+ * JWT and JWE Algorithms used for encryption and signing
+ */
 export const jwtAlgs = {
   jweAlgRsa: 'RSA-OAEP-256', // RSA algorithm for JWE
   jweAlgSec: 'A256KW', // Key wrapping algorithm for JWE
@@ -53,14 +75,18 @@ export const jwtAlgs = {
   jwtAlg: 'PS512', // Algorithm for JWT
 };
 
-// JWT Configuration settings
+/**
+ * JWT Configuration settings
+ */
 export const jwtConfig = {
   audience: 'audience', // Audience for the JWT
   issuer: 'issuer', // Issuer of the JWT
   expiresIn: '2h', // Expiration time for the JWT
 };
 
-// Header keys used in API requests
+/**
+ * Header keys used in API requests
+ */
 export const headersKey = {
   contentType: 'content-type', // Header key for content type
   authorization: 'authorization', // Header key for content type
