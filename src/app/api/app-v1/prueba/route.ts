@@ -10,7 +10,6 @@ const response: ResponseApi = {
   info: '',
   datetime: '2022-05-17T15:44:11.656Z[UTC]',
   payload: undefined,
-  error: undefined,
 };
 
 export async function GET(request: NextRequest): Promise<NextResponse<ResponseApi>> {

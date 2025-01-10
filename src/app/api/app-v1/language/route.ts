@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 // Internal app
 import type { LangFiles } from '@/interfaces';
 
@@ -14,7 +15,7 @@ export async function POST(
   request: NextRequest
 ): Promise<NextResponse<{ code: string; language?: LangFiles; error?: unknown }>> {
   // Extract locale and tenant from the request body
-  const { locale, tenant = 'bt' } = await request.json();
+  const { locale, tenant } = await request.json();
   const jsonRegex = /\.json$/i;
   const language: LangFiles = {
     default: [],
