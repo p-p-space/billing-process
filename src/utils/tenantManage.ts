@@ -1,5 +1,5 @@
 import { Tenant } from '@/interfaces';
-import { allowedTenants, defaultTenant } from '@/constans';
+import { allowedTenantsList, defaultTenant } from '@/constans';
 
 /**
  * Checks if the tenant value is an available tenant.
@@ -7,7 +7,7 @@ import { allowedTenants, defaultTenant } from '@/constans';
  * @returns {Tenant} The available tenant or the default tenant.
  */
 export function availableTenant(value: string | undefined): Tenant {
-  const tenantUrl = value && allowedTenants.includes(value as Tenant) ? value : defaultTenant;
+  const tenantUrl = value && allowedTenantsList.includes(value as Tenant) ? value : defaultTenant;
 
   return tenantUrl as Tenant;
 }

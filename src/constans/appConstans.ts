@@ -1,6 +1,6 @@
 import { Tenant } from '@/interfaces';
+import { tenantSettings } from './envConstans';
 
-const tenant: Tenant = 'bt';
 const apiString = 'api';
 
 /**
@@ -11,21 +11,17 @@ export const AppCookieName = 'app_tenant';
 /**
  * Default tenant for the application.
  */
-export const defaultTenant: Tenant = (process.env.TENANT_DEFAULT as Tenant) ?? tenant;
+export const defaultTenant = tenantSettings.tenant as Tenant;
 
 /**
  * List of available themes for the application.
  */
-export const availableThemes: Tenant[] = (process.env.AVAILABLE_THEMES?.split(',').map((tenant) =>
-  tenant.trim()
-) as Tenant[]) ?? [tenant];
+export const availableTenantsList = tenantSettings.availableTenantsList as Tenant[];
 
 /**
  * List of allowed tenants for the application.
  */
-export const allowedTenants: Tenant[] = (process.env.ALLOED_TENANTS?.split(',').map((tenant) =>
-  tenant.trim()
-) as Tenant[]) ?? [tenant];
+export const allowedTenantsList = tenantSettings.allowedTenantsList as Tenant[];
 
 /**
  * Toggles for enabling/disabling features.

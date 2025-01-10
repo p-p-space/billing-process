@@ -6,7 +6,7 @@ export const creds = {
   awsRegion: process.env.AWS_REGION ?? '',
   ptCognitoClientId: process.env.PT_COGNITO_CLIENT_ID ?? '',
   ptCognitoClientSecret: process.env.PT_COGNITO_CLIENT_SECRET ?? '',
-};
+} as const;
 
 // Web Keys and Secrets (Publicly Exposed)
 export const webKeys = {
@@ -14,7 +14,7 @@ export const webKeys = {
   secJwsStr: process.env.NEXT_PUBLIC_SECRET_JWS_STR ?? '',
   webJwePubKey: process.env.NEXT_PUBLIC_WEB_JWE_PUBLIC_KEY ?? '',
   webJwsPubKey: process.env.NEXT_PUBLIC_WEB_JWS_PUBLIC_KEY ?? '',
-};
+} as const;
 
 // Servevices Keys and Secrets (Not Publicly Exposed)
 export const servKeys = {
@@ -24,4 +24,19 @@ export const servKeys = {
   servJwePubKey: process.env.SERV_JWE_PUBLIC_KEY ?? '',
   servJwsPrivKey: process.env.SERV_JWS_PRIVATE_KEY ?? '',
   servJwsPubKey: process.env.SERV_JWS_PUBLIC_KEY ?? '',
-};
+} as const;
+
+const tenant = process.env.TENANT_DEFAULT ?? 'bt';
+const availableTenants = process.env.AVAILABLE_TENANTS ?? tenant;
+const availableTenantsList = availableTenants.split(',').map((tenant) => tenant.trim()) ?? [tenant];
+const allowedTenants = process.env.ALLOED_TENANTS ?? tenant;
+const allowedTenantsList = allowedTenants.split(',').map((tenant) => tenant.trim()) ?? [tenant];
+
+// Tenant Settings
+export const tenantSettings = {
+  tenant,
+  availableTenants,
+  availableTenantsList,
+  allowedTenants,
+  allowedTenantsList,
+} as const;

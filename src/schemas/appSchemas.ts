@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
-const tenantSchema = z.enum(['bt', 'pm']);
+const enunSchema = ['bt', 'pm'] as const;
+
+const tenantSchema = z.enum(enunSchema);
 
 export const appSchema = {
   lang: z.enum(['en', 'es']),
