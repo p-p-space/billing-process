@@ -1,4 +1,4 @@
-import { httpSchema } from '@/schemas/httpSchemas';
+import { httpSchema } from '@/schemas';
 import { z } from 'zod';
 
 /**

@@ -1,6 +1,34 @@
 import { z } from 'zod';
+import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 // Internal App
 import { appSchema } from '@/schemas';
+
+/**
+ * Represents the options for configuring a cookie.
+ */
+export type CookieOptions = Pick<ResponseCookie, 'name' | 'value' | 'path' | 'sameSite' | 'expires'>;
+
+/**
+ * Represents the response containing cookie values.
+ */
+export type CookieValues = {
+  cookieContent: ResponseCookie;
+};
+
+/**
+ * Represents a language from the available languages.
+ */
+export type Lang = z.infer<typeof appSchema.lang>;
+
+/**
+ * Represents the data structure for language data.
+ */
+export type LangData = z.infer<typeof appSchema.langData>;
+
+/**
+ * Represents the structure for language files.
+ */
+export type LangFiles = z.infer<typeof appSchema.langFiles>;
 
 /**
  * Represents the data structure for body data.
