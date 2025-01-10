@@ -3,6 +3,7 @@ import path from 'path';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal app
+import { defaultTenant } from '@/constans';
 import { createErrorResponseApi, createResponseApi } from '@/libs';
 import type { ApiResponsePromise, LangFiles } from '@/interfaces';
 
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest): ApiResponsePromise {
     const updateLanguageFiles = (filePath: string, fileName: string) => {
       language.default.push(fileName);
 
-      if (tenant !== 'bt' && fs.existsSync(path.join(src.tenant, filePath))) {
+      if (tenant !== defaultTenant && fs.existsSync(path.join(src.tenant, filePath))) {
         language.tenant.push(fileName);
       }
     };
@@ -53,10 +54,10 @@ export async function POST(request: NextRequest): ApiResponsePromise {
       }
     }
 
-    const respLang = createResponseApi({ code: '200.000.00', message: 'Prossc ok', content: { language } });
+    const respLang = createResponseApi({ code: '200.00.000', message: 'Process ok', content: { language } });
     return NextResponse.json(respLang, { status: 200 });
   } catch (error) {
-    const errorLang = createErrorResponseApi(error as Error);
-    return NextResponse.json(errorLang, { status: 500 });
+    const { status, data } = createErrorResponseApi(error as Error);
+    return NextResponse.json(data, { status });
   }
 }

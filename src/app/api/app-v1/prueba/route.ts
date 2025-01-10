@@ -1,70 +1,106 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal App
-import type { ResponseApi } from '@/interfaces';
+import { createErrorResponseApi, createResponseApi } from '@/libs';
+import type { ApiResponsePromise, ParamsProps, ResponseApi } from '@/interfaces';
 
 const status: number = 200;
+const response = {
+  code: `${status}.00.000`,
+} as ResponseApi;
 
-const response: ResponseApi = {
-  code: `${status}.00.001`,
-  message: 'Process ok',
-  info: '',
-  datetime: '2022-05-17T15:44:11.656Z[UTC]',
-  payload: undefined,
-};
-
-export async function GET(request: NextRequest): Promise<NextResponse<ResponseApi>> {
+export async function GET(request: NextRequest, { params }: ParamsProps): ApiResponsePromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
+  const { tenant } = await params;
 
-  response.message = `${pathname}${search} --- ${method}`;
-  response.payload = {
-    user: {
-      id: 12345,
-      name: 'Juan Pérez',
-      email: 'juan.perez@example.com',
-      apps: ['uno', 'dos'],
-    },
-  };
+  try {
+    response.message = `${pathname}${search} --- ${method}`;
+    response.payload = {
+      user: {
+        id: 12345,
+        name: 'Juan Pérez',
+        email: 'juan.perez@example.com',
+        apps: ['uno', 'dos'],
+      },
+      tenant,
+    };
 
-  return NextResponse.json(response, { status });
+    const respGet = createResponseApi(response);
+
+    return NextResponse.json(respGet, { status });
+  } catch (error) {
+    const { status, data } = createErrorResponseApi(error as Error);
+    return NextResponse.json(data, { status });
+  }
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse<ResponseApi>> {
+export async function POST(request: NextRequest): ApiResponsePromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
 
-  response.message = `${pathname}${search} --- ${method}`;
-  response.payload = await request.json();
+  try {
+    response.message = `${pathname}${search} --- ${method}`;
+    response.payload = await request.json();
 
-  return NextResponse.json(response, { status });
+    const respPost = createResponseApi(response);
+
+    return NextResponse.json(respPost, { status });
+  } catch (error) {
+    const { status, data } = createErrorResponseApi(error as Error);
+    return NextResponse.json(data, { status });
+  }
 }
 
-export async function PUT(request: NextRequest): Promise<NextResponse<ResponseApi>> {
+export async function PUT(request: NextRequest): ApiResponsePromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
 
-  response.message = `${pathname}${search} --- ${method}`;
-  response.payload = await request.json();
+  try {
+    response.message = `${pathname}${search} --- ${method}`;
+    response.payload = await request.json();
 
-  return NextResponse.json(response, { status });
+    const respPut = createResponseApi(response);
+
+    return NextResponse.json(respPut, { status });
+  } catch (error) {
+    const { status, data } = createErrorResponseApi(error as Error);
+    return NextResponse.json(data, { status });
+  }
 }
 
-export async function PATCH(request: NextRequest): Promise<NextResponse<ResponseApi>> {
+export async function PATCH(request: NextRequest): ApiResponsePromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
 
-  response.message = `${pathname}${search} --- ${method}`;
-  response.payload = await request.json();
+  try {
+    response.message = `${pathname}${search} --- ${method}`;
+    response.payload = await request.json();
 
-  return NextResponse.json(response, { status });
+    const respPatch = createResponseApi(response);
+
+    return NextResponse.json(respPatch, { status });
+  } catch (error) {
+    const { status, data } = createErrorResponseApi(error as Error);
+    return NextResponse.json(data, { status });
+  }
 }
 
-export async function DELETE(request: NextRequest): Promise<NextResponse<ResponseApi>> {
-  const { method, nextUrl } = request;
-  const { pathname, search } = nextUrl;
+export async function DELETE(request: NextRequest): ApiResponsePromise {
+  try {
+    const { method, nextUrl } = request;
+    const { pathname, search } = nextUrl;
 
-  response.message = `${pathname}${search} --- ${method}`;
-  response.payload = undefined;
+    response.message = `${pathname}${search} --- ${method}`;
 
-  return NextResponse.json(response, { status });
+    const respDelete = createResponseApi(response);
+
+    if (respDelete) {
+      throw new Error('Error en DELETE');
+    }
+
+    return NextResponse.json(respDelete, { status });
+  } catch (error) {
+    const { status, data } = createErrorResponseApi(error as Error);
+    return NextResponse.json(data, { status });
+  }
 }
