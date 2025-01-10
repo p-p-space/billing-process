@@ -1,5 +1,7 @@
-import { httpSchema } from '@/schemas';
 import { z } from 'zod';
+import type { NextResponse } from 'next/server';
+// Internal App
+import type { httpSchema } from '@/schemas';
 
 /**
  * Represents the structure of an error response from the API.
@@ -18,6 +20,11 @@ export type HeaderConfig = {
  * Represents the configuration for an HTTP request.
  */
 export type HttpConfig = z.infer<typeof httpSchema.httpConfig>;
+
+/**
+ * Represents a promise that resolves to a Next.js response containing either a successful API response or an error response.
+ */
+export type ApiResponsePromise = Promise<NextResponse<ResponseApi | ErrorResponseApi>>;
 
 /**
  * Represents the content of an HTTP request.

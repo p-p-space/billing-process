@@ -19,7 +19,7 @@ export default getRequestConfig(async () => {
   const requestType = 'application';
 
   const { data } = await manageRequest(requestConfig, requestType);
-  const { messages } = await loadDataLang(data.language, locale, tenant);
+  const { messages } = await loadDataLang(data.content.language, locale, tenant);
 
   return {
     locale,

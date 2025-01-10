@@ -15,6 +15,7 @@ const responseApiSchema = z.object({
   info: z.string().optional(),
   datetime: z.string().datetime(),
   payload: z.unknown().optional(),
+  content: z.unknown().optional(),
 });
 
 export const httpSchema = {

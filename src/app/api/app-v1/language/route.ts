@@ -3,18 +3,10 @@ import path from 'path';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal app
-import type { LangFiles } from '@/interfaces';
+import { createErrorResponseApi, createResponseApi } from '@/libs';
+import type { ApiResponsePromise, LangFiles } from '@/interfaces';
 
-/**
- * Handles POST requests to fetch language files.
- *
- * @param {NextRequest} request - The HTTP request.
- * @returns {NextResponse} - The HTTP response with the language files.
- */
-export async function POST(
-  request: NextRequest
-): Promise<NextResponse<{ code: string; language?: LangFiles; error?: unknown }>> {
-  // Extract locale and tenant from the request body
+export async function POST(request: NextRequest): ApiResponsePromise {
   const { locale, tenant } = await request.json();
   const jsonRegex = /\.json$/i;
   const language: LangFiles = {
@@ -61,10 +53,10 @@ export async function POST(
       }
     }
 
-    // Return the response with the language files
-    return NextResponse.json({ code: '200.000.00', language }, { status: 200 });
+    const respLang = createResponseApi({ code: '200.000.00', message: 'Prossc ok', content: { language } });
+    return NextResponse.json(respLang, { status: 200 });
   } catch (error) {
-    // Handle errors and return an error response
-    return NextResponse.json({ code: '500.000.00', error }, { status: 500 });
+    const errorLang = createErrorResponseApi(error as Error);
+    return NextResponse.json(errorLang, { status: 500 });
   }
 }
