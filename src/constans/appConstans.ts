@@ -56,7 +56,7 @@ export const apiPaths = {
   cardSolutionPath: `${apiVersions.apiServ[2]}`, // Path for card solution API
   appPath: `/${apiString}/${apiVersions.apiApp}`, // Path for application API
   appServApi: 'services', // Services API endpoint
-  appApis: ['language', 'logout', 'prueba'], // List of application API endpoints
+  appApis: ['language', 'logout', 'prueba', 'signin'], // List of application API endpoints
 };
 
 /**
@@ -89,6 +89,7 @@ export const headersKey = {
   appContentSecurity: 'app-content-security', // Header key for content security status
   appOriginPath: 'app-origin-path', // Header key for application origin path
   appJwsToken: 'app-token', // Header key for application JWS token
+  appCookie: 'cookie', // Header key for app cookies
   servJwsToken: 'x-token', // Header key for service JWS token
   servTenantId: 'x-tenant-id', // Header key for service tenant ID
   servReqId: 'x-request-id', // Header key for service request ID
