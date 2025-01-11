@@ -10,6 +10,7 @@ import { encryptData, decryptData, signData, verifySignature, disassembleJWS, as
  */
 const browserAxios = axios.create({
   baseURL: `${baseURLs.app}`,
+  withCredentials: true,
 });
 
 /**
