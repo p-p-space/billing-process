@@ -3,7 +3,7 @@ export const creds = {
   tenantId: process.env.TENANT_ID ?? '',
   clientId: process.env.CLIENT_ID ?? '',
   clientSecret: process.env.CLIENT_SECRET ?? '',
-  awsRegion: process.env.AWS_REGION ?? '',
+  awsRegion: process.env.AWS_REGION ?? 'us-east-1',
   ptCognitoClientId: process.env.PT_COGNITO_CLIENT_ID ?? '',
   ptCognitoClientSecret: process.env.PT_COGNITO_CLIENT_SECRET ?? '',
 } as const;
