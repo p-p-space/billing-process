@@ -1,2 +1,2 @@
-export * from './customerRequestHandler';
-export * from './serviceManager.ts';
+export * from './tenantRequestService';
+export * from './handleConnectService';
