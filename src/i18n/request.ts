@@ -2,6 +2,7 @@ import { getRequestConfig } from 'next-intl/server';
 // Internal app
 import { manageRequest } from '@/libs';
 import { getAppLang } from './servI18n';
+import { defaultTenant } from '@/constans';
 import type { Lang, LangData, LangFiles, RequestContent } from '@/interfaces';
 
 /**
@@ -43,7 +44,7 @@ async function loadDataLang(language: LangFiles, locale: Lang, tenant: string): 
     const langName = lang.replace(`${locale}/`, '');
 
     // Import application language data
-    appLang = (await import(`../../dictionary/bt/${lang}.json`)).default;
+    appLang = (await import(`../../dictionary/${defaultTenant}/${lang}.json`)).default;
 
     // Import tenant language data if it exists
     if (language.tenant.indexOf(lang) !== -1) {
