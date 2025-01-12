@@ -26,13 +26,13 @@ export const servKeys = {
   servJwsPubKey: process.env.SERV_JWS_PUBLIC_KEY ?? '',
 } as const;
 
-const tenant = process.env.TENANT_DEFAULT ?? 'bt';
-const availableTenants = process.env.AVAILABLE_TENANTS ?? tenant;
-const availableTenantsList = availableTenants.split(',').map((tenant) => tenant.trim()) ?? [tenant];
-const allowedTenants = process.env.ALLOED_TENANTS ?? tenant;
-const allowedTenantsList = allowedTenants.split(',').map((tenant) => tenant.trim()) ?? [tenant];
-
 // Tenant Settings
+const tenant = process.env.TENANT_DEFAULT ?? 'bt';
+const availabletenants = process.env.AVAILABLE_TENANTS ?? tenant;
+const availableTenantsList = availabletenants.split(',').map((tenant) => tenant.trim()) ?? [tenant];
+const allowedtenants = process.env.ALLOED_TENANTS ?? tenant;
+const allowedTenantsList = allowedtenants.split(',').map((tenant) => tenant.trim()) ?? [tenant];
+
 export const tenantSettings = {
   tenant,
   availableTenants,
