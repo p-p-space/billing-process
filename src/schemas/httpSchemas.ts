@@ -8,7 +8,7 @@ const httpConfigSchema = z.object({
   timeout: z.number(),
   headers: z.record(z.string(), z.string()),
   validateStatus: z.function().args(z.number()).returns(z.boolean()),
-  withCredentials: z.boolean().optional(),
+  withCredentials: z.boolean(),
 });
 const responseApiSchema = z.object({
   code: z.string().regex(codeRegex, { message: 'code format should be codeHttp.00.000' }),

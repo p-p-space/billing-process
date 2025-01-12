@@ -30,6 +30,7 @@ export function createHttpConfig(config?: HeaderConfig): HttpConfig {
     validateStatus: function (status) {
       return (status >= 200 && status < 300) || (status >= 400 && status <= 503);
     },
+    withCredentials: true,
   };
 
   if (config?.timeout) {
