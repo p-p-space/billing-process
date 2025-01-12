@@ -25,8 +25,8 @@ export default async function RootLayoutMain({ children, params }: ChildrenProps
   const { tenant } = await params;
   const lang = await getLocale();
   const messages = await getMessages();
-  const settings = await selectSettings(tenant);
-  const themeVars = await selectTheme(settings.tenantTheme);
+  const { tenantTheme } = await selectSettings(tenant);
+  const themeVars = await selectTheme(tenantTheme);
 
   return (
     <html lang={lang} suppressHydrationWarning>
