@@ -1,6 +1,6 @@
-import { AppSettings, AvailableTenants } from '@/interfaces';
+import { AppSettings, Tenant } from '@/interfaces';
 
-const customerTenant = 'pm' as AvailableTenants;
+const customerTenant = 'pm' as Tenant;
 
 export const settings = {
   tenant: customerTenant,

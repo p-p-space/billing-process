@@ -5,7 +5,7 @@ import { readCookie } from '@/utils';
 import { appCookieName, headersKey } from '@/constans';
 import { selectSettings } from '@/tenants/tenantOptions';
 import { createHttpConfig, manageRequest } from '@/libs';
-import type { AvailableTenants, ReqResBody, RequestContent } from '@/interfaces';
+import type { Tenant, ReqResBody, RequestContent } from '@/interfaces';
 
 const oauthToken: { bearer?: string } = {
   bearer: undefined,
@@ -83,7 +83,7 @@ export async function getOauthBearer() {
 }
 
 export async function appCreedentials() {
-  const tenant = (await readCookie(appCookieName)) as AvailableTenants;
+  const tenant = (await readCookie(appCookieName)) as Tenant;
 
   const credentials = await selectSettings(tenant);
   const { tenantClientId, tenantClientSecret, tenantId } = credentials;

@@ -2,18 +2,18 @@
 
 // Internal app
 import { appCookieName } from '@/constans';
-import type { AllowedTenants, Lang } from '@/interfaces';
+import type { Tenant, Lang } from '@/interfaces';
 import { langCookieName, defaultLang, langs } from './';
 import { cookieValues, createCookie, readCookie } from '@/utils';
 
 /**
  * Gets the application language from cookies.
- * @returns {Promise<{ locale: Lang, tenant: AllowedTenants }>} An object containing the application language and tenant.
+ * @returns {Promise<{ locale: Lang, tenant: Tenant }>} An object containing the application language and tenant.
  */
-export async function getAppLang(): Promise<{ locale: Lang; tenant: AllowedTenants }> {
+export async function getAppLang(): Promise<{ locale: Lang; tenant: Tenant }> {
   const lang = await readCookie(langCookieName);
   const locale = await availableLang(lang);
-  const tenant = (await readCookie(appCookieName)) as AllowedTenants;
+  const tenant = (await readCookie(appCookieName)) as Tenant;
 
   return { locale, tenant };
 }

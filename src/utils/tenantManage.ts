@@ -1,4 +1,4 @@
-import { AllowedTenants } from '@/interfaces';
+import { Tenant } from '@/interfaces';
 import { defaultTenant, appSettings } from '@/constans';
 
 /**
@@ -6,9 +6,9 @@ import { defaultTenant, appSettings } from '@/constans';
  * @param {string | undefined} value - The url tenant.
  * @returns {Allowedtenants} The available tenant or the default tenant.
  */
-export function availableTenant(value: string | undefined): AllowedTenants {
+export function availableTenant(value: string | undefined): Tenant {
   const { allowedTenants } = appSettings;
-  const tenantUrl = value && allowedTenants.includes(value as AllowedTenants) ? value : defaultTenant;
+  const tenantUrl = value && allowedTenants.includes(value as Tenant) ? value : defaultTenant;
 
-  return tenantUrl as AllowedTenants;
+  return tenantUrl as Tenant;
 }

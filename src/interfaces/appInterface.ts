@@ -59,5 +59,4 @@ export type StringMap = z.infer<typeof appSchemas.stringMap>;
  */
 
 export type DefaultTenant = typeof defaultTenant;
-export type AvailableTenants = z.infer<typeof appSchemas.availableTenants>;
-export type AllowedTenants = z.infer<typeof appSchemas.allowedTenants>;
+export type Tenant = z.infer<typeof appSchemas.allowedTenants>;

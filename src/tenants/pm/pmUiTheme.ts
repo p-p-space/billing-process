@@ -1,5 +1,5 @@
 export const themeVars = {
-  primary: '#8142F5',
-  secondary: '#A19DA2',
+  primary: '#8142F6',
+  secondary: '#A19DA1',
   fontFamily: 'Prelo, sans-serif',
 };

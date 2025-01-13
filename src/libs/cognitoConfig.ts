@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import { readCookie } from '@/utils';
 import { appCookieName } from '@/constans';
 import { selectSettings } from '@/tenants/tenantOptions';
-import { AvailableTenants } from '@/interfaces';
+import { Tenant } from '@/interfaces';
 
 /**
  * Creates a new instance of CognitoIdentityProviderClient with the provided credentials.
@@ -34,7 +34,7 @@ export async function hashClienSecret(userName: string) {
 }
 
 export async function cognitoCreedentials() {
-  const tenant = (await readCookie(appCookieName)) as AvailableTenants;
+  const tenant = (await readCookie(appCookieName)) as Tenant;
 
   const credentials = await selectSettings(tenant);
   const { tenantCognitoClientId, tenantCognitoClientSecret, tenantCognitoRegion } = credentials;
