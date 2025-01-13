@@ -1,5 +1,6 @@
-import { Tenant } from '@/interfaces';
-import { defaultTenant, appSettings } from '@/constans';
+// Internal App
+import type { Tenant } from '@/interfaces';
+import { appSettings, defaultTenant } from '@/constans';
 
 /**
  * Checks if the tenant value is an available tenant.

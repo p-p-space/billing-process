@@ -1,15 +1,8 @@
 import { z } from 'zod';
 // Internal App
-import { appSchema } from './appSchemas';
+import { appSchemas } from './appSchemas';
 
 const codeRegex = /^codeHttp\.\d{2}\.\d{3}$/;
-
-const httpConfigSchema = z.object({
-  timeout: z.number(),
-  headers: z.record(z.string(), z.string()),
-  validateStatus: z.function().args(z.number()).returns(z.boolean()),
-  withCredentials: z.boolean(),
-});
 const responseApiSchema = z.object({
   code: z.string().regex(codeRegex, { message: 'code format should be codeHttp.00.000' }),
   message: z.string(),
@@ -18,20 +11,29 @@ const responseApiSchema = z.object({
   payload: z.unknown().optional(),
   content: z.unknown().optional(),
 });
+const requestTypeSchema = z.enum(['browser', 'application', 'services']);
+const httpConfigSchema = z.object({
+  timeout: z.number(),
+  headers: z.record(z.string(), z.string()),
+  validateStatus: z.function().args(z.number()).returns(z.boolean()),
+  withCredentials: z.boolean(),
+});
+const requestContentSchema = z.object({
+  pathUrl: z.string(),
+  method: z.enum(['get', 'post', 'put', 'patch', 'delete', 'options', 'head']),
+  dataRequest: appSchemas.reqResBody.optional(),
+  httpConfig: httpConfigSchema.optional(),
+});
+const errorResponseApiSchema = z.object({
+  status: z.number(),
+  data: responseApiSchema.pick({ code: true, message: true }),
+});
 
-export const httpSchema = {
-  reqResBody: appSchema.reqResBody,
+export const httpSchemas = {
+  reqResBody: appSchemas.reqResBody,
   responseApi: responseApiSchema,
-  requestType: z.enum(['browser', 'application', 'services']),
+  requestType: requestTypeSchema,
   httpConfig: httpConfigSchema,
-  requestContent: z.object({
-    pathUrl: z.string(),
-    method: z.enum(['get', 'post', 'put', 'patch', 'delete', 'options', 'head']),
-    dataRequest: appSchema.reqResBody.optional(),
-    httpConfig: httpConfigSchema.optional(),
-  }),
-  errorResponseApi: z.object({
-    status: z.number(),
-    data: responseApiSchema.pick({ code: true, message: true }),
-  }),
+  requestContent: requestContentSchema,
+  errorResponseApi: errorResponseApiSchema,
 };

@@ -1,4 +1,4 @@
-import { AppSettings, Tenant } from '@/interfaces';
+import type { AppSettings, Tenant } from '@/interfaces';
 
 const customerTenant = 'pm' as Tenant;
 

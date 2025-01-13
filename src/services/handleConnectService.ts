@@ -5,7 +5,7 @@ import { readCookie } from '@/utils';
 import { appCookieName, headersKey } from '@/constans';
 import { selectSettings } from '@/tenants/tenantOptions';
 import { createHttpConfig, manageRequest } from '@/libs';
-import type { Tenant, ReqResBody, RequestContent } from '@/interfaces';
+import type { ReqResBody, RequestContent, Tenant } from '@/interfaces';
 
 const oauthToken: { bearer?: string } = {
   bearer: undefined,

@@ -1,12 +1,12 @@
 import { z } from 'zod';
 import type { NextResponse } from 'next/server';
 // Internal App
-import type { httpSchema } from '@/schemas';
+import type { httpSchemas } from '@/schemas';
 
 /**
  * Represents the structure of an error response from the API.
  */
-export type ErrorResponseApi = z.infer<typeof httpSchema.errorResponseApi>;
+export type ErrorResponseApi = z.infer<typeof httpSchemas.errorResponseApi>;
 
 /**
  * Configuration for HTTP headers and timeout.
@@ -19,7 +19,7 @@ export type HeaderConfig = {
 /**
  * Represents the configuration for an HTTP request.
  */
-export type HttpConfig = z.infer<typeof httpSchema.httpConfig>;
+export type HttpConfig = z.infer<typeof httpSchemas.httpConfig>;
 
 /**
  * Represents a promise that resolves to a Next.js response containing either a successful API response or an error response.
@@ -29,14 +29,14 @@ export type ApiResponsePromise = Promise<NextResponse<ResponseApi | ErrorRespons
 /**
  * Represents the content of an HTTP request.
  */
-export type RequestContent = z.infer<typeof httpSchema.requestContent>;
+export type RequestContent = z.infer<typeof httpSchemas.requestContent>;
 
 /**
  * Represents the type of an HTTP request.
  */
-export type RequestType = z.infer<typeof httpSchema.requestType>;
+export type RequestType = z.infer<typeof httpSchemas.requestType>;
 
 /**
  * Represents the structure of a response from the API.
  */
-export type ResponseApi = z.infer<typeof httpSchema.responseApi>;
+export type ResponseApi = z.infer<typeof httpSchemas.responseApi>;

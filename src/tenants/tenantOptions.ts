@@ -1,7 +1,7 @@
 // Internal App
 import { appSettings, defaultTenant } from '@/constans';
-import { AppSettings, Tenant, StringMap } from '@/interfaces';
 import { defaultSettings, defaultThemeVars } from './bt';
+import type { AppSettings, StringMap, Tenant } from '@/interfaces';
 
 export async function selectTheme(tenant: Tenant): Promise<StringMap> {
   const { availableTenants } = appSettings;

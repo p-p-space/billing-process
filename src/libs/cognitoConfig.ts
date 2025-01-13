@@ -1,11 +1,11 @@
 'use server';
-import { CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider';
 import crypto from 'crypto';
+import { CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider';
 // Internal App
 import { readCookie } from '@/utils';
+import { Tenant } from '@/interfaces';
 import { appCookieName } from '@/constans';
 import { selectSettings } from '@/tenants/tenantOptions';
-import { Tenant } from '@/interfaces';
 
 /**
  * Creates a new instance of CognitoIdentityProviderClient with the provided credentials.

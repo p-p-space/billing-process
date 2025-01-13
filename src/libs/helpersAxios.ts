@@ -2,7 +2,7 @@ import { AxiosInstance, isAxiosError } from 'axios';
 import type { AxiosError, AxiosResponse } from 'axios';
 // Internal App
 import { headersKey } from '@/constans';
-import { httpSchema } from '@/schemas';
+import { httpSchemas } from '@/schemas';
 import { applicationAxios, browserAxios, servicesAxios } from './';
 import type {
   ErrorResponseApi,
@@ -59,7 +59,7 @@ export function createHttpConfig(config?: HeaderConfig): HttpConfig {
  * @throws Will throw an error if the request content is invalid.
  */
 export async function manageRequest(requestContent: RequestContent, requestType: RequestType): Promise<AxiosResponse> {
-  const parsedReqContent = httpSchema.requestContent.safeParse(requestContent);
+  const parsedReqContent = httpSchemas.requestContent.safeParse(requestContent);
   let httpConfig = createHttpConfig();
 
   if (!parsedReqContent.success) {

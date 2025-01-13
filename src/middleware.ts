@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal app
 import { handleCustomerRequest } from './services';
-import { langCookieName, availableLang } from './i18n';
+import { availableLang, langCookieName } from './i18n';
 import { availableTenant, cookieValues } from './utils';
 import { apiSrc, apiVersions, appCookieName } from './constans';
 

@@ -1,12 +1,12 @@
 import { useCallback } from 'react';
 import { isAxiosError } from 'axios';
-// Internal app
+// Internal App
 import { useUiStore } from '@/store';
 import { headersKey } from '@/constans';
 import type { RequestContent } from '@/interfaces';
 import { createHttpConfig, manageRequest } from '@/libs';
 
-export function useBrowserRequest() {
+export function useBrowserRequest(loading = true) {
   const setLoadingScreen = useUiStore((state) => state.setLoadingScreen);
 
   const createBrowserRequest = useCallback(
@@ -19,7 +19,7 @@ export function useBrowserRequest() {
       }
 
       try {
-        setLoadingScreen(true);
+        setLoadingScreen(loading);
         const requestConfig = { pathUrl, method, dataRequest, httpConfig };
         const requestType = 'browser';
         const responseWebRequest = await manageRequest(requestConfig, requestType);
@@ -44,7 +44,7 @@ export function useBrowserRequest() {
         throw errorResponse.message;
       }
     },
-    [setLoadingScreen]
+    [loading, setLoadingScreen]
   );
 
   return {

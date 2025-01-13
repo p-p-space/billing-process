@@ -1,5 +1,5 @@
 import { defaultTenant } from '@/constans';
-import { AppSettings } from '@/interfaces';
+import type { AppSettings } from '@/interfaces';
 
 export const defaultSettings: AppSettings = {
   tenant: defaultTenant,
