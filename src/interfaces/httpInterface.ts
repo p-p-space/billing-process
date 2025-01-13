@@ -24,7 +24,7 @@ export type HttpConfig = z.infer<typeof httpSchemas.httpConfig>;
 /**
  * Represents a promise that resolves to a Next.js response containing either a successful API response or an error response.
  */
-export type ApiResponsePromise = Promise<NextResponse<ResponseApi | ErrorResponseApi>>;
+export type ApiResponsePromise = Promise<NextResponse<ResponseApi>>;
 
 /**
  * Represents the content of an HTTP request.
