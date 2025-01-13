@@ -71,6 +71,7 @@ export const headersKey = {
   appContentSecurity: 'app-content-security', // Header key for content security status
   appOriginPath: 'app-origin-path', // Header key for application origin path
   appJwsToken: 'app-token', // Header key for application JWS token
+  AppReqId: 'app-request-id', // Header key for application JWS token
   appCookie: 'cookie', // Header key for app cookies
   servJwsToken: 'x-token', // Header key for service JWS token
   servTenantId: 'x-tenant-id', // Header key for service tenant ID

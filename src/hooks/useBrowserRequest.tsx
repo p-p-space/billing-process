@@ -1,3 +1,4 @@
+import uuid4 from 'uuid4';
 import { useCallback } from 'react';
 import { isAxiosError } from 'axios';
 // Internal App
@@ -13,6 +14,7 @@ export function useBrowserRequest(loading = true) {
     async (requestContent: RequestContent) => {
       const { pathUrl, method, dataRequest } = requestContent;
       const httpConfig = createHttpConfig();
+      httpConfig.headers[headersKey.AppReqId] = uuid4();
 
       if (dataRequest) {
         httpConfig.headers[headersKey.appContentSecurity] = 'enc';

@@ -19,8 +19,8 @@ export async function POST(request: NextRequest): ApiResponsePromise {
       AuthFlow: 'USER_PASSWORD_AUTH',
       ClientId: clientId,
       AuthParameters: {
-        USERNAME: userName ?? '',
-        PASSWORD: password ?? '',
+        USERNAME: userName,
+        PASSWORD: password,
         SECRET_HASH: secretHash,
       },
     });

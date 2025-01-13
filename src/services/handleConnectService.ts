@@ -14,6 +14,7 @@ const oauthToken: { bearer?: string } = {
 export async function connectServices(request: NextRequest) {
   const { headers, method } = request;
   const pathUrl = headers.get(headersKey.appOriginPath);
+  const reqId = headers.get(headersKey.AppReqId);
   const { tenantId } = await appCreedentials();
 
   if (!oauthToken.bearer) {
@@ -28,7 +29,7 @@ export async function connectServices(request: NextRequest) {
   const httpConfig = createHttpConfig({ timeout: 59500 });
   httpConfig.headers[headersKey.authorization] = `Bearer ${bearer}`;
   httpConfig.headers[headersKey.servTenantId] = tenantId;
-  httpConfig.headers[headersKey.servReqId] = 'e30b625a-e085-42a5-aac2-3d52f73ad8fe';
+  httpConfig.headers[headersKey.servReqId] = `${reqId}`;
   let dataRequest = undefined;
 
   if (headers.get(headersKey.appContentSecurity) !== null) {
