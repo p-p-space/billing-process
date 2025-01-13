@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 import type { ApiResponsePromise } from '@/interfaces';
 import { createErrorResponseApi, createResponseApi } from '@/libs/axios';
 import { InitiateAuthCommand } from '@aws-sdk/client-cognito-identity-provider';
-import { cognitoCreedentials, createCognitoClient, hashClienSecret } from '@/libs/cognitoConfig';
+import { cognitoCreedentials, createCognitoClient, hashClienSecret } from '@/libs/cognito';
 
 export async function POST(request: NextRequest): ApiResponsePromise {
   // const { userName, password } =

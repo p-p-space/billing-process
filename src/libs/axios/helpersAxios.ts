@@ -4,15 +4,8 @@ import type { AxiosError, AxiosResponse } from 'axios';
 import { headersKey } from '@/constans';
 import { httpSchemas } from '@/schemas';
 import { applicationAxios, browserAxios, servicesAxios } from './';
-import type {
-  ErrorResponseApi,
-  HeaderConfig,
-  HttpConfig,
-  ReqResBody,
-  RequestContent,
-  RequestType,
-  ResponseApi,
-} from '@/interfaces';
+import type { ErrorResponseApi, RequestContent } from '@/interfaces/httpInterface';
+import type { HeaderConfig, HttpConfig, ReqResBody, RequestType, ResponseApi } from '@/interfaces';
 
 /**
  * Creates an HTTP configuration object.

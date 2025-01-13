@@ -1,6 +1,6 @@
 'use server';
 import crypto from 'crypto';
-import { CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider';
+import { CognitoIdentityProviderClient, InitiateAuthCommand } from '@aws-sdk/client-cognito-identity-provider';
 // Internal App
 import { readCookie } from '@/utils';
 import { Tenant } from '@/interfaces';
@@ -44,4 +44,15 @@ export async function cognitoCreedentials() {
     clientSecret: tenantCognitoClientSecret,
     region: tenantCognitoRegion,
   };
+}
+
+export async function cognitoConnect(command: InitiateAuthCommand) {
+  console.log({ command });
+
+  const cognitoClient = await createCognitoClient();
+
+  const result = await cognitoClient.send(command);
+  console.log({ result });
+
+  return result;
 }
