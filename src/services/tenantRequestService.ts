@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
 import type { RequestContent } from '@/interfaces';
-import { createHttpConfig, manageRequest } from '@/libs';
+import { createHttpConfig, manageRequest } from '@/libs/axios';
 import { apiPaths, apiVersions, headersKey } from '@/constans';
 
 /**

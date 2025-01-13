@@ -1,6 +1,6 @@
 import { getRequestConfig } from 'next-intl/server';
 // Internal app
-import { manageRequest } from '@/libs';
+import { manageRequest } from '@/libs/axios';
 import { getAppLang } from './servI18n';
 import { defaultTenant } from '@/constans';
 import type { Lang, LangData, LangFiles, RequestContent } from '@/interfaces';

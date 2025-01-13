@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal App
-import { createErrorResponseApi, createResponseApi } from '@/libs';
+import { createErrorResponseApi, createResponseApi } from '@/libs/axios';
 import type { ApiResponsePromise, ParamsProps, ResponseApi } from '@/interfaces';
 
 const status: number = 200;

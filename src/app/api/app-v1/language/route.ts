@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal app
 import { defaultTenant } from '@/constans';
-import { createErrorResponseApi, createResponseApi } from '@/libs';
+import { createErrorResponseApi, createResponseApi } from '@/libs/axios';
 import type { ApiResponsePromise, LangFiles } from '@/interfaces';
 
 export async function POST(request: NextRequest): ApiResponsePromise {

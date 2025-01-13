@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 import { readCookie } from '@/utils';
 import { appCookieName, headersKey } from '@/constans';
 import { selectSettings } from '@/tenants/tenantOptions';
-import { createHttpConfig, manageRequest } from '@/libs';
+import { createHttpConfig, manageRequest } from '@/libs/axios';
 import type { ReqResBody, RequestContent, Tenant } from '@/interfaces';
 
 const oauthToken: { bearer?: string } = {
