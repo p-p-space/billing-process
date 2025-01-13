@@ -40,7 +40,7 @@ export default function FormSignin() {
 
   const handleLogin = (loginData: ReqResBody) => {
     const dataLogin: RequestContent = {
-      pathUrl: `${apiPaths.browserPath}/prueba`,
+      pathUrl: `${apiPaths.browserPath}/signin`,
       method: 'post',
       dataRequest: loginData,
     };

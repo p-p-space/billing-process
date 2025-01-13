@@ -1,27 +1,9 @@
-import { Tenant } from '@/interfaces';
-import { tenantSettings } from './envConstans';
-
-const apiString = 'api';
+export const apiSrc = '/api';
 
 /**
  * Name of the application cookie.
  */
-export const AppCookieName = 'app_tenant';
-
-/**
- * Default tenant for the application.
- */
-export const defaultTenant = tenantSettings.tenant as Tenant;
-
-/**
- * List of available themes for the application.
- */
-export const availableTenantsList = tenantSettings.availableTenantsList as Tenant[];
-
-/**
- * List of allowed tenants for the application.
- */
-export const allowedTenantsList = tenantSettings.allowedTenantsList as Tenant[];
+export const appCookieName = 'app_tenant';
 
 /**
  * Toggles for enabling/disabling features.
@@ -42,8 +24,8 @@ export const baseURLs = {
  * API Versions.
  */
 export const apiVersions = {
-  apiServ: [`/${apiString}/v1.0.0`, `/${apiString}/v0`, `/${apiString}/v1.3`], // Versions for services API
-  apiApp: 'app-v1', // Version for application API
+  apiServ: [`${apiSrc}/v1.0.0`, `${apiSrc}/v0`, `${apiSrc}/v1.3`], // Versions for services API
+  apiApp: '/app-v1', // Version for application API
   apiSearch: /^\/api\/v\d+(\.\d+)*\//, // Regular expression for API search
 };
 
@@ -54,7 +36,7 @@ export const apiPaths = {
   browserPath: `${apiVersions.apiServ[0]}`, // Path for browserPath API
   customerPath: `${apiVersions.apiServ[1]}`, // Path for customerPath API
   cardSolutionPath: `${apiVersions.apiServ[2]}`, // Path for card solution API
-  appPath: `/${apiString}/${apiVersions.apiApp}`, // Path for application API
+  appPath: `${apiSrc}${apiVersions.apiApp}`, // Path for application API
   appServApi: 'services', // Services API endpoint
   appApis: ['language', 'logout', 'prueba', 'signin'], // List of application API endpoints
 };

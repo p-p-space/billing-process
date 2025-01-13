@@ -1,13 +1,14 @@
 // Internal App
-import { availableTenantsList, defaultTenant } from '@/constans';
-import { SettingsApp, StringMap, Tenant } from '@/interfaces';
+import { appSettings, defaultTenant } from '@/constans';
+import { AppSettings, AvailableTenants, StringMap } from '@/interfaces';
 import { defaultSettings, defaultThemeVars } from './bt';
 
-export async function selectTheme(tenant: Tenant): Promise<StringMap> {
+export async function selectTheme(tenant: AvailableTenants): Promise<StringMap> {
+  const { availableTenants } = appSettings;
   try {
     let themeOptions = {};
 
-    if (tenant !== defaultTenant && availableTenantsList.includes(tenant)) {
+    if (tenant !== defaultTenant && availableTenants.includes(tenant)) {
       const options = await import(`./${tenant}/${tenant}UiTheme`);
       themeOptions = options.themeVars;
     }
@@ -18,11 +19,12 @@ export async function selectTheme(tenant: Tenant): Promise<StringMap> {
   }
 }
 
-export async function selectSettings(tenant: Tenant): Promise<SettingsApp> {
+export async function selectSettings(tenant: AvailableTenants): Promise<AppSettings> {
+  const { availableTenants } = appSettings;
   try {
     let optionSettings = {};
 
-    if (tenant !== defaultTenant && availableTenantsList.includes(tenant)) {
+    if (tenant !== defaultTenant && availableTenants.includes(tenant)) {
       const options = await import(`./${tenant}/${tenant}Settings`);
 
       optionSettings = options.settings;

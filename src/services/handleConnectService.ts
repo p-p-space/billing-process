@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal App
-import { creds, headersKey } from '@/constans';
+import { readCookie } from '@/utils';
+import { appCookieName, headersKey } from '@/constans';
+import { selectSettings } from '@/tenants/tenantOptions';
 import { createHttpConfig, manageRequest } from '@/libs';
-import type { ReqResBody, RequestContent } from '@/interfaces';
+import type { AvailableTenants, ReqResBody, RequestContent } from '@/interfaces';
 
 const oauthToken: { bearer?: string } = {
   bearer: undefined,
@@ -12,6 +14,7 @@ const oauthToken: { bearer?: string } = {
 export async function connectServices(request: NextRequest) {
   const { headers, method } = request;
   const pathUrl = headers.get(headersKey.appOriginPath);
+  const { tenantId } = await appCreedentials();
 
   if (!oauthToken.bearer) {
     const responseBearer = await getOauthBearer();
@@ -24,7 +27,7 @@ export async function connectServices(request: NextRequest) {
   const { bearer } = oauthToken;
   const httpConfig = createHttpConfig({ timeout: 59500 });
   httpConfig.headers[headersKey.authorization] = `Bearer ${bearer}`;
-  httpConfig.headers[headersKey.servTenantId] = creds.tenantId;
+  httpConfig.headers[headersKey.servTenantId] = tenantId;
   httpConfig.headers[headersKey.servReqId] = 'e30b625a-e085-42a5-aac2-3d52f73ad8fe';
   let dataRequest = undefined;
 
@@ -46,10 +49,11 @@ export async function connectServices(request: NextRequest) {
 }
 
 export async function getOauthBearer() {
+  const { clientId, clientSecret } = await appCreedentials();
   const dataRequest: ReqResBody = {
     grant_type: 'client_credentials',
-    client_id: creds.clientId,
-    client_secret: creds.clientSecret,
+    client_id: clientId,
+    client_secret: clientSecret,
   };
 
   const httpConfig = createHttpConfig({ timeout: 59600 });
@@ -76,4 +80,17 @@ export async function getOauthBearer() {
   }
 
   return NextResponse.json(data, { status });
+}
+
+export async function appCreedentials() {
+  const tenant = (await readCookie(appCookieName)) as AvailableTenants;
+
+  const credentials = await selectSettings(tenant);
+  const { tenantClientId, tenantClientSecret, tenantId } = credentials;
+
+  return {
+    clientId: tenantClientId,
+    clientSecret: tenantClientSecret,
+    tenantId,
+  };
 }
