@@ -19,6 +19,25 @@ export default function CompaniesPage() {
     },
   });
 
+  const patchApp = () => {
+    const delApp: RequestContent = {
+      pathUrl: `${apiPaths.browserPath}/prueba`,
+      method: 'patch',
+      dataRequest: { name: 'Juan Pérez' },
+    };
+
+    mutate(delApp);
+  };
+
+  const delApp = () => {
+    const delApp: RequestContent = {
+      pathUrl: `${apiPaths.browserPath}/prueba`,
+      method: 'delete',
+    };
+
+    mutate(delApp);
+  };
+
   const noFound = () => {
     const noFound: RequestContent = {
       pathUrl: `${apiPaths.cardSolutionPath}/debit`,
@@ -79,20 +98,35 @@ export default function CompaniesPage() {
 
   return (
     <>
+      <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={delApp}>
+        GET aplication
+      </Button>
       <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={noFound}>
-        No found
+        POST aplication
+      </Button>
+      <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={noFound}>
+        PUT aplication
+      </Button>
+      <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={patchApp}>
+        PATH aplication
+      </Button>
+      <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={delApp}>
+        DELETE aplication
+      </Button>
+      <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={noFound}>
+        No found services
       </Button>
       <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={getSuccess}>
-        GET success
+        GET success services
       </Button>
       <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={getFail}>
-        GET fail
+        GET fail services
       </Button>
       <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={postSuccess}>
-        POST success
+        POST success services
       </Button>
       <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={postFail}>
-        POST fail
+        POST fail services
       </Button>
     </>
   );
