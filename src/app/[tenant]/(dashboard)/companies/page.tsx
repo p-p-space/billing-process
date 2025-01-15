@@ -19,6 +19,35 @@ export default function CompaniesPage() {
     },
   });
 
+  const getApp = () => {
+    const delApp: RequestContent = {
+      pathUrl: `${apiPaths.browserPath}/prueba`,
+      method: 'get',
+    };
+
+    mutate(delApp);
+  };
+
+  const postApp = () => {
+    const delApp: RequestContent = {
+      pathUrl: `${apiPaths.browserPath}/prueba`,
+      method: 'post',
+      dataRequest: { userName: 'yayita', password: '123' },
+    };
+
+    mutate(delApp);
+  };
+
+  const putApp = () => {
+    const delApp: RequestContent = {
+      pathUrl: `${apiPaths.browserPath}/prueba`,
+      method: 'put',
+      dataRequest: { userId: 'dfgdfgdfhdfgdfgdf-456464dfg4564' },
+    };
+
+    mutate(delApp);
+  };
+
   const patchApp = () => {
     const delApp: RequestContent = {
       pathUrl: `${apiPaths.browserPath}/prueba`,
@@ -98,13 +127,13 @@ export default function CompaniesPage() {
 
   return (
     <>
-      <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={delApp}>
+      <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={getApp}>
         GET aplication
       </Button>
-      <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={noFound}>
+      <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={postApp}>
         POST aplication
       </Button>
-      <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={noFound}>
+      <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={putApp}>
         PUT aplication
       </Button>
       <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={patchApp}>
