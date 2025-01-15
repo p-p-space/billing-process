@@ -4,7 +4,7 @@ import type { AxiosError, AxiosResponse } from 'axios';
 import { headersKey } from '@/constans';
 import { httpSchemas } from '@/schemas';
 import { applicationAxios, browserAxios, servicesAxios } from './';
-import type { ErrorResponseApi, RequestContent } from '@/interfaces/httpInterface';
+import type { ErrorResponseApi, RequestAxios } from '@/interfaces/httpInterface';
 import type { HeaderConfig, HttpConfig, ReqResBody, RequestType, ResponseApi } from '@/interfaces';
 
 /**
@@ -51,8 +51,8 @@ export function createHttpConfig(config?: HeaderConfig): HttpConfig {
  * @returns {Promise<AxiosResponse>} The response from the Axios request.
  * @throws Will throw an error if the request content is invalid.
  */
-export async function manageRequest(requestContent: RequestContent, requestType: RequestType): Promise<AxiosResponse> {
-  const parsedReqContent = httpSchemas.requestContent.safeParse(requestContent);
+export async function manageRequest(requestAxios: RequestAxios, requestType: RequestType): Promise<AxiosResponse> {
+  const parsedReqContent = httpSchemas.requestAxios.safeParse(requestAxios);
   let httpConfig = createHttpConfig();
 
   if (!parsedReqContent.success) {

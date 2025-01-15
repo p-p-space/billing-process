@@ -1,106 +1,76 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal App
-import { createErrorResponseApi, createResponseApi } from '@/libs/axios';
-import type { ApiResponsePromise, ParamsProps, ResponseApi } from '@/interfaces';
+import type { ApiResponsePromise, ResponseApi, Tenant } from '@/interfaces';
+import { readCookie } from '@/utils';
+import { appCookieName } from '@/constans';
 
 const status: number = 200;
 const response = {
   code: `${status}.00.000`,
 } as ResponseApi;
 
-export async function GET(request: NextRequest, { params }: ParamsProps): ApiResponsePromise {
+export async function GET(request: NextRequest): ApiResponsePromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
-  const { tenant } = await params;
+  const tenant = (await readCookie(appCookieName)) as Tenant;
 
-  try {
-    response.message = `${pathname}${search} --- ${method}`;
-    response.payload = {
-      user: {
-        id: 12345,
-        name: 'Juan Pérez',
-        email: 'juan.perez@example.com',
-        apps: ['uno', 'dos'],
-      },
-      tenant,
-    };
+  response.message = `${pathname}${search} --- ${method}`;
+  response.payload = {
+    user: {
+      id: 12345,
+      name: 'Juan Pérez',
+      email: 'juan.perez@example.com',
+      apps: ['uno', 'dos'],
+    },
+    tenant,
+  };
 
-    const respGet = createResponseApi(response);
-
-    return NextResponse.json(respGet, { status });
-  } catch (error) {
-    const { status, data } = createErrorResponseApi(error as Error);
-    return NextResponse.json(data, { status });
-  }
+  return NextResponse.json(response, { status });
 }
 
 export async function POST(request: NextRequest): ApiResponsePromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
+  const { payload } = await request.json();
 
-  try {
-    response.message = `${pathname}${search} --- ${method}`;
-    response.payload = await request.json();
+  response.message = `${pathname}${search} --- ${method}`;
+  response.payload = payload;
 
-    const respPost = createResponseApi(response);
-
-    return NextResponse.json(respPost, { status });
-  } catch (error) {
-    const { status, data } = createErrorResponseApi(error as Error);
-    return NextResponse.json(data, { status });
-  }
+  return NextResponse.json(response, { status });
 }
 
 export async function PUT(request: NextRequest): ApiResponsePromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
+  const { payload } = await request.json();
 
-  try {
-    response.message = `${pathname}${search} --- ${method}`;
-    response.payload = await request.json();
+  response.message = `${pathname}${search} --- ${method}`;
+  response.payload = { user: payload };
 
-    const respPut = createResponseApi(response);
-
-    return NextResponse.json(respPut, { status });
-  } catch (error) {
-    const { status, data } = createErrorResponseApi(error as Error);
-    return NextResponse.json(data, { status });
-  }
+  return NextResponse.json(response, { status });
 }
 
 export async function PATCH(request: NextRequest): ApiResponsePromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
+  const { payload } = await request.json();
 
-  try {
-    response.message = `${pathname}${search} --- ${method}`;
-    response.payload = await request.json();
+  response.message = `${pathname}${search} --- ${method}`;
+  response.payload = { update: payload };
 
-    const respPatch = createResponseApi(response);
-
-    return NextResponse.json(respPatch, { status });
-  } catch (error) {
-    const { status, data } = createErrorResponseApi(error as Error);
-    return NextResponse.json(data, { status });
-  }
+  return NextResponse.json(response, { status });
 }
 
 export async function DELETE(request: NextRequest): ApiResponsePromise {
-  try {
-    const { method, nextUrl } = request;
-    const { pathname, search } = nextUrl;
+  const { method, nextUrl } = request;
+  const { pathname, search } = nextUrl;
+  const status: number = 500;
 
-    response.message = `${pathname}${search} --- ${method}`;
+  response.message = `${pathname}${search} --- ${method}`;
 
-    const respDelete = createResponseApi(response);
-
-    if (respDelete) {
-      throw new Error('Error en DELETE');
-    }
-
-    return NextResponse.json(respDelete, { status });
-  } catch (error) {
-    const { status, data } = createErrorResponseApi(error as Error);
-    return NextResponse.json(data, { status });
+  if (status !== 200) {
+    response.message = `DELETE Error ${pathname}${search} --- ${method}`;
   }
+
+  return NextResponse.json(response, { status });
 }

@@ -5,7 +5,7 @@ import { readCookie } from '@/utils';
 import { appCookieName, headersKey } from '@/constans';
 import { selectSettings } from '@/tenants/tenantOptions';
 import { createHttpConfig, manageRequest } from '@/libs/axios';
-import type { ReqResBody, RequestContent, Tenant } from '@/interfaces';
+import type { ReqResBody, RequestAxios, Tenant } from '@/interfaces';
 
 const oauthToken: { bearer?: string } = {
   bearer: undefined,
@@ -42,7 +42,7 @@ export async function connectServices(request: NextRequest) {
     pathUrl,
     dataRequest,
     httpConfig,
-  } as RequestContent;
+  } as RequestAxios;
   const requestType = 'services';
   const { status, data } = await manageRequest(requestConfig, requestType);
 
@@ -65,7 +65,7 @@ export async function getOauthBearer() {
     pathUrl: `/oauth2/v1/token`,
     dataRequest,
     httpConfig,
-  } as RequestContent;
+  } as RequestAxios;
   const requestType = 'services';
 
   const { data, status } = await manageRequest(requestConfig, requestType);

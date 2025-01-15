@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
-import type { RequestContent } from '@/interfaces';
+import type { RequestAxios } from '@/interfaces';
 import { createHttpConfig, manageRequest } from '@/libs/axios';
 import { apiPaths, apiVersions, headersKey } from '@/constans';
 
@@ -39,7 +39,7 @@ export async function handleCustomerRequest(request: NextRequest): Promise<NextR
     pathUrl,
     dataRequest: undefined,
     httpConfig,
-  } as RequestContent;
+  } as RequestAxios;
   const requestType = 'application';
 
   if (headers.get(headersKey.appContentSecurity) !== null) {

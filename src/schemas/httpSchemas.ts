@@ -7,7 +7,7 @@ const responseApiSchema = z.object({
   code: z.string().regex(codeRegex, { message: 'code format should be codeHttp.00.000' }),
   message: z.string(),
   info: z.string().optional(),
-  datetime: z.string().datetime(),
+  datetime: z.string().datetime().optional(),
   payload: z.unknown().optional(),
   content: z.unknown().optional(),
 });
@@ -22,6 +22,8 @@ const requestContentSchema = z.object({
   pathUrl: z.string(),
   method: z.enum(['get', 'post', 'put', 'patch', 'delete', 'options', 'head']),
   dataRequest: appSchemas.reqResBody.optional(),
+});
+const requestAxiosSchema = requestContentSchema.extend({
   httpConfig: httpConfigSchema.optional(),
 });
 const errorResponseApiSchema = z.object({
@@ -35,5 +37,6 @@ export const httpSchemas = {
   requestType: requestTypeSchema,
   httpConfig: httpConfigSchema,
   requestContent: requestContentSchema,
+  requestAxios: requestAxiosSchema,
   errorResponseApi: errorResponseApiSchema,
 };

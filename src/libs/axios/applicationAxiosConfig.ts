@@ -65,7 +65,7 @@ applicationAxios.interceptors.response.use(
         const signedData = await signData(payload, secretJws, jwtAlgs.jwsAlgRsa);
         const authJws = disassembleJWS(signedData);
 
-        response.data = { ...data, payload, authJws };
+        response.data = createResponseApi({ ...data, payload, authJws });
       }
     } catch (error) {
       const respApi = {
