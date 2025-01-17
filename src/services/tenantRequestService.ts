@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
 import type { RequestAxios } from '@/interfaces';
 import { createHttpConfig, manageRequest } from '@/libs/axios';
-import { apiPaths, apiVersions, headersKey } from '@/constans';
+import { apiPaths, headersKey } from '@/constans';
 
 /**
  * Handles customer requests by processing the incoming request, configuring the HTTP request,
@@ -25,13 +25,12 @@ export async function handleCustomerRequest(request: NextRequest): Promise<NextR
   const { headers, method, nextUrl } = request;
   const { pathname, search } = nextUrl;
   const uriPath = `${pathname}${search}`;
-  const apiApp = uriPath.split('/')[3];
-  let pathUrl = uriPath.replace(apiVersions.apiSearch, '/');
+  let pathUrl = uriPath.replace(apiPaths.apiSearch, '/');
   const httpConfig = createHttpConfig({ timeout: 59700, headers });
   httpConfig.headers[headersKey.appOriginPath] = uriPath;
 
-  if (!apiPaths.appApis.includes(apiApp)) {
-    pathUrl = `/${apiPaths.appServApi}`;
+  if (!pathname.includes(apiPaths.appBrowserApi)) {
+    pathUrl = apiPaths.appApiServ;
   }
 
   const requestConfig = {

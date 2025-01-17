@@ -31,7 +31,7 @@ export async function GET(request: NextRequest): ApiResponsePromise {
 export async function POST(request: NextRequest): ApiResponsePromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
-  const { payload } = await request.json();
+  const payload = await request.json();
 
   response.message = `${pathname}${search} --- ${method}`;
   response.payload = payload;
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest): ApiResponsePromise {
 export async function PUT(request: NextRequest): ApiResponsePromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
-  const { payload } = await request.json();
+  const payload = await request.json();
 
   response.message = `${pathname}${search} --- ${method}`;
   response.payload = { user: payload };
@@ -53,7 +53,7 @@ export async function PUT(request: NextRequest): ApiResponsePromise {
 export async function PATCH(request: NextRequest): ApiResponsePromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
-  const { payload } = await request.json();
+  const payload = await request.json();
 
   response.message = `${pathname}${search} --- ${method}`;
   response.payload = { update: payload };

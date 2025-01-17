@@ -44,7 +44,7 @@ export default function FormSignin() {
     // loginData.email = 'mundoenrique';
     // loginData.password = '-Yayita81';
     const dataLogin: RequestContent = {
-      pathUrl: `${apiPaths.browserPath}/signin`,
+      pathUrl: `${apiPaths.appBrowserApi}/signin`,
       method: 'post',
       dataRequest: loginData,
     };

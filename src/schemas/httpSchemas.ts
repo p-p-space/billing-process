@@ -3,14 +3,15 @@ import { z } from 'zod';
 import { appSchemas } from './appSchemas';
 
 const codeRegex = /^codeHttp\.\d{2}\.\d{3}$/;
-const responseApiSchema = z.object({
-  code: z.string().regex(codeRegex, { message: 'code format should be codeHttp.00.000' }),
-  message: z.string(),
-  info: z.string().optional(),
-  datetime: z.string().datetime().optional(),
-  payload: z.unknown().optional(),
-  content: z.unknown().optional(),
-});
+const responseApiSchema = z
+  .object({
+    code: z.string().regex(codeRegex, { message: 'code format should be codeHttp.00.000' }),
+    message: z.string(),
+    info: z.string().optional(),
+    datetime: z.string().datetime().optional(),
+    payload: z.unknown().optional(),
+  })
+  .catchall(z.unknown());
 const requestTypeSchema = z.enum(['browser', 'application', 'services']);
 const httpConfigSchema = z.object({
   timeout: z.number(),

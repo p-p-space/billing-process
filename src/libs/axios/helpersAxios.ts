@@ -92,8 +92,8 @@ function createAxiosInstance(requestType: RequestType): AxiosInstance {
  */
 export function createResponseApi(dataResponse: ReqResBody): ResponseApi {
   let responseApi: ResponseApi = {
-    code: '500.00.00',
-    message: 'Internal Server Error',
+    code: '200.00.00',
+    message: 'Process ok',
     datetime: new Date().toISOString(),
   };
 
@@ -110,12 +110,12 @@ export function createResponseApi(dataResponse: ReqResBody): ResponseApi {
  */
 export function createErrorResponseApi(error: AxiosError | Error): AxiosResponse | ErrorResponseApi {
   if (isAxiosError(error) && error.response) {
-    error.response.data = createResponseApi({ code: `${error.status}.00.000`, message: error.message });
+    error.response.data = { code: `${error.status}.00.000`, message: error.message };
 
     return error.response;
   }
 
-  const errorResponse = createResponseApi({ message: error.message });
+  const errorResponse = { code: '500.00.00', message: error.message };
 
   return {
     status: 500,

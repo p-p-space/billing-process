@@ -9,7 +9,7 @@ import { assembleJWS, verifySignature, decryptData, encryptData, signData, disas
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
 const applicationAxios = axios.create({
-  baseURL: `${baseURLs.app}${apiPaths.appPath}`,
+  baseURL: `${baseURLs.app}${apiPaths.appAPiV1}`,
 });
 
 /**
@@ -17,10 +17,9 @@ const applicationAxios = axios.create({
  * Verifies the request signature and decrypts the data.
  */
 applicationAxios.interceptors.request.use(async (request) => {
-  const { data, headers } = request;
-  const appContentSec = !!headers[headersKey.appContentSecurity];
+  const { data, headers, url } = request;
 
-  if (data?.payload && appContentSec) {
+  if (data?.payload) {
     try {
       let { payload } = data;
       const tokenApp = headers[headersKey.appJwsToken];
@@ -30,7 +29,11 @@ applicationAxios.interceptors.request.use(async (request) => {
       const secretJwe = await importPKCS8(servKeys.webJwePrivKey, jwtAlgs.jweAlgRsa);
       payload = await decryptData(signatureVerified, secretJwe);
 
-      request.data.payload = payload;
+      if (url !== apiPaths.appApiServ) {
+        request.data = payload;
+      } else {
+        request.data.payload = payload;
+      }
     } catch (error) {
       throw new Error(`applicationAxios Request (${(error as Error).message})`);
     }

@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal app
 import { defaultTenant } from '@/constans';
-import { createErrorResponseApi, createResponseApi } from '@/libs/axios';
+import { createErrorResponseApi } from '@/libs/axios';
 import type { ApiResponsePromise, LangFiles } from '@/interfaces';
 
 export async function POST(request: NextRequest): ApiResponsePromise {
@@ -15,7 +15,7 @@ export async function POST(request: NextRequest): ApiResponsePromise {
     tenant: [],
   };
   const src = {
-    default: path.join(process.cwd(), 'dictionary/bt'),
+    default: path.join(process.cwd(), `dictionary/${defaultTenant}`),
     tenant: path.join(process.cwd(), `dictionary/${tenant}`),
   };
 
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest): ApiResponsePromise {
       }
     }
 
-    const respLang = createResponseApi({ code: '200.00.000', message: 'Process ok', content: { language } });
+    const respLang = { code: '200.00.000', message: 'Process ok', language };
     return NextResponse.json(respLang, { status: 200 });
   } catch (error) {
     const { status, data } = createErrorResponseApi(error as Error);

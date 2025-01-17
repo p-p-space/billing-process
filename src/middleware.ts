@@ -4,16 +4,10 @@ import type { NextRequest } from 'next/server';
 import { handleCustomerRequest } from './services';
 import { availableLang, langCookieName } from './i18n';
 import { availableTenant, cookieValues } from './utils';
-import { apiSrc, apiVersions, appCookieName } from './constans';
+import { apiPaths, apiSrc, appCookieName } from './constans';
 
 export async function middleware(request: NextRequest) {
   const { cookies, nextUrl, url } = request;
-
-  if (apiVersions.apiServ.some((api) => nextUrl.pathname.startsWith(api))) {
-    const responseApi = await handleCustomerRequest(request);
-
-    return responseApi;
-  }
 
   if (!nextUrl.pathname.startsWith(apiSrc)) {
     const responsePages = NextResponse.next();
@@ -28,6 +22,17 @@ export async function middleware(request: NextRequest) {
     responsePages.cookies.set(cookietenant);
 
     return responsePages;
+  }
+
+  if (
+    !nextUrl.pathname.startsWith(apiPaths.appAPiV1) &&
+    !nextUrl.pathname.startsWith('/api/all') &&
+    nextUrl.pathname !== '/api/healthcheck'
+  ) {
+    console.log('middleware', nextUrl.pathname);
+    const responseApi = await handleCustomerRequest(request);
+
+    return responseApi;
   }
 }
 

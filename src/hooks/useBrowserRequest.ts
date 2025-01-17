@@ -12,11 +12,13 @@ export function useBrowserRequest(loading = true) {
 
   const createBrowserRequest = useCallback(
     async (requestContent: RequestContent) => {
-      const { pathUrl, method, dataRequest } = requestContent;
+      const { pathUrl, method, ...data } = requestContent;
+      let { dataRequest } = data;
       const httpConfig = createHttpConfig();
       httpConfig.headers[headersKey.AppReqId] = uuid4();
 
       if (dataRequest) {
+        dataRequest = { payload: dataRequest };
         httpConfig.headers[headersKey.appContentSecurity] = 'enc';
       }
 

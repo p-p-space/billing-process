@@ -21,7 +21,7 @@ export default function CompaniesPage() {
 
   const getApp = () => {
     const delApp: RequestContent = {
-      pathUrl: `${apiPaths.browserPath}/prueba`,
+      pathUrl: `${apiPaths.appBrowserApi}/prueba`,
       method: 'get',
     };
 
@@ -30,7 +30,7 @@ export default function CompaniesPage() {
 
   const postApp = () => {
     const delApp: RequestContent = {
-      pathUrl: `${apiPaths.browserPath}/prueba`,
+      pathUrl: `${apiPaths.appBrowserApi}/prueba`,
       method: 'post',
       dataRequest: { userName: 'yayita', password: '123' },
     };
@@ -40,7 +40,7 @@ export default function CompaniesPage() {
 
   const putApp = () => {
     const delApp: RequestContent = {
-      pathUrl: `${apiPaths.browserPath}/prueba`,
+      pathUrl: `${apiPaths.appBrowserApi}/prueba`,
       method: 'put',
       dataRequest: { userId: 'dfgdfgdfhdfgdfgdf-456464dfg4564' },
     };
@@ -50,7 +50,7 @@ export default function CompaniesPage() {
 
   const patchApp = () => {
     const delApp: RequestContent = {
-      pathUrl: `${apiPaths.browserPath}/prueba`,
+      pathUrl: `${apiPaths.appBrowserApi}/prueba`,
       method: 'patch',
       dataRequest: { name: 'Juan Pérez' },
     };
@@ -60,7 +60,7 @@ export default function CompaniesPage() {
 
   const delApp = () => {
     const delApp: RequestContent = {
-      pathUrl: `${apiPaths.browserPath}/prueba`,
+      pathUrl: `${apiPaths.appBrowserApi}/prueba`,
       method: 'delete',
     };
 
@@ -69,7 +69,7 @@ export default function CompaniesPage() {
 
   const noFound = () => {
     const noFound: RequestContent = {
-      pathUrl: `${apiPaths.cardSolutionPath}/debit`,
+      pathUrl: `${apiPaths.cardsSolApi}/debit`,
       method: 'post',
       dataRequest: {
         cardNumber: '1234567890123456',
@@ -83,7 +83,7 @@ export default function CompaniesPage() {
 
   const getSuccess = () => {
     const dataGet: RequestContent = {
-      pathUrl: `${apiPaths.customerPath}/onboarding/validate?consultantCode=000650714&countryCode=PE`,
+      pathUrl: `${apiPaths.customersApi}/onboarding/validate?consultantCode=000650714&countryCode=PE`,
       method: 'get',
     };
 
@@ -92,7 +92,7 @@ export default function CompaniesPage() {
 
   const getFail = () => {
     const dataGet: RequestContent = {
-      pathUrl: `${apiPaths.customerPath}/onboarding/validate?consultantCode=650714&countryCode=PE`,
+      pathUrl: `${apiPaths.customersApi}/onboarding/validate?consultantCode=650714&countryCode=PE`,
       method: 'get',
     };
 
@@ -101,7 +101,7 @@ export default function CompaniesPage() {
 
   const postSuccess = () => {
     const dataPOst: RequestContent = {
-      pathUrl: `${apiPaths.customerPath}/users/credentials`,
+      pathUrl: `${apiPaths.customersApi}/users/credentials`,
       method: 'post',
       dataRequest: {
         userId: 'b2da31b6-15d6-4fd7-bbb4-4485bb9dba7e',
@@ -114,7 +114,7 @@ export default function CompaniesPage() {
 
   const postFail = () => {
     const dataPOst: RequestContent = {
-      pathUrl: `${apiPaths.customerPath}/users/credentials`,
+      pathUrl: `${apiPaths.customersApi}/users/credentials`,
       method: 'post',
       dataRequest: {
         userId: 'b2da31b6-15d6-4fd7-bbb4-2585bb9dba7e',

@@ -21,24 +21,15 @@ export const baseURLs = {
 };
 
 /**
- * API Versions.
- */
-export const apiVersions = {
-  apiServ: [`${apiSrc}/v1.0.0`, `${apiSrc}/v0`, `${apiSrc}/v1.3`], // Versions for services API
-  apiApp: '/app-v1', // Version for application API
-  apiSearch: /^\/api\/v\d+(\.\d+)*\//, // Regular expression for API search
-};
-
-/**
  * API Paths constructed using template literals.
  */
 export const apiPaths = {
-  browserPath: `${apiVersions.apiServ[0]}`, // Path for browserPath API
-  customerPath: `${apiVersions.apiServ[1]}`, // Path for customerPath API
-  cardSolutionPath: `${apiVersions.apiServ[2]}`, // Path for card solution API
-  appPath: `${apiSrc}${apiVersions.apiApp}`, // Path for application API
-  appServApi: 'services', // Services API endpoint
-  appApis: ['language', 'logout', 'prueba', 'signin'], // List of application API endpoints
+  apiSearch: /^\/api\/v\d+(\.\d+)*\//, // Regular expression for API search
+  appAPiV1: `${apiSrc}/app-v1`, // Application API path for internal requests
+  appApiServ: '/services', // Services API endpoint
+  appBrowserApi: `${apiSrc}/v1.0.0`, // API version for browser to application requests
+  customersApi: `${apiSrc}/v0`, // API version for customer requests
+  cardsSolApi: `${apiSrc}/v1.3`, // API version for cards solution requests
 };
 
 /**

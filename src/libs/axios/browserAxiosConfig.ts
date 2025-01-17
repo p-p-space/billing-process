@@ -19,16 +19,17 @@ const browserAxios = axios.create({
 browserAxios.interceptors.request.use(async (request) => {
   const { data, headers } = request;
 
-  if (data) {
+  if (data?.payload) {
     try {
+      let { payload } = data;
       const secretJwe = await importSPKI(webKeys.webJwePubKey, jwtAlgs.jweAlgRsa);
-      const payload = await encryptData(data, secretJwe, jwtAlgs.jweAlgRsa);
+      payload = await encryptData(payload, secretJwe, jwtAlgs.jweAlgRsa);
       const secretJws = encode(webKeys.secJwsStr);
       const signedData = await signData(payload, secretJws, jwtAlgs.jwsAlgSec);
       const authJws = disassembleJWS(signedData);
       headers[headersKey.appJwsToken] = `JWS ${authJws}`;
 
-      request.data = { payload };
+      request.data.payload = payload;
     } catch (error) {
       throw new Error(`browserAxios Request (${(error as Error).message})`);
     }
