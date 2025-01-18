@@ -8,10 +8,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Typography, Button } from '@mui/material';
 //Internal app
 import { getSchema } from '@/config';
+import { apiPaths } from '@/constans';
 import { useBrowserRequest } from '@/hooks';
 import { InputPass, InputText } from '@/components';
 import type { ReqResBody, RequestContent } from '@/interfaces';
-import { apiPaths } from '@/constans';
 
 export default function FormSignin() {
   const t = useTranslations('signin');

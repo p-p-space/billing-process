@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal App
 import { readCookie } from '@/utils';
-import { appCookieName, headersKey } from '@/constans';
 import { selectSettings } from '@/tenants/tenantOptions';
+import { tenantCookieName, headersKey } from '@/constans';
 import { createHttpConfig, manageRequest } from '@/libs/axios';
 import type { ReqResBody, RequestAxios, Tenant } from '@/interfaces';
 
@@ -84,7 +84,7 @@ export async function getOauthBearer() {
 }
 
 export async function appCreedentials() {
-  const tenant = (await readCookie(appCookieName)) as Tenant;
+  const tenant = (await readCookie(tenantCookieName)) as Tenant;
 
   const credentials = await selectSettings(tenant);
   const { tenantClientId, tenantClientSecret, tenantId } = credentials;

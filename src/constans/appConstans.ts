@@ -3,7 +3,12 @@ export const apiSrc = '/api';
 /**
  * Name of the application cookie.
  */
-export const appCookieName = 'app_tenant';
+export const tenantCookieName = 'app_tenant';
+
+/**
+ * Name of the tenant cookie.
+ */
+export const langCookieName = 'app_lang';
 
 /**
  * Toggles for enabling/disabling features.

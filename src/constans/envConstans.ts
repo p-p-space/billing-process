@@ -1,4 +1,5 @@
 export const defaultTenant = 'bt';
+export const defaultLang = 'en';
 const availableTenants = [defaultTenant, 'pm'] as const;
 const allowedTenants = [...availableTenants, 'pp'] as const;
 const availableLangs = ['en', 'es'] as const;

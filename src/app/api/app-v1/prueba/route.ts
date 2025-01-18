@@ -1,8 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal App
-import type { ApiResponsePromise, ResponseApi, Tenant } from '@/interfaces';
 import { readCookie } from '@/utils';
-import { appCookieName } from '@/constans';
+import { tenantCookieName } from '@/constans';
+import type { ApiResponsePromise, ResponseApi, Tenant } from '@/interfaces';
 
 const status: number = 200;
 const response = {
@@ -12,7 +12,7 @@ const response = {
 export async function GET(request: NextRequest): ApiResponsePromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
-  const tenant = (await readCookie(appCookieName)) as Tenant;
+  const tenant = (await readCookie(tenantCookieName)) as Tenant;
 
   response.message = `${pathname}${search} --- ${method}`;
   response.payload = {

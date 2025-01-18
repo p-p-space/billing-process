@@ -92,7 +92,7 @@ function createAxiosInstance(requestType: RequestType): AxiosInstance {
  */
 export function createResponseApi(dataResponse: ReqResBody): ResponseApi {
   let responseApi: ResponseApi = {
-    code: '200.00.00',
+    code: '200.00.000',
     message: 'Process ok',
     datetime: new Date().toISOString(),
   };
@@ -105,7 +105,7 @@ export function createResponseApi(dataResponse: ReqResBody): ResponseApi {
 /**
  * Create an error response object.
  *
- * @param {AxiosError |Error} error - The error api response.
+ * @param {AxiosError | Error} error - The error api response.
  * @returns {AxiosResponse | ErrorResponseApi} The error response object.
  */
 export function createErrorResponseApi(error: AxiosError | Error): AxiosResponse | ErrorResponseApi {
@@ -115,7 +115,7 @@ export function createErrorResponseApi(error: AxiosError | Error): AxiosResponse
     return error.response;
   }
 
-  const errorResponse = { code: '500.00.00', message: error.message };
+  const errorResponse = { code: '500.00.000', message: error.message };
 
   return {
     status: 500,

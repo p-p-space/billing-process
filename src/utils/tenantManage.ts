@@ -5,7 +5,7 @@ import { appSettings, defaultTenant } from '@/constans';
 /**
  * Checks if the tenant value is an available tenant.
  * @param {string | undefined} value - The url tenant.
- * @returns {Allowedtenants} The available tenant or the default tenant.
+ * @returns {Tenant} The available tenant or the default tenant.
  */
 export function availableTenant(value: string | undefined): Tenant {
   const { allowedTenants } = appSettings;
