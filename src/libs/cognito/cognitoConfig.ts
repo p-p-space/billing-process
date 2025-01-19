@@ -1,7 +1,11 @@
 'use server';
 
 import crypto from 'crypto';
-import { CognitoIdentityProviderClient, InitiateAuthCommand } from '@aws-sdk/client-cognito-identity-provider';
+import {
+  CognitoIdentityProviderClient,
+  CognitoIdentityProviderServiceException,
+  InitiateAuthCommand,
+} from '@aws-sdk/client-cognito-identity-provider';
 // Internal App
 import { readCookie } from '@/utils';
 import { Tenant } from '@/interfaces';
@@ -48,12 +52,23 @@ export async function cognitoCreedentials() {
 }
 
 export async function cognitoConnect(command: InitiateAuthCommand) {
-  console.log({ command });
-
+  console.log(command.input);
   const cognitoClient = await createCognitoClient();
 
-  const result = await cognitoClient.send(command);
-  console.log({ result });
+  try {
+    const result = await cognitoClient.send(command);
+    console.log({ result });
+    return result;
+  } catch (error) {
+    const parseError = error as CognitoIdentityProviderServiceException;
+    // Handle code status
+    // const status = parseError.$metadata.httpStatusCode;
+    console.error({ parseError });
+    console.error(parseError.name);
+    console.error(parseError.message);
+    console.error(parseError.$fault);
+    console.error(parseError.$metadata);
 
-  return result;
+    return parseError;
+  }
 }

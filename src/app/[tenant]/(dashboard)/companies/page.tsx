@@ -81,6 +81,15 @@ export default function CompaniesPage() {
     mutate(noFound);
   };
 
+  const carDetail = () => {
+    const carDetail: RequestContent = {
+      pathUrl: `${apiPaths.cardsSolApi}/cards/${'4a6f51f0-25a7-4fe8-81fa-050b473ffb21'}`,
+      method: 'get',
+    };
+
+    mutate(carDetail);
+  };
+
   const getSuccess = () => {
     const dataGet: RequestContent = {
       pathUrl: `${apiPaths.customersApi}/onboarding/validate?consultantCode=000650714&countryCode=PE`,
@@ -144,6 +153,9 @@ export default function CompaniesPage() {
       </Button>
       <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={noFound}>
         No found services
+      </Button>
+      <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={carDetail}>
+        card detail services
       </Button>
       <Button variant="contained" type="button" disabled={false} fullWidth sx={{ mb: 3 }} onClick={getSuccess}>
         GET success services
