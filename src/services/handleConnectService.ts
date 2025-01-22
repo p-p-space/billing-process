@@ -87,11 +87,10 @@ export async function appCreedentials() {
   const tenant = (await readCookie(tenantCookieName)) as Tenant;
 
   const credentials = await selectSettings(tenant);
-  const { tenantClientId, tenantClientSecret, tenantId } = credentials;
 
   return {
-    clientId: tenantClientId,
-    clientSecret: tenantClientSecret,
-    tenantId,
+    clientId: credentials.tenantClientId,
+    clientSecret: credentials.tenantClientSecret,
+    tenantId: credentials.tenantId,
   };
 }

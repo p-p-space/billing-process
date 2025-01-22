@@ -21,18 +21,18 @@ export async function createCognitoClient(): Promise<CognitoIdentityProviderClie
   const { region } = await cognitoCreedentials();
 
   const cognitoClient = new CognitoIdentityProviderClient({
-    region: region,
+    region,
   });
 
   return cognitoClient;
 }
 
-export async function hashClienSecret(userName: string) {
+export async function hashClienSecret(user: string) {
   const { clientId, clientSecret } = await cognitoCreedentials();
 
   const secretHash = crypto
     .createHmac('sha256', clientSecret)
-    .update(userName + clientId)
+    .update(user + clientId)
     .digest('base64');
 
   return { secretHash };
@@ -42,12 +42,11 @@ export async function cognitoCreedentials() {
   const tenant = (await readCookie(tenantCookieName)) as Tenant;
 
   const credentials = await selectSettings(tenant);
-  const { tenantCognitoClientId, tenantCognitoClientSecret, tenantCognitoRegion } = credentials;
 
   return {
-    clientId: tenantCognitoClientId,
-    clientSecret: tenantCognitoClientSecret,
-    region: tenantCognitoRegion,
+    clientId: credentials.cognitoClientId,
+    clientSecret: credentials.cognitoClientSecret,
+    region: credentials.cognitoRegion,
   };
 }
 

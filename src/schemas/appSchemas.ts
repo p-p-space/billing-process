@@ -16,9 +16,19 @@ const appSettingsSchema = z.object({
   tenantId: z.string(),
   tenantClientId: z.string(),
   tenantClientSecret: z.string(),
-  tenantCognitoRegion: z.string(),
-  tenantCognitoClientId: z.string(),
-  tenantCognitoClientSecret: z.string(),
+  cognitoRegion: z.string(),
+  cognitoClientId: z.string(),
+  cognitoClientSecret: z.string(),
+  secJweStr: z.string(),
+  secJwsStr: z.string(),
+  webJwePrivKey: z.string(),
+  webJwePubKey: z.string(),
+  webJwsPrivKey: z.string(),
+  webJwsPubKey: z.string(),
+  servJwePrivKey: z.string(),
+  servJwePubKey: z.string(),
+  servJwsPrivKey: z.string(),
+  servJwsPubKey: z.string(),
 });
 const stringMapSchema = z.record(z.string(), z.string());
 

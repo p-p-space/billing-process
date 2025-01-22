@@ -49,9 +49,12 @@ export async function handleCustomerRequest(request: NextRequest): ApiResponsePr
 
   const authJws = data.authJws;
   delete data.authJws;
+
   const response = NextResponse.json(data, { status });
 
-  response.headers.set(headersKey.appJwsToken, `JWS ${authJws}`);
+  if (data.payload) {
+    response.headers.set(headersKey.appJwsToken, `JWS ${authJws}`);
+  }
 
   return response;
 }

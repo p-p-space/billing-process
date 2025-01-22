@@ -1,3 +1,7 @@
+// Environment variable for the web environment, defaults to 'local' if not set
+export const webEnv = process.env.NEXT_PUBLIC_WEB_ENV ?? 'local';
+
+// Base path for API endpoints
 export const apiSrc = '/api';
 
 /**
@@ -21,8 +25,8 @@ export const toggles = {
  * Base URLs for the application and services.
  */
 export const baseURLs = {
-  app: process.env.NEXT_PUBLIC_WEB_URL ?? '',
-  serv: process.env.SERV_URL ?? '',
+  app: process.env.NEXT_PUBLIC_WEB_URL ?? 'http://localhost:3000',
+  serv: process.env.SERV_URL ?? 'https://t-api.novopayment.com',
 };
 
 /**
