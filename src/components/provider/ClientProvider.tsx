@@ -1,4 +1,5 @@
 'use client';
+
 import { Container } from '@mui/material';
 import { useCallback, useEffect } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
