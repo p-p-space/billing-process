@@ -7,9 +7,6 @@ import {
   InitiateAuthCommand,
 } from '@aws-sdk/client-cognito-identity-provider';
 // Internal App
-import { readCookie } from '@/utils';
-import { Tenant } from '@/interfaces';
-import { tenantCookieName } from '@/constans';
 import { selectSettings } from '@/tenants/tenantOptions';
 
 /**
@@ -39,9 +36,7 @@ export async function hashClienSecret(user: string) {
 }
 
 export async function cognitoCreedentials() {
-  const tenant = (await readCookie(tenantCookieName)) as Tenant;
-
-  const credentials = await selectSettings(tenant);
+  const credentials = await selectSettings();
 
   return {
     clientId: credentials.cognitoClientId,

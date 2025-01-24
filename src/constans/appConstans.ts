@@ -1,3 +1,15 @@
+export const defaultTenant = 'bt';
+export const defaultLang = 'en';
+const availableTenants = [defaultTenant, 'pm'] as const;
+const allowedTenants = [...availableTenants, 'pp'] as const;
+const availableLangs = ['en', 'es'] as const;
+
+export const appSettings = {
+  availableTenants,
+  allowedTenants,
+  availableLangs,
+};
+
 // Environment variable for the web environment, defaults to 'local' if not set
 export const webEnv = process.env.NEXT_PUBLIC_WEB_ENV ?? 'local';
 
@@ -70,6 +82,7 @@ export const headersKey = {
   authorization: 'authorization', // Header key for content type
   appContentSecurity: 'app-content-security', // Header key for content security status
   appOriginPath: 'app-origin-path', // Header key for application origin path
+  appTenant: 'app-tenant', // Header key for application origin path
   appJwsToken: 'app-token', // Header key for application JWS token
   AppReqId: 'app-request-id', // Header key for application JWS token
   appCookie: 'cookie', // Header key for app cookies

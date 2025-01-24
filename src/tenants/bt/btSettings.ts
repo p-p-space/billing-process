@@ -1,8 +1,11 @@
-import { credentials } from './ptCredentials';
+import { credentials } from './btCredentials';
 import type { AppSettings } from '@/interfaces';
 import { defaultTenant, webEnv } from '@/constans';
 
 export const defaultSettings: AppSettings = {
+  webUrl: credentials[webEnv].webUrl,
+  servUrl: credentials[webEnv].servUrl,
+  timeZone: credentials[webEnv].timeZone,
   tenant: defaultTenant,
   tenantTheme: defaultTenant,
   tenantImages: defaultTenant,

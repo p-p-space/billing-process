@@ -8,7 +8,10 @@ const availableLangsSchema = z.enum(appSettings.availableLangs);
 const langDataSchema = z.record(z.record(z.string()));
 const langFilesSchema = z.record(z.array(z.string()));
 const reqResBodySchema = z.record(z.unknown());
-const appSettingsSchema = z.object({
+const tenantSettingsSchema = z.object({
+  webUrl: z.string(),
+  servUrl: z.string(),
+  timeZone: z.string(),
   tenant: availableTenantsSchema,
   tenantTheme: availableTenantsSchema,
   tenantImages: availableTenantsSchema,
@@ -39,6 +42,6 @@ export const appSchemas = {
   langData: langDataSchema,
   langFiles: langFilesSchema,
   reqResBody: reqResBodySchema,
-  appSettings: appSettingsSchema,
+  tenantSettings: tenantSettingsSchema,
   stringMap: stringMapSchema,
 };

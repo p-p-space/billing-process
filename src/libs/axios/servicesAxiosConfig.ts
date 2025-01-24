@@ -1,7 +1,10 @@
+'use server';
+
 import axios from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
-import { baseURLs, jwtAlgs, headersKey, servKeys } from '@/constans';
+import { selectSettings } from '@/tenants/tenantOptions';
+import { baseURLs, jwtAlgs, headersKey } from '@/constans';
 import { createErrorResponseApi, createResponseApi } from './helpersAxios';
 import { decryptData, disassembleJWS, encryptData, signData } from '@/security';
 
@@ -17,17 +20,16 @@ const servicesAxios = axios.create({
  * Encrypts the request data and signs it before sending.
  */
 servicesAxios.interceptors.request.use(async (request) => {
-  const { data, headers } = request;
-  const appContentSec = !!headers[headersKey.appContentSecurity];
+  const { data } = request;
 
-  if (data?.payload && appContentSec) {
-    headers.delete(headersKey.appContentSecurity);
+  if (data?.payload) {
+    const { servJwePubKey, servJwsPrivKey } = await selectSettings();
 
     try {
       let { payload } = data;
-      const secretJwe = await importSPKI(servKeys.servJwePubKey, jwtAlgs.jweAlgRsa);
+      const secretJwe = await importSPKI(servJwePubKey, jwtAlgs.jweAlgRsa);
       payload = await encryptData(payload, secretJwe, jwtAlgs.jweAlgRsa);
-      const secretJws = await importPKCS8(servKeys.servJwsPrivKey, jwtAlgs.jwsAlgRsa);
+      const secretJws = await importPKCS8(servJwsPrivKey, jwtAlgs.jwsAlgRsa);
       const signedData = await signData(payload, secretJws, jwtAlgs.jwsAlgRsa);
       const authJws = disassembleJWS(signedData);
       request.headers[headersKey.servJwsToken] = `JWS ${authJws}`;
@@ -50,10 +52,11 @@ servicesAxios.interceptors.response.use(
     const { data } = response;
 
     if (data?.data) {
+      const { servJwePrivKey } = await selectSettings();
       const { code, message, datetime, data: cipherData } = data;
 
       try {
-        const secretJwe = await importPKCS8(servKeys.servJwePrivKey, jwtAlgs.jweAlgRsa);
+        const secretJwe = await importPKCS8(servJwePrivKey, jwtAlgs.jweAlgRsa);
         const payload = await decryptData(cipherData, secretJwe);
 
         response.data = createResponseApi({ code, datetime, message, payload });

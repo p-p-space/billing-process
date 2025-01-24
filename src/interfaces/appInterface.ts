@@ -45,9 +45,9 @@ export type LangFiles = z.infer<typeof appSchemas.langFiles>;
 export type ReqResBody = z.infer<typeof appSchemas.reqResBody>;
 
 /**
- * AppSettings is a type that represents an object where each key is a string and the value is a Tenant.
+ * TenantSettings is a type that represents an object where each key is a string and the value is a Tenant.
  */
-export type AppSettings = z.infer<typeof appSchemas.appSettings>;
+export type TenantSettings = z.infer<typeof appSchemas.tenantSettings>;
 
 /**
  * StringMap is a type that represents an object with string keys and string values.

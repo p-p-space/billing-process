@@ -1,8 +1,11 @@
+'use server';
+
 import axios from 'axios';
 import { importPKCS8 } from 'jose';
 // Internal app
+import { selectSettings } from '@/tenants/tenantOptions';
+import { apiPaths, baseURLs, jwtAlgs, headersKey } from '@/constans';
 import { createErrorResponseApi, createResponseApi } from './helpersAxios';
-import { apiPaths, baseURLs, jwtAlgs, headersKey, servKeys, webKeys } from '@/constans';
 import { assembleJWS, verifySignature, decryptData, encryptData, signData, disassembleJWS, encode } from '@/security';
 
 /**
@@ -20,13 +23,15 @@ applicationAxios.interceptors.request.use(async (request) => {
   const { data, headers, url } = request;
 
   if (data?.payload) {
+    const { webJwePrivKey, secJwsStr } = await selectSettings();
+
     try {
       let { payload } = data;
       const tokenApp = headers[headersKey.appJwsToken];
       const signedData = assembleJWS(tokenApp, payload);
-      const secretJws = encode(webKeys.secJwsStr);
+      const secretJws = encode(secJwsStr);
       const signatureVerified = await verifySignature(signedData, secretJws);
-      const secretJwe = await importPKCS8(servKeys.webJwePrivKey, jwtAlgs.jweAlgRsa);
+      const secretJwe = await importPKCS8(webJwePrivKey, jwtAlgs.jweAlgRsa);
       payload = await decryptData(signatureVerified, secretJwe);
 
       if (url !== apiPaths.appApiServ) {
@@ -60,11 +65,13 @@ applicationAxios.interceptors.response.use(
     }
 
     try {
+      const { secJweStr, webJwsPrivKey } = await selectSettings();
+
       if (data?.payload) {
         let { payload } = data;
-        const secretJwe = encode(webKeys.secJweStr);
+        const secretJwe = encode(secJweStr);
         payload = await encryptData(payload, secretJwe, jwtAlgs.jweAlgSec);
-        const secretJws = await importPKCS8(servKeys.webJwsPrivKey, jwtAlgs.jwsAlgRsa);
+        const secretJws = await importPKCS8(webJwsPrivKey, jwtAlgs.jwsAlgRsa);
         const signedData = await signData(payload, secretJws, jwtAlgs.jwsAlgRsa);
         const authJws = disassembleJWS(signedData);
 

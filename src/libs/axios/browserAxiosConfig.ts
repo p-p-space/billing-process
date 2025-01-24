@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { importSPKI } from 'jose';
 // Internal app
-import { baseURLs, jwtAlgs, headersKey, webKeys } from '@/constans';
+import { selectSettings } from '@/tenants/tenantOptions';
+import { baseURLs, jwtAlgs, headersKey } from '@/constans';
 import { createErrorResponseApi, createResponseApi } from './helpersAxios';
 import { encryptData, decryptData, signData, verifySignature, disassembleJWS, assembleJWS, encode } from '@/security';
 
@@ -20,11 +21,13 @@ browserAxios.interceptors.request.use(async (request) => {
   const { data, headers } = request;
 
   if (data?.payload) {
+    const { webJwePubKey, secJwsStr } = await selectSettings();
+
     try {
       let { payload } = data;
-      const secretJwe = await importSPKI(webKeys.webJwePubKey, jwtAlgs.jweAlgRsa);
+      const secretJwe = await importSPKI(webJwePubKey, jwtAlgs.jweAlgRsa);
       payload = await encryptData(payload, secretJwe, jwtAlgs.jweAlgRsa);
-      const secretJws = encode(webKeys.secJwsStr);
+      const secretJws = encode(secJwsStr);
       const signedData = await signData(payload, secretJws, jwtAlgs.jwsAlgSec);
       const authJws = disassembleJWS(signedData);
       headers[headersKey.appJwsToken] = `JWS ${authJws}`;
@@ -47,17 +50,18 @@ browserAxios.interceptors.response.use(
     const { data, headers } = response;
 
     if (data?.payload) {
-      const { payload } = data;
+      const { webJwsPubKey, secJweStr } = await selectSettings();
 
       try {
+        let { payload } = data;
         const tokenApp = headers[headersKey.appJwsToken];
         const signedData = assembleJWS(tokenApp, payload);
-        const secretJws = await importSPKI(webKeys.webJwsPubKey, jwtAlgs.jwsAlgRsa);
+        const secretJws = await importSPKI(webJwsPubKey, jwtAlgs.jwsAlgRsa);
         const signatureVerified = await verifySignature(signedData, secretJws);
-        const secretJwe = encode(webKeys.secJweStr);
-        const decrypt = await decryptData(signatureVerified, secretJwe);
+        const secretJwe = encode(secJweStr);
+        payload = await decryptData(signatureVerified, secretJwe);
 
-        response.data.payload = decrypt;
+        response.data.payload = payload;
       } catch (error) {
         response.status = 500;
         response.data = createResponseApi({ message: `browserAxios Response (${(error as Error).message})` });

@@ -1,39 +1,27 @@
 import { localCredentials } from './credentials/localCredentials';
 
+const tenantconfig = {
+  tenantId: localCredentials.tenantId,
+  tenantClientId: localCredentials.tenantClientId,
+  tenantClientSecret: localCredentials.tenantClientSecret,
+  cognitoClientId: localCredentials.cognitoClientId,
+  cognitoClientSecret: localCredentials.cognitoClientSecret,
+};
+
 export const credentials: Record<string, Record<string, string>> = {
   local: {
-    tenantId: localCredentials.tenantId,
-    tenantClientId: localCredentials.tenantClientId,
-    tenantClientSecret: localCredentials.tenantClientSecret,
-    cognitoClientId: localCredentials.cognitoClientId,
-    cognitoClientSecret: localCredentials.cognitoClientSecret,
+    ...tenantconfig,
   },
   dev: {
-    tenantId: localCredentials.tenantId,
-    tenantClientId: localCredentials.tenantClientId,
-    tenantClientSecret: localCredentials.tenantClientSecret,
-    cognitoClientId: localCredentials.cognitoClientId,
-    cognitoClientSecret: localCredentials.cognitoClientSecret,
+    ...tenantconfig,
   },
   test: {
-    tenantId: localCredentials.tenantId,
-    tenantClientId: localCredentials.tenantClientId,
-    tenantClientSecret: localCredentials.tenantClientSecret,
-    cognitoClientId: localCredentials.cognitoClientId,
-    cognitoClientSecret: localCredentials.cognitoClientSecret,
+    ...tenantconfig,
   },
   uat: {
-    tenantId: localCredentials.tenantId,
-    tenantClientId: localCredentials.tenantClientId,
-    tenantClientSecret: localCredentials.tenantClientSecret,
-    cognitoClientId: localCredentials.cognitoClientId,
-    cognitoClientSecret: localCredentials.cognitoClientSecret,
+    ...tenantconfig,
   },
   prod: {
-    tenantId: localCredentials.tenantId,
-    tenantClientId: localCredentials.tenantClientId,
-    tenantClientSecret: localCredentials.tenantClientSecret,
-    cognitoClientId: localCredentials.cognitoClientId,
-    cognitoClientSecret: localCredentials.cognitoClientSecret,
+    ...tenantconfig,
   },
 };

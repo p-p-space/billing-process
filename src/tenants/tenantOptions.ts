@@ -1,7 +1,10 @@
+'use server';
+
 // Internal App
-import { appSettings, defaultTenant } from '@/constans';
+import { readCookie } from '@/utils';
 import { defaultSettings, defaultThemeVars } from './bt';
-import type { AppSettings, StringMap, Tenant } from '@/interfaces';
+import type { TenantSettings, StringMap, Tenant } from '@/interfaces';
+import { appSettings, defaultTenant, tenantCookieName } from '@/constans';
 
 export async function selectTheme(tenant: Tenant): Promise<StringMap> {
   const { availableTenants } = appSettings;
@@ -23,7 +26,8 @@ export async function selectTheme(tenant: Tenant): Promise<StringMap> {
   }
 }
 
-export async function selectSettings(tenant: Tenant): Promise<AppSettings> {
+export async function selectSettings(): Promise<TenantSettings> {
+  const tenant = (await readCookie(tenantCookieName)) as Tenant;
   const { availableTenants } = appSettings;
   const availableTenantsList = availableTenants.map((tenant) => tenant as Tenant);
 

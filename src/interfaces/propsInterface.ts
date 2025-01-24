@@ -17,6 +17,7 @@ export type ParamsProps = {
 /**
  * Type definition for props that include map of string keys and string values for theme UI.
  */
-export type ThemeProps = {
+export type TenantThemeProps = {
+  tenant: Tenant;
   themeVars: StringMap;
 };

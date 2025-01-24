@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal App
-import { readCookie } from '@/utils';
 import { selectSettings } from '@/tenants/tenantOptions';
-import { tenantCookieName, headersKey } from '@/constans';
+import { headersKey } from '@/constans';
+import type { ReqResBody, RequestAxios } from '@/interfaces';
 import { createHttpConfig, manageRequest } from '@/libs/axios';
-import type { ReqResBody, RequestAxios, Tenant } from '@/interfaces';
 
 const oauthToken: { bearer?: string } = {
   bearer: undefined,
@@ -34,7 +33,6 @@ export async function connectServices(request: NextRequest) {
 
   if (headers.get(headersKey.appContentSecurity) !== null) {
     dataRequest = await request.json();
-    httpConfig.headers[headersKey.appContentSecurity] = 'enc';
   }
 
   const requestConfig = {
@@ -84,9 +82,7 @@ export async function getOauthBearer() {
 }
 
 export async function appCreedentials() {
-  const tenant = (await readCookie(tenantCookieName)) as Tenant;
-
-  const credentials = await selectSettings(tenant);
+  const credentials = await selectSettings();
 
   return {
     clientId: credentials.tenantClientId,

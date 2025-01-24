@@ -7,7 +7,7 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 //Internal app
 import type { ChildrenProps, ParamsProps } from '@/interfaces';
 import { selectSettings, selectTheme } from '@/tenants/tenantOptions';
-import { ClientProvider, GlobalError, MuiProvider, GlobalSuccess, Lang, LoadingScreen } from '@/components';
+import { ClientProvider, GlobalError, GlobalSuccess, Lang, LoadingScreen, MuiProvider } from '@/components';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('head');
@@ -25,7 +25,7 @@ export default async function RootLayoutMain({ children, params }: ChildrenProps
   const { tenant } = await params;
   const lang = await getLocale();
   const messages = await getMessages();
-  const { tenantTheme } = await selectSettings(tenant);
+  const { tenantTheme } = await selectSettings();
   const themeVars = await selectTheme(tenantTheme);
 
   return (
@@ -34,7 +34,7 @@ export default async function RootLayoutMain({ children, params }: ChildrenProps
         <NextIntlClientProvider messages={messages}>
           <InitColorSchemeScript attribute="class" />
           <AppRouterCacheProvider>
-            <MuiProvider themeVars={themeVars}>
+            <MuiProvider themeVars={themeVars} tenant={tenant}>
               <ClientProvider>{children}</ClientProvider>
               <GlobalError />
               <GlobalSuccess />

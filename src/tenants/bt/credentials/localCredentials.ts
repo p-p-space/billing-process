@@ -1,4 +1,7 @@
 export const localCredentials = {
+  webUrl: 'http://localhost:3000',
+  servUrl: 'https://t-api.novopayment.com',
+  timeZone: 'America/Caracas',
   tenantId: '4ebb4b36-11d6-462b-a7de-deecbffb0f71',
   tenantClientId: 'oa0eaqpiDT7BK6fvKP36PNUSHiWAeRdb',
   tenantClientSecret: 'UH8q0OwvkXrRdI3x',
