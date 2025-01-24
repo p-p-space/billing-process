@@ -1,7 +1,7 @@
 // Internal App
 import { webEnv } from '@/constans';
 import { credentials } from './pmCredentials';
-import type { AppSettings, Tenant } from '@/interfaces';
+import type { TenantSettings, Tenant } from '@/interfaces';
 
 const customerTenant = 'pm' as Tenant;
 
@@ -15,4 +15,4 @@ export const settings = {
   tenantClientSecret: credentials[webEnv].tenantClientSecret,
   cognitoClientId: credentials[webEnv].cognitoClientId,
   cognitoClientSecret: credentials[webEnv].cognitoClientSecret,
-} as AppSettings;
+} as TenantSettings;
