@@ -50,6 +50,11 @@ export type ReqResBody = z.infer<typeof appSchemas.reqResBody>;
 export type TenantSettings = z.infer<typeof appSchemas.tenantSettings>;
 
 /**
+ * EnvSettings is a type that represents an object where each key is a string and the value is a Tenant.
+ */
+export type EnvSettings = z.infer<typeof appSchemas.envSettings>;
+
+/**
  * StringMap is a type that represents an object with string keys and string values.
  */
 export type StringMap = z.infer<typeof appSchemas.stringMap>;
@@ -57,6 +62,5 @@ export type StringMap = z.infer<typeof appSchemas.stringMap>;
 /**
  * Tenant is a type that represents the structure of a tenant
  */
-
 export type DefaultTenant = typeof defaultTenant;
 export type Tenant = z.infer<typeof appSchemas.allowedTenants>;

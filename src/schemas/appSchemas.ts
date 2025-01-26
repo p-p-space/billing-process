@@ -12,7 +12,13 @@ const tenantSettingsSchema = z.object({
   webUrl: z.string(),
   servUrl: z.string(),
   timeZone: z.string(),
-  tenant: availableTenantsSchema,
+  redisHost: z.string(),
+  redisPort: z.number(),
+  redisSsl: z.string(),
+  redisUser: z.string(),
+  redisPassword: z.string(),
+  redisPrefix: z.string(),
+  tenantPwa: availableTenantsSchema,
   tenantTheme: availableTenantsSchema,
   tenantImages: availableTenantsSchema,
   tenantDictionary: availableTenantsSchema,
@@ -20,8 +26,11 @@ const tenantSettingsSchema = z.object({
   tenantClientId: z.string(),
   tenantClientSecret: z.string(),
   cognitoRegion: z.string(),
+  cognitoUserPoolId: z.string(),
   cognitoClientId: z.string(),
   cognitoClientSecret: z.string(),
+  cognitoAccessKeyId: z.string(),
+  cognitoSecretAccessKey: z.string(),
   secJweStr: z.string(),
   secJwsStr: z.string(),
   webJwePrivKey: z.string(),
@@ -33,6 +42,7 @@ const tenantSettingsSchema = z.object({
   servJwsPrivKey: z.string(),
   servJwsPubKey: z.string(),
 });
+const envSettingsSchema = z.record(tenantSettingsSchema);
 const stringMapSchema = z.record(z.string(), z.string());
 
 export const appSchemas = {
@@ -43,5 +53,6 @@ export const appSchemas = {
   langFiles: langFilesSchema,
   reqResBody: reqResBodySchema,
   tenantSettings: tenantSettingsSchema,
+  envSettings: envSettingsSchema,
   stringMap: stringMapSchema,
 };

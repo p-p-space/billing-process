@@ -15,10 +15,14 @@ import { selectSettings } from '@/tenants/tenantOptions';
  * @returns {CognitoIdentityProviderClient} A new instance of CognitoIdentityProviderClient.
  */
 export async function createCognitoClient(): Promise<CognitoIdentityProviderClient> {
-  const { region } = await cognitoCreedentials();
+  const { region, accessKeyId, secretAccessKey } = await cognitoCreedentials();
 
   const cognitoClient = new CognitoIdentityProviderClient({
     region,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
   });
 
   return cognitoClient;
@@ -42,6 +46,9 @@ export async function cognitoCreedentials() {
     clientId: credentials.cognitoClientId,
     clientSecret: credentials.cognitoClientSecret,
     region: credentials.cognitoRegion,
+    accessKeyId: credentials.cognitoAccessKeyId,
+    secretAccessKey: credentials.cognitoSecretAccessKey,
+    userPollId: credentials.cognitoUserPoolId,
   };
 }
 

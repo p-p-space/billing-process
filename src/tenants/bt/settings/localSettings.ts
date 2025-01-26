@@ -1,13 +1,30 @@
-export const localCredentials = {
+// Internal App
+import { TenantSettings } from '@/interfaces';
+import { baseURLs, defaultTenant, redisConnect, timeZone } from '@/constans';
+
+export const localSettings: TenantSettings = {
   webUrl: 'http://localhost:3000',
-  servUrl: 'https://t-api.novopayment.com',
-  timeZone: 'America/Caracas',
+  servUrl: baseURLs.serv ?? 'https://t-api.novopayment.com',
+  timeZone: timeZone ?? 'America/Miami',
+  redisHost: redisConnect.host ?? 'dev-redis.novopayment.net',
+  redisPort: parseInt(redisConnect.port ?? '6379'),
+  redisSsl: redisConnect.ssl ?? 'ON',
+  redisUser: redisConnect.user ?? 'orion214005',
+  redisPassword: redisConnect.password ?? 'orion214005*novo',
+  redisPrefix: defaultTenant,
+  tenantPwa: defaultTenant,
+  tenantTheme: defaultTenant,
+  tenantImages: defaultTenant,
+  tenantDictionary: defaultTenant,
   tenantId: '4ebb4b36-11d6-462b-a7de-deecbffb0f71',
   tenantClientId: 'oa0eaqpiDT7BK6fvKP36PNUSHiWAeRdb',
   tenantClientSecret: 'UH8q0OwvkXrRdI3x',
   cognitoRegion: 'us-east-1',
+  cognitoUserPoolId: 'us-east-1_X86CaPJWw',
   cognitoClientId: '5se5vueiulffn56c91u02lrmua',
   cognitoClientSecret: 'f2nmuhunsjk6relkcvn1inpmfi7n6et6afmfjo3dq6b6g7s6cli',
+  cognitoAccessKeyId: 'AKIA4WVDIB2IXUYKPH2Z',
+  cognitoSecretAccessKey: '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',
   secJweStr: 'ce10509d021fe426dfcdecb01287971a',
   secJwsStr: '5b58bb161dbd5fa7a77863d9dd9c49c7c36b89555d206af8d6e13df8677aeeba',
   webJwePrivKey:

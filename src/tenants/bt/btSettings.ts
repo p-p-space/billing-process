@@ -1,29 +1,30 @@
-import { credentials } from './btCredentials';
-import type { TenantSettings } from '@/interfaces';
-import { defaultTenant, webEnv } from '@/constans';
+// Internal App
+import { webEnv } from '@/constans';
+import { EnvSettings } from '@/interfaces';
+import { localSettings, devSettings, testSettings, uatSettings, prodSettings } from './settings';
 
-export const defaultSettings: TenantSettings = {
-  webUrl: credentials[webEnv].webUrl,
-  servUrl: credentials[webEnv].servUrl,
-  timeZone: credentials[webEnv].timeZone,
-  tenant: defaultTenant,
-  tenantTheme: defaultTenant,
-  tenantImages: defaultTenant,
-  tenantDictionary: defaultTenant,
-  tenantId: credentials[webEnv].tenantId,
-  tenantClientId: credentials[webEnv].tenantClientId,
-  tenantClientSecret: credentials[webEnv].tenantClientSecret,
-  cognitoRegion: credentials[webEnv].cognitoRegion,
-  cognitoClientId: credentials[webEnv].cognitoClientId,
-  cognitoClientSecret: credentials[webEnv].cognitoClientSecret,
-  secJweStr: credentials[webEnv].secJweStr,
-  secJwsStr: credentials[webEnv].secJwsStr,
-  webJwePrivKey: credentials[webEnv].webJwePrivKey,
-  webJwePubKey: credentials[webEnv].webJwePubKey,
-  webJwsPrivKey: credentials[webEnv].webJwsPrivKey,
-  webJwsPubKey: credentials[webEnv].webJwsPubKey,
-  servJwePrivKey: credentials[webEnv].servJwePrivKey,
-  servJwePubKey: credentials[webEnv].servJwePubKey,
-  servJwsPrivKey: credentials[webEnv].servJwsPrivKey,
-  servJwsPubKey: credentials[webEnv].servJwsPubKey,
+const envSettings: EnvSettings = {
+  local: {
+    ...localSettings,
+  },
+  dev: {
+    ...localSettings,
+    ...devSettings,
+  },
+  test: {
+    ...localSettings,
+    ...testSettings,
+  },
+  uat: {
+    ...localSettings,
+    ...uatSettings,
+  },
+  prod: {
+    ...localSettings,
+    ...prodSettings,
+  },
+};
+
+export const defaultSettings = {
+  ...envSettings[webEnv],
 };

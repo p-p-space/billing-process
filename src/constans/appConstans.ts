@@ -1,5 +1,6 @@
 export const defaultTenant = 'bt';
 export const defaultLang = 'en';
+export const timeZone = process.env.TIMEZONE;
 const availableTenants = [defaultTenant, 'pm'] as const;
 const allowedTenants = [...availableTenants, 'pp'] as const;
 const availableLangs = ['en', 'es'] as const;
@@ -37,8 +38,8 @@ export const toggles = {
  * Base URLs for the application and services.
  */
 export const baseURLs = {
-  app: process.env.NEXT_PUBLIC_WEB_URL ?? 'http://localhost:3000',
-  serv: process.env.SERV_URL ?? 'https://t-api.novopayment.com',
+  app: process.env.NEXT_PUBLIC_WEB_URL,
+  serv: process.env.SERV_URL,
 };
 
 /**
@@ -89,4 +90,15 @@ export const headersKey = {
   servJwsToken: 'x-token', // Header key for service JWS token
   servTenantId: 'x-tenant-id', // Header key for service tenant ID
   servReqId: 'x-request-id', // Header key for service request ID
+};
+
+/**
+ * Redis connection settings
+ */
+export const redisConnect = {
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT,
+  ssl: process.env.REDIS_SSL,
+  user: process.env.REDIS_USER,
+  password: process.env.REDIS_PASSWORD,
 };

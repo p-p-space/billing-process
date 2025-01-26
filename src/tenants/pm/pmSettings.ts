@@ -1,18 +1,30 @@
 // Internal App
 import { webEnv } from '@/constans';
-import { credentials } from './pmCredentials';
-import type { TenantSettings, Tenant } from '@/interfaces';
+import type { EnvSettings } from '@/interfaces';
+import { localSettings, devSettings, testSettings, uatSettings, prodSettings } from './settings';
 
-const customerTenant = 'pm' as Tenant;
+const envSettings: EnvSettings = {
+  local: {
+    ...localSettings,
+  },
+  dev: {
+    ...localSettings,
+    ...devSettings,
+  },
+  test: {
+    ...localSettings,
+    ...testSettings,
+  },
+  uat: {
+    ...localSettings,
+    ...uatSettings,
+  },
+  prod: {
+    ...localSettings,
+    ...prodSettings,
+  },
+};
 
 export const settings = {
-  tenant: customerTenant,
-  tenantTheme: customerTenant,
-  tenantImages: customerTenant,
-  tenantDictionary: customerTenant,
-  tenantId: credentials[webEnv].tenantId,
-  tenantClientId: credentials[webEnv].tenantClientId,
-  tenantClientSecret: credentials[webEnv].tenantClientSecret,
-  cognitoClientId: credentials[webEnv].cognitoClientId,
-  cognitoClientSecret: credentials[webEnv].cognitoClientSecret,
-} as TenantSettings;
+  ...envSettings[webEnv],
+};
