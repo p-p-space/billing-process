@@ -17,10 +17,10 @@ const browserAxios = axios.create();
  */
 browserAxios.interceptors.request.use(async (request) => {
   const { data, headers } = request;
+  const { webUrl, webJwePubKey, secJwsStr } = await selectSettings();
+  request.baseURL = webUrl;
 
   if (data?.payload) {
-    const { webJwePubKey, secJwsStr } = await selectSettings();
-
     try {
       let { payload } = data;
       const secretJwe = await importSPKI(webJwePubKey, jwtAlgs.jweAlgRsa);

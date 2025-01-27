@@ -3,17 +3,15 @@
 import axios from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
+import { jwtAlgs, headersKey } from '@/constans';
 import { selectSettings } from '@/tenants/tenantOptions';
-import { baseURLs, jwtAlgs, headersKey } from '@/constans';
 import { createErrorResponseApi, createResponseApi } from './helpersAxios';
 import { decryptData, disassembleJWS, encryptData, signData } from '@/security';
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
-const servicesAxios = axios.create({
-  baseURL: `${baseURLs.serv}`,
-});
+const servicesAxios = axios.create();
 
 /**
  * Interceptor for handling request encryption and signing.
@@ -21,10 +19,10 @@ const servicesAxios = axios.create({
  */
 servicesAxios.interceptors.request.use(async (request) => {
   const { data } = request;
+  const { servUrl, servJwePubKey, servJwsPrivKey } = await selectSettings();
+  request.baseURL = servUrl;
 
   if (data?.payload) {
-    const { servJwePubKey, servJwsPrivKey } = await selectSettings();
-
     try {
       let { payload } = data;
       const secretJwe = await importSPKI(servJwePubKey, jwtAlgs.jweAlgRsa);

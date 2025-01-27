@@ -2,20 +2,18 @@ import uuid4 from 'uuid4';
 import { useCallback } from 'react';
 import { isAxiosError } from 'axios';
 // Internal App
+import { useUiStore } from '@/store';
 import { headersKey } from '@/constans';
-import { useTenantStore, useUiStore } from '@/store';
 import type { RequestContent } from '@/interfaces';
 import { createHttpConfig, manageRequest } from '@/libs/axios';
 
 export function useBrowserRequest(loading = true) {
   const setLoadingScreen = useUiStore((state) => state.setLoadingScreen);
-  const { webUrl } = useTenantStore((state) => state.tenantSett);
 
   const createBrowserRequest = useCallback(
     async (requestContent: RequestContent) => {
-      const { method, ...data } = requestContent;
-      let { pathUrl, dataRequest } = data;
-      pathUrl = `${webUrl}${pathUrl}`;
+      const { pathUrl, method, ...data } = requestContent;
+      let { dataRequest } = data;
       const httpConfig = createHttpConfig();
       httpConfig.headers[headersKey.AppReqId] = uuid4();
 
@@ -30,8 +28,7 @@ export function useBrowserRequest(loading = true) {
         const requestType = 'browser';
         const responseWebRequest = await manageRequest(requestConfig, requestType);
         const { data, status } = responseWebRequest;
-        const { message, payload } = data;
-        console.log('createBrowserRequest:', { data, status });
+        const { message } = data;
 
         setLoadingScreen(false);
 
@@ -39,7 +36,7 @@ export function useBrowserRequest(loading = true) {
           throw new Error(message);
         }
 
-        return payload;
+        return data;
       } catch (error) {
         if (isAxiosError(error) && error.response) {
           throw error.response.data.message;
@@ -50,7 +47,7 @@ export function useBrowserRequest(loading = true) {
         throw errorResponse.message;
       }
     },
-    [loading, setLoadingScreen, webUrl]
+    [loading, setLoadingScreen]
   );
 
   return {

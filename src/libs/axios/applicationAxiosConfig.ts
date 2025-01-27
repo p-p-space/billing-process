@@ -4,16 +4,14 @@ import axios from 'axios';
 import { importPKCS8 } from 'jose';
 // Internal app
 import { selectSettings } from '@/tenants/tenantOptions';
-import { apiPaths, baseURLs, jwtAlgs, headersKey } from '@/constans';
+import { apiPaths, jwtAlgs, headersKey } from '@/constans';
 import { createErrorResponseApi, createResponseApi } from './helpersAxios';
 import { assembleJWS, verifySignature, decryptData, encryptData, signData, disassembleJWS, encode } from '@/security';
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
-const applicationAxios = axios.create({
-  baseURL: `${baseURLs.app}${apiPaths.appAPiV1}`,
-});
+const applicationAxios = axios.create();
 
 /**
  * Interceptor for handling request decryption and verification.
@@ -21,10 +19,10 @@ const applicationAxios = axios.create({
  */
 applicationAxios.interceptors.request.use(async (request) => {
   const { data, headers, url } = request;
+  const { webUrl, webJwePrivKey, secJwsStr } = await selectSettings();
+  request.baseURL = `${webUrl}${apiPaths.appAPiV1}`;
 
   if (data?.payload) {
-    const { webJwePrivKey, secJwsStr } = await selectSettings();
-
     try {
       let { payload } = data;
       const tokenApp = headers[headersKey.appJwsToken];
