@@ -25,7 +25,7 @@ export default async function RootLayoutMain({ children, params }: ChildrenProps
   const { tenant } = await params;
   const lang = await getLocale();
   const messages = await getMessages();
-  const { tenantTheme } = await selectSettings();
+  const { tenantTheme, tenantImages, webUrl } = await selectSettings();
   const themeVars = await selectTheme(tenantTheme);
 
   return (
@@ -34,7 +34,7 @@ export default async function RootLayoutMain({ children, params }: ChildrenProps
         <NextIntlClientProvider messages={messages}>
           <InitColorSchemeScript attribute="class" />
           <AppRouterCacheProvider>
-            <MuiProvider themeVars={themeVars} tenant={tenant}>
+            <MuiProvider themeVars={themeVars} tenantSett={{ tenant, tenantImages, webUrl }}>
               <ClientProvider>{children}</ClientProvider>
               <GlobalError />
               <GlobalSuccess />

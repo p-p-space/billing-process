@@ -1,9 +1,8 @@
 import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
-import { readCookie } from '@/utils';
-import { apiPaths, headersKey, tenantCookieName } from '@/constans';
+import { apiPaths, headersKey } from '@/constans';
 import { createHttpConfig, manageRequest } from '@/libs/axios';
-import type { ApiResponsePromise, RequestAxios, Tenant } from '@/interfaces';
+import type { ApiResponsePromise, RequestAxios } from '@/interfaces';
 
 /**
  * Handles customer requests by processing the incoming request, configuring the HTTP request,
@@ -26,7 +25,6 @@ export async function handleCustomerRequest(request: NextRequest): ApiResponsePr
   const { headers, method, nextUrl } = request;
   const { pathname, search } = nextUrl;
   const uriPath = `${pathname}${search}`;
-  const tenant = (await readCookie(tenantCookieName)) as Tenant;
   let pathUrl = uriPath.replace(apiPaths.apiSearch, '/');
   const httpConfig = createHttpConfig({ timeout: 59700, headers });
   httpConfig.headers[headersKey.appOriginPath] = uriPath;
@@ -56,7 +54,6 @@ export async function handleCustomerRequest(request: NextRequest): ApiResponsePr
 
   if (data.payload) {
     customerReqresp.headers.set(headersKey.appJwsToken, `JWS ${authJws}`);
-    customerReqresp.headers.set(headersKey.appTenant, `${tenant}`);
   }
 
   return customerReqresp;

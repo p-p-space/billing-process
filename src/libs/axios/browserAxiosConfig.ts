@@ -1,17 +1,15 @@
 import axios from 'axios';
 import { importSPKI } from 'jose';
 // Internal app
+import { jwtAlgs, headersKey } from '@/constans';
 import { selectSettings } from '@/tenants/tenantOptions';
-import { baseURLs, jwtAlgs, headersKey } from '@/constans';
 import { createErrorResponseApi, createResponseApi } from './helpersAxios';
 import { encryptData, decryptData, signData, verifySignature, disassembleJWS, assembleJWS, encode } from '@/security';
 
 /**
  * Creates an Axios instance with predefined configuration for making HTTP requests.
  */
-const browserAxios = axios.create({
-  baseURL: `${baseURLs.app}`,
-});
+const browserAxios = axios.create();
 
 /**
  * Interceptor for handling request encryption and signing.

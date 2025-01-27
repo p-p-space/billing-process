@@ -3,21 +3,21 @@ import { useCallback } from 'react';
 import { isAxiosError } from 'axios';
 // Internal App
 import { headersKey } from '@/constans';
-import type { RequestContent } from '@/interfaces';
 import { useTenantStore, useUiStore } from '@/store';
+import type { RequestContent } from '@/interfaces';
 import { createHttpConfig, manageRequest } from '@/libs/axios';
 
 export function useBrowserRequest(loading = true) {
   const setLoadingScreen = useUiStore((state) => state.setLoadingScreen);
-  const tenant = useTenantStore((state) => state.tenant);
+  const { webUrl } = useTenantStore((state) => state.tenantSett);
 
   const createBrowserRequest = useCallback(
     async (requestContent: RequestContent) => {
-      const { pathUrl, method, ...data } = requestContent;
-      let { dataRequest } = data;
+      const { method, ...data } = requestContent;
+      let { pathUrl, dataRequest } = data;
+      pathUrl = `${webUrl}${pathUrl}`;
       const httpConfig = createHttpConfig();
       httpConfig.headers[headersKey.AppReqId] = uuid4();
-      httpConfig.headers[headersKey.appTenant] = tenant;
 
       if (dataRequest) {
         dataRequest = { payload: dataRequest };
@@ -50,7 +50,7 @@ export function useBrowserRequest(loading = true) {
         throw errorResponse.message;
       }
     },
-    [loading, setLoadingScreen, tenant]
+    [loading, setLoadingScreen, webUrl]
   );
 
   return {

@@ -6,7 +6,7 @@ import { Box, CircularProgress, CssBaseline } from '@mui/material';
 // Internal App
 import { useTenantStore } from '@/store';
 import { createTenantTheme } from '@/theme-ui';
-import type { ChildrenProps, TenantThemeProps } from '@/interfaces';
+import type { ChildrenProps, TenantSettProps } from '@/interfaces';
 
 /**
  * Provider setting material ui theme
@@ -14,15 +14,17 @@ import type { ChildrenProps, TenantThemeProps } from '@/interfaces';
  * @param children - Children element.
  * @param themeVars - Variables to create the theme.
  */
-export default function MuiProvider({ children, themeVars, tenant }: ChildrenProps & TenantThemeProps) {
+export default function MuiProvider({ children, themeVars, tenantSett }: ChildrenProps & TenantSettProps) {
   const theme = createTenantTheme(themeVars);
   const [isHydrated, setIsHydrated] = useState(true);
   const setTenant = useTenantStore((state) => state.setTenant);
+  const setTenantSett = useTenantStore((state) => state.setTenantSett);
 
   useEffect(() => {
-    setTenant(tenant);
+    setTenant(tenantSett.tenant);
+    setTenantSett(tenantSett);
     setIsHydrated(false);
-  }, [setTenant, tenant]);
+  }, [setTenant, setTenantSett, tenantSett]);
 
   return (
     <ThemeProvider theme={theme}>
