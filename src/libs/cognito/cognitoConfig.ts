@@ -1,23 +1,19 @@
 'use server';
 
 import crypto from 'crypto';
-import {
-  CognitoIdentityProviderClient,
-  CognitoIdentityProviderServiceException,
-  InitiateAuthCommand,
-} from '@aws-sdk/client-cognito-identity-provider';
+import * as aws from '@aws-sdk/client-cognito-identity-provider';
 // Internal App
 import { selectSettings } from '@/tenants/tenantOptions';
 
 /**
  * Creates a new instance of CognitoIdentityProviderClient with the provided credentials.
  *
- * @returns {CognitoIdentityProviderClient} A new instance of CognitoIdentityProviderClient.
+ * @returns {aws.CognitoIdentityProviderClient} A new instance of CognitoIdentityProviderClient.
  */
-export async function createCognitoClient(): Promise<CognitoIdentityProviderClient> {
+export async function createCognitoClient(): Promise<aws.CognitoIdentityProviderClient> {
   const { region, accessKeyId, secretAccessKey } = await cognitoCreedentials();
 
-  const cognitoClient = new CognitoIdentityProviderClient({
+  const cognitoClient = new aws.CognitoIdentityProviderClient({
     region,
     credentials: {
       accessKeyId,
@@ -52,7 +48,7 @@ export async function cognitoCreedentials() {
   };
 }
 
-export async function cognitoConnect(command: InitiateAuthCommand) {
+export async function cognitoConnect(command: aws.InitiateAuthCommand) {
   console.log(command.input);
   const cognitoClient = await createCognitoClient();
 
@@ -61,7 +57,7 @@ export async function cognitoConnect(command: InitiateAuthCommand) {
     console.log({ result });
     return result;
   } catch (error) {
-    const parseError = error as CognitoIdentityProviderServiceException;
+    const parseError = error as aws.CognitoIdentityProviderServiceException;
     // Handle code status
     // const status = parseError.$metadata.httpStatusCode;
     console.error({ parseError });
