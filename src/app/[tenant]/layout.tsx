@@ -8,6 +8,7 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import type { ChildrenProps, ParamsProps } from '@/interfaces';
 import { selectSettings, selectTheme } from '@/tenants/tenantOptions';
 import { ClientProvider, GlobalError, GlobalSuccess, Lang, LoadingScreen, MuiProvider } from '@/components';
+import { redisActions } from '@/libs/redis/redisConfig';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('head');
@@ -27,6 +28,8 @@ export default async function RootLayoutMain({ children, params }: ChildrenProps
   const messages = await getMessages();
   const { tenantTheme, tenantImages, webUrl } = await selectSettings();
   const themeVars = await selectTheme(tenantTheme);
+
+  await redisActions('set', 'prueba', 'exitosa');
 
   return (
     <html lang={lang} suppressHydrationWarning>

@@ -12,7 +12,7 @@ export const appSettings = {
 };
 
 // Environment variable for the web environment, defaults to 'local' if not set
-export const webEnv = process.env.NEXT_PUBLIC_WEB_ENV ?? 'local';
+export const webEnv = process.env.WEB_ENV ?? 'local';
 
 // Base path for API endpoints
 export const apiSrc = '/api';
@@ -97,6 +97,7 @@ export const headersKey = {
 export const redisConnect = {
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,
+  db: process.env.REDIS_DB,
   ssl: process.env.REDIS_SSL,
   user: process.env.REDIS_USER,
   password: process.env.REDIS_PASSWORD,

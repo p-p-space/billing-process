@@ -8,6 +8,7 @@ export const localSettings: TenantSettings = {
   timeZone: timeZone ?? 'America/Miami',
   redisHost: redisConnect.host ?? 'dev-redis.novopayment.net',
   redisPort: parseInt(redisConnect.port ?? '6379'),
+  redisDb: parseInt(redisConnect.db ?? '0'),
   redisSsl: redisConnect.ssl ?? 'ON',
   redisUser: redisConnect.user ?? 'orion214005',
   redisPassword: redisConnect.password ?? 'orion214005*novo',
