@@ -3,7 +3,13 @@ import type { RedisOptions } from 'ioredis';
 // Internal App
 import { selectSettings } from '@/tenants/tenantOptions';
 
-export async function createRedisInstance() {
+let redisInstance: Redis | null = null;
+
+async function createRedisInstance() {
+  if (redisInstance) {
+    return redisInstance;
+  }
+
   const { redisHost, redisPort, redisDb, redisSsl, redisUser, redisPassword, redisPrefix } = await selectSettings();
 
   const redisOptions: RedisOptions = {
@@ -20,7 +26,7 @@ export async function createRedisInstance() {
     tls: redisSsl === 'ON' ? { rejectUnauthorized: false } : undefined,
   };
 
-  const redisInstance = new Redis(redisOptions);
+  redisInstance = new Redis(redisOptions);
 
   redisInstance.on('connect', () => {
     console.log('Conectado a Redis');
@@ -40,80 +46,56 @@ export async function createRedisInstance() {
 
   redisInstance.on('end', () => {
     console.log('Conexión finalizada a Redis');
+    redisInstance = null;
   });
 
   return redisInstance;
 }
 
-type RedisAction = 'set' | 'get' | 'del' | 'hset' | 'hget' | 'lpush' | 'lpop' | 'sadd' | 'smembers';
-
-/**
- * Ejecuta una acción con Redis y cierra la conexión de manera ordenada.
- *
- * @param {RedisAction} action - La acción a ejecutar ('set', 'get', 'del', 'hset', 'hget', 'lpush', 'lpop', 'sadd', 'smembers').
- * @param {string} key - La clave para la acción de Redis.
- * @param {string | string[]} [value] - El valor para la acción de Redis (solo para 'set', 'hset', 'lpush', 'sadd').
- 
- */
-export async function redisActions(
-  action: RedisAction,
-  key: string,
-  value?: string | string[]
-): Promise<string | number | string[] | null> {
+export async function redisExcute() {
   const redisInstance = await createRedisInstance();
 
-  try {
-    let result;
-    switch (action) {
-      case 'set':
-        if (typeof value !== 'string') {
-          throw new Error('Value must be a string for set action');
-        }
-        result = await redisInstance.set(key, value);
-        break;
-      case 'get':
-        result = await redisInstance.get(key);
-        break;
-      case 'del':
-        result = await redisInstance.del(key);
-        break;
-      case 'hset':
-        if (typeof value !== 'string') {
-          throw new Error('Value must be a string for hset action');
-        }
-        result = await redisInstance.hset(key, value);
-        break;
-      case 'hget':
-        result = await redisInstance.hget(key, value as string);
-        break;
-      case 'lpush':
-        if (!Array.isArray(value)) {
-          throw new Error('Value must be an array of strings for lpush action');
-        }
-        result = await redisInstance.lpush(key, ...value);
-        break;
-      case 'lpop':
-        result = await redisInstance.lpop(key);
-        break;
-      case 'sadd':
-        if (!Array.isArray(value)) {
-          throw new Error('Value must be an array of strings for sadd action');
-        }
-        result = await redisInstance.sadd(key, ...value);
-        break;
-      case 'smembers':
-        result = await redisInstance.smembers(key);
-        break;
-      default:
-        throw new Error(`Unsupported action: ${action}`);
-    }
-    console.log({ result });
+  const set = async (key: string, value: string) => {
+    const result = await redisInstance.set(key, value);
+
     return result;
-  } catch (error) {
-    console.error(`Redis action: ${(error as Error).message}`);
-    throw error;
-  } finally {
-    await redisInstance.expire(key, 185);
-    await redisInstance.quit();
-  }
+  };
+
+  const get = async (key: string) => {
+    const result = await redisInstance.get(key);
+
+    return result;
+  };
+
+  const hset = async (key: string, field: object) => {
+    const result = await redisInstance.hset(key, field);
+
+    return result;
+  };
+
+  const hget = async (key: string, field: string) => {
+    const result = await redisInstance.hget(key, field);
+
+    return result;
+  };
+
+  const hgetall = async (key: string) => {
+    const result = await redisInstance.hgetall(key);
+
+    return result;
+  };
+
+  const zadd = async (key: string, score: number, member: string) => {
+    const result = await redisInstance.zadd(key, 'NX', score, member);
+
+    return result;
+  };
+
+  const zrange = async (key: string, start: number, stop: number) => {
+    const result = (await redisInstance.zrange(key, start, stop, 'WITHSCORES')).filter((_, index) => index % 2 !== 0);
+
+    return result;
+  };
+
+  return { set, get, hset, hget, hgetall, zadd, zrange };
 }
