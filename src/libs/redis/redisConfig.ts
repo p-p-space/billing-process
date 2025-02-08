@@ -5,7 +5,7 @@ import { selectSettings } from '@/tenants/tenantOptions';
 
 let redisInstance: Redis | null = null;
 
-async function createRedisInstance() {
+export async function createRedisInstance() {
   if (redisInstance) {
     return redisInstance;
   }
@@ -29,23 +29,23 @@ async function createRedisInstance() {
   redisInstance = new Redis(redisOptions);
 
   redisInstance.on('connect', () => {
-    console.log('Conectado a Redis');
+    console.log('Redis connected');
   });
 
   redisInstance.on('error', (error) => {
-    console.error(`Redis conección error: ${error.message}`);
+    console.error(`Redis connection: ${error.message}`);
   });
 
   redisInstance.on('close', () => {
-    console.log('Conexión cerrada a Redis');
+    console.log('Redis connection closed');
   });
 
   redisInstance.on('reconnecting', () => {
-    console.log('Reconectando a Redis');
+    console.log('Redis reconnecting');
   });
 
   redisInstance.on('end', () => {
-    console.log('Conexión finalizada a Redis');
+    console.log('Redis connection ended');
     redisInstance = null;
   });
 

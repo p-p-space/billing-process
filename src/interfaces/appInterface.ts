@@ -18,13 +18,6 @@ export type ExampleArray = (typeof exampleArray)[number];
 export type CookieOptions = Pick<ResponseCookie, 'name' | 'value' | 'path' | 'sameSite' | 'expires'>;
 
 /**
- * Represents the response containing cookie values.
- */
-export type CookieValues = {
-  cookieContent: ResponseCookie;
-};
-
-/**
  * Represents a language from the available languages.
  */
 export type Lang = z.infer<typeof appSchemas.availableLangs>;

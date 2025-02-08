@@ -2,7 +2,7 @@
 
 // Internal App
 import type { Lang, Tenant } from '@/interfaces';
-import { availableTenant, cookieValues, createCookie, readCookie } from '@/utils';
+import { availableTenant, cookieValues, setCookie, readCookie } from '@/utils';
 import { appSettings, defaultLang, langCookieName, tenantCookieName } from '@/constans';
 
 /**
@@ -24,9 +24,9 @@ export async function getAppLang(): Promise<{ locale: Lang; tenant: Tenant }> {
  * @returns {Promise<void>}
  */
 export async function setAppLang(lang: Lang): Promise<void> {
-  const { cookieContent } = cookieValues({ name: langCookieName, value: lang });
+  const cookieLang = cookieValues({ name: langCookieName, value: lang });
 
-  await createCookie(cookieContent);
+  await setCookie(cookieLang);
 }
 
 /**

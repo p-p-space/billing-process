@@ -16,8 +16,8 @@ export async function middleware(request: NextRequest) {
     const lagnValue = await availableLang(lang);
     const tenantUrl = url.split('/')[3];
     const tenantValue = availableTenant(tenantUrl);
-    const { cookieContent: cookieLang } = cookieValues({ name: langCookieName, value: lagnValue });
-    const { cookieContent: cookietenant } = cookieValues({
+    const cookieLang = cookieValues({ name: langCookieName, value: lagnValue });
+    const cookietenant = cookieValues({
       name: tenantCookieName,
       value: tenantValue,
       sameSite: 'strict',

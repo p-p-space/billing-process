@@ -3,7 +3,7 @@ import { TenantSettings } from '@/interfaces';
 import { baseURLs, defaultTenant, redisConnect, timeZone } from '@/constans';
 
 export const localSettings: TenantSettings = {
-  webUrl: 'http://localhost:3000',
+  webUrl: baseURLs.app ?? 'http://localhost:3000',
   servUrl: baseURLs.serv ?? 'https://t-api.novopayment.com',
   timeZone: timeZone ?? 'America/Miami',
   redisHost: redisConnect.host ?? 'dev-redis.novopayment.net',
