@@ -28,11 +28,6 @@ export const tenantCookieName = 'app_tenant';
 export const langCookieName = 'app_lang';
 
 /**
- * Name of the session cookie.
- */
-export const sessionCookieName = 'app_wallet';
-
-/**
  * Toggles for enabling/disabling features.
  */
 export const toggles = {
@@ -108,4 +103,13 @@ export const redisConnect = {
   user: process.env.REDIS_USER,
   password: process.env.REDIS_PASSWORD,
   exp: process.env.REDIS_EXP,
+};
+
+/**
+ * Session settings
+ */
+export const SessSettings = {
+  sessExpTime: process.env.SESS_EXP_TIME,
+  sessCookieName: process.env.SESS_COOKIE_NAME,
+  sessMatchIp: process.env.SESS_MATCH_IP,
 };

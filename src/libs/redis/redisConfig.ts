@@ -5,22 +5,20 @@ import { Tenant } from '@/interfaces';
 import { selectSettings } from '@/tenants/tenantOptions';
 
 export async function createRedisInstance(tenantUrl?: Tenant): Promise<Redis> {
-  const { redisHost, redisPort, redisDb, redisSsl, redisUser, redisPassword, redisPrefix } = await selectSettings(
-    tenantUrl
-  );
+  const redisConnect = await selectSettings(tenantUrl);
 
   const redisOptions: RedisOptions = {
-    host: redisHost,
-    port: redisPort,
-    db: redisDb,
-    username: redisUser,
-    password: redisPassword,
-    keyPrefix: `${redisPrefix}:`,
+    host: redisConnect.redisHost,
+    port: redisConnect.redisPort,
+    db: redisConnect.redisDb,
+    username: redisConnect.redisUser,
+    password: redisConnect.redisPassword,
+    keyPrefix: `${redisConnect.redisPrefix}:`,
     lazyConnect: true,
     showFriendlyErrorStack: true,
     enableAutoPipelining: false,
     maxRetriesPerRequest: 1,
-    tls: redisSsl === 'ON' ? { rejectUnauthorized: false } : undefined,
+    tls: redisConnect.redisSsl === 'ON' ? { rejectUnauthorized: false } : undefined,
   };
 
   const redisInstance = new Redis(redisOptions);

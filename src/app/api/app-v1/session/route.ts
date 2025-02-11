@@ -10,17 +10,20 @@ import { selectSettings } from '@/tenants/tenantOptions';
 
 export async function POST(request: NextRequest): ApiResponsePromise {
   const { tenant, currentId } = await request.json();
-  let sessionId = uuid4();
-  const { redisExp } = await selectSettings(tenant);
+  const { sessExpTime } = await selectSettings(tenant);
   const redisInstance = await createRedisInstance(tenant);
+  const cookieId = { code: '200.00.000', message: 'Process ok', sessionId: '' };
+  const sessRegeneration = sessExpTime + 10 > 60 ? 60 : sessExpTime;
 
   try {
     const sessionData = await redisInstance.hgetall(currentId);
     const expireAt = await redisInstance.ttl(currentId);
-    sessionId = sessionData.sessionId && expireAt > 10 ? currentId : sessionId;
+    const sessionId = sessionData.sessionId && expireAt > sessRegeneration ? currentId : uuid4();
     sessionData.sessionId = sessionId;
+    sessionData.sessExpTime = `${sessExpTime}`;
     await redisInstance.hset(sessionId, sessionData);
-    await redisInstance.expire(sessionId, redisExp + 10);
+    await redisInstance.expire(sessionId, sessExpTime + 10);
+    cookieId.sessionId = sessionId;
 
     if (currentId && sessionId !== currentId) {
       await redisInstance.del(currentId);
@@ -30,8 +33,6 @@ export async function POST(request: NextRequest): ApiResponsePromise {
   } finally {
     await redisInstance.quit();
   }
-
-  const cookieId = { code: '200.00.000', message: 'Process ok', sessionId };
 
   const respHealth = createResponseApi(cookieId);
   return NextResponse.json(respHealth, { status: 200 });

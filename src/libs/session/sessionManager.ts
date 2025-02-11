@@ -3,13 +3,14 @@ import type { NextRequest, NextResponse } from 'next/server';
 import { cookieValues } from '@/utils';
 import { manageRequest } from '../axios';
 import { RequestAxios, Tenant } from '@/interfaces';
-import { headersKey, sessionCookieName } from '@/constans';
+import { headersKey } from '@/constans';
 import { selectSettings } from '@/tenants/tenantOptions';
 
 export async function handleSession(request: NextRequest, response: NextResponse) {
   const { cookies, headers, url } = request;
   const tenant = (headers.get(headersKey.appTenant) as Tenant) ?? url.split('/')[3];
-  const currentId = cookies.get(sessionCookieName)?.value;
+  const { sessExpTime, sessCookieName } = await selectSettings(tenant);
+  const currentId = cookies.get(`${sessCookieName}${tenant}`)?.value;
 
   const requestConfig: RequestAxios = {
     method: 'post',
@@ -20,13 +21,11 @@ export async function handleSession(request: NextRequest, response: NextResponse
 
   const { data } = await manageRequest(requestConfig, requestType);
 
-  const { redisExp } = await selectSettings(tenant);
-
   const cookieSesion = cookieValues({
-    name: sessionCookieName,
+    name: `${sessCookieName}${tenant}`,
     value: data.sessionId,
     sameSite: 'strict',
-    expires: redisExp,
+    expires: sessExpTime + 5,
   });
 
   response.cookies.set(cookieSesion);
