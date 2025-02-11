@@ -19,6 +19,7 @@ const tenantSettingsSchema = z.object({
   redisUser: z.string(),
   redisPassword: z.string(),
   redisPrefix: z.string(),
+  redisExp: z.number(),
   tenantPwa: availableTenantsSchema,
   tenantTheme: availableTenantsSchema,
   tenantImages: availableTenantsSchema,

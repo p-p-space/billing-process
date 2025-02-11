@@ -1,16 +1,13 @@
 import Redis from 'ioredis';
 import type { RedisOptions } from 'ioredis';
 // Internal App
+import { Tenant } from '@/interfaces';
 import { selectSettings } from '@/tenants/tenantOptions';
 
-let redisInstance: Redis | null = null;
-
-export async function createRedisInstance() {
-  if (redisInstance) {
-    return redisInstance;
-  }
-
-  const { redisHost, redisPort, redisDb, redisSsl, redisUser, redisPassword, redisPrefix } = await selectSettings();
+export async function createRedisInstance(tenantUrl?: Tenant): Promise<Redis> {
+  const { redisHost, redisPort, redisDb, redisSsl, redisUser, redisPassword, redisPrefix } = await selectSettings(
+    tenantUrl
+  );
 
   const redisOptions: RedisOptions = {
     host: redisHost,
@@ -26,7 +23,7 @@ export async function createRedisInstance() {
     tls: redisSsl === 'ON' ? { rejectUnauthorized: false } : undefined,
   };
 
-  redisInstance = new Redis(redisOptions);
+  const redisInstance = new Redis(redisOptions);
 
   redisInstance.on('connect', () => {
     console.log('Redis connected');
@@ -37,16 +34,15 @@ export async function createRedisInstance() {
   });
 
   redisInstance.on('close', () => {
-    console.log('Redis connection closed');
+    console.log('Redis closed');
   });
 
   redisInstance.on('reconnecting', () => {
-    console.log('Redis reconnecting');
+    console.log('Redis');
   });
 
   redisInstance.on('end', () => {
-    console.log('Redis connection ended');
-    redisInstance = null;
+    console.log('Redis ended');
   });
 
   return redisInstance;

@@ -2,13 +2,14 @@ import uuid4 from 'uuid4';
 import { useCallback } from 'react';
 import { isAxiosError } from 'axios';
 // Internal App
-import { useUiStore } from '@/store';
+import { useTenantStore, useUiStore } from '@/store';
 import { headersKey } from '@/constans';
-import type { RequestContent } from '@/interfaces';
+import type { RequestAxios, RequestContent } from '@/interfaces';
 import { createHttpConfig, manageRequest } from '@/libs/axios';
 
 export function useBrowserRequest(loading = true) {
   const setLoadingScreen = useUiStore((state) => state.setLoadingScreen);
+  const { tenant } = useTenantStore((state) => state.tenantSett);
 
   const createBrowserRequest = useCallback(
     async (requestContent: RequestContent) => {
@@ -16,6 +17,7 @@ export function useBrowserRequest(loading = true) {
       let { dataRequest } = data;
       const httpConfig = createHttpConfig();
       httpConfig.headers[headersKey.AppReqId] = uuid4();
+      httpConfig.headers[headersKey.appTenant] = tenant;
 
       if (dataRequest) {
         dataRequest = { payload: dataRequest };
@@ -24,7 +26,7 @@ export function useBrowserRequest(loading = true) {
 
       try {
         setLoadingScreen(loading);
-        const requestConfig = { pathUrl, method, dataRequest, httpConfig };
+        const requestConfig: RequestAxios = { pathUrl, method, dataRequest, httpConfig };
         const requestType = 'browser';
         const responseWebRequest = await manageRequest(requestConfig, requestType);
         const { data, status } = responseWebRequest;
@@ -47,7 +49,7 @@ export function useBrowserRequest(loading = true) {
         throw errorResponse.message;
       }
     },
-    [loading, setLoadingScreen]
+    [loading, setLoadingScreen, tenant]
   );
 
   return {

@@ -26,8 +26,8 @@ export async function selectTheme(tenant: Tenant): Promise<StringMap> {
   }
 }
 
-export async function selectSettings(): Promise<TenantSettings> {
-  const tenant = (await readCookie(tenantCookieName)) as Tenant;
+export async function selectSettings(tenantUrl?: Tenant): Promise<TenantSettings> {
+  const tenant = ((await readCookie(tenantCookieName)) as Tenant) ?? tenantUrl;
   const { availableTenants } = appSettings;
   const availableTenantsList = availableTenants.map((tenant) => tenant as Tenant);
 

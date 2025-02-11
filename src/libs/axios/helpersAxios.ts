@@ -46,7 +46,7 @@ export function createHttpConfig(config?: HeaderConfig): HttpConfig {
 /**
  * Manages an HTTP request.
  *
- * @param {RequestContent} requestContent - The content of the request.
+ * @param {RequestAxios} requestAxios - The content of the request.
  * @param {RequestType} requestType - The type of the request.
  * @returns {Promise<AxiosResponse>} The response from the Axios request.
  * @throws Will throw an error if the request content is invalid.

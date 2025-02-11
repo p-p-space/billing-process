@@ -3,7 +3,7 @@ import { getRequestConfig } from 'next-intl/server';
 import { getAppLang } from './servI18n';
 import { defaultTenant } from '@/constans';
 import { manageRequest } from '@/libs/axios';
-import type { Lang, LangData, LangFiles, RequestContent } from '@/interfaces';
+import type { Lang, LangData, LangFiles, RequestAxios } from '@/interfaces';
 
 /**
  * Request configuration to fetch language messages.
@@ -12,7 +12,7 @@ import type { Lang, LangData, LangFiles, RequestContent } from '@/interfaces';
 export default getRequestConfig(async () => {
   const { locale, tenant } = await getAppLang();
   const dataRequest = { locale, tenant };
-  const requestConfig: RequestContent = {
+  const requestConfig: RequestAxios = {
     method: 'post',
     pathUrl: `/language`,
     dataRequest,

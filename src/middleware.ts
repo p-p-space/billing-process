@@ -2,16 +2,21 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal app
 import { availableLang } from './i18n';
+import { handleSession } from './libs/session';
 import { handleCustomerRequest } from './services';
 import { availableTenant, cookieValues } from './utils';
 import { apiPaths, apiSrc, langCookieName, tenantCookieName } from './constans';
 
 export async function middleware(request: NextRequest) {
+  const response = NextResponse.next();
   const { cookies, nextUrl, url } = request;
   const { pathname } = nextUrl;
 
+  if (!pathname.startsWith(apiPaths.appAPiV1)) {
+    await handleSession(request, response);
+  }
+
   if (!pathname.startsWith(apiSrc)) {
-    const responsePages = NextResponse.next();
     const lang = cookies.get(langCookieName)?.value;
     const lagnValue = await availableLang(lang);
     const tenantUrl = url.split('/')[3];
@@ -23,10 +28,8 @@ export async function middleware(request: NextRequest) {
       sameSite: 'strict',
     });
 
-    responsePages.cookies.set(cookieLang);
-    responsePages.cookies.set(cookietenant);
-
-    return responsePages;
+    response.cookies.set(cookieLang);
+    response.cookies.set(cookietenant);
   }
 
   if (apiPaths.apiSearch.exec(pathname)) {
@@ -34,6 +37,8 @@ export async function middleware(request: NextRequest) {
 
     return responseApi;
   }
+
+  return response;
 }
 
 export const config = {

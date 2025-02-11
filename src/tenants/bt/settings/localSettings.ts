@@ -12,6 +12,7 @@ export const localSettings: TenantSettings = {
   redisSsl: redisConnect.ssl ?? 'ON',
   redisUser: redisConnect.user ?? 'orion214005',
   redisPassword: redisConnect.password ?? 'orion214005*novo',
+  redisExp: parseInt(redisConnect.exp ?? '180'),
   redisPrefix: defaultTenant,
   tenantPwa: defaultTenant,
   tenantTheme: defaultTenant,

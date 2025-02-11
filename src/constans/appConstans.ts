@@ -28,6 +28,11 @@ export const tenantCookieName = 'app_tenant';
 export const langCookieName = 'app_lang';
 
 /**
+ * Name of the session cookie.
+ */
+export const sessionCookieName = 'app_wallet';
+
+/**
  * Toggles for enabling/disabling features.
  */
 export const toggles = {
@@ -81,6 +86,7 @@ export const jwtConfig = {
 export const headersKey = {
   contentType: 'content-type', // Header key for content type
   authorization: 'authorization', // Header key for content type
+  appTenant: 'app-tenant', // Header key for tenant
   appContentSecurity: 'app-content-security', // Header key for content security status
   appOriginPath: 'app-origin-path', // Header key for application origin path
   appJwsToken: 'app-token', // Header key for application JWS token
@@ -101,4 +107,5 @@ export const redisConnect = {
   ssl: process.env.REDIS_SSL,
   user: process.env.REDIS_USER,
   password: process.env.REDIS_PASSWORD,
+  exp: process.env.REDIS_EXP,
 };
