@@ -1,6 +1,6 @@
 // Internal App
 import { TenantSettings } from '@/interfaces';
-import { baseURLs, defaultTenant, redisConnect, SessSettings, timeZone } from '@/constans';
+import { baseURLs, defaultTenant, prefixCookieName, redisConnect, SessSettings, timeZone } from '@/constans';
 
 export const localSettings: TenantSettings = {
   webUrl: baseURLs.app ?? 'http://localhost:3000',
@@ -14,7 +14,7 @@ export const localSettings: TenantSettings = {
   redisPassword: redisConnect.password ?? 'orion214005*novo',
   redisPrefix: defaultTenant,
   sessExpTime: parseInt(SessSettings.sessExpTime ?? '180'),
-  sessCookieName: SessSettings.sessCookieName ?? 'app_wallet_',
+  sessCookieName: prefixCookieName,
   sessMatchIp: SessSettings.sessMatchIp ? SessSettings.sessMatchIp === 'ON' : false,
   tenantPwa: defaultTenant,
   tenantTheme: defaultTenant,

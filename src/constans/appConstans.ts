@@ -18,14 +18,19 @@ export const webEnv = process.env.WEB_ENV ?? 'local';
 export const apiSrc = '/api';
 
 /**
+ * Prefix of the application cookies.
+ */
+export const prefixCookieName = 'billing_';
+
+/**
  * Name of the application cookie.
  */
-export const tenantCookieName = 'app_tenant';
+export const tenantCookieName = `${prefixCookieName}tenant`;
 
 /**
  * Name of the tenant cookie.
  */
-export const langCookieName = 'app_lang';
+export const langCookieName = `${prefixCookieName}lang`;
 
 /**
  * Toggles for enabling/disabling features.
@@ -102,7 +107,6 @@ export const redisConnect = {
   ssl: process.env.REDIS_SSL,
   user: process.env.REDIS_USER,
   password: process.env.REDIS_PASSWORD,
-  exp: process.env.REDIS_EXP,
 };
 
 /**
@@ -110,6 +114,5 @@ export const redisConnect = {
  */
 export const SessSettings = {
   sessExpTime: process.env.SESS_EXP_TIME,
-  sessCookieName: process.env.SESS_COOKIE_NAME,
   sessMatchIp: process.env.SESS_MATCH_IP,
 };
