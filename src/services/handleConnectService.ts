@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal App
-import { selectSettings } from '@/tenants/tenantOptions';
 import { headersKey } from '@/constans';
+import { appCredSetts } from '@/tenants/tenantSettings';
 import type { ReqResBody, RequestAxios } from '@/interfaces';
 import { createHttpConfig, manageRequest } from '@/libs/axios';
 
@@ -14,7 +14,7 @@ export async function connectServices(request: NextRequest) {
   const { headers, method } = request;
   const pathUrl = headers.get(headersKey.appOriginPath);
   const reqId = headers.get(headersKey.AppReqId);
-  const { tenantId } = await appCreedentials();
+  const { tenantId } = await appCredSetts();
 
   if (!oauthToken.bearer) {
     const responseBearer = await getOauthBearer();
@@ -48,7 +48,7 @@ export async function connectServices(request: NextRequest) {
 }
 
 export async function getOauthBearer() {
-  const { clientId, clientSecret } = await appCreedentials();
+  const { clientId, clientSecret } = await appCredSetts();
   const dataRequest: ReqResBody = {
     grant_type: 'client_credentials',
     client_id: clientId,
@@ -79,14 +79,4 @@ export async function getOauthBearer() {
   }
 
   return NextResponse.json(data, { status });
-}
-
-export async function appCreedentials() {
-  const credentials = await selectSettings();
-
-  return {
-    clientId: credentials.tenantClientId,
-    clientSecret: credentials.tenantClientSecret,
-    tenantId: credentials.tenantId,
-  };
 }

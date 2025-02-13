@@ -2,23 +2,23 @@ import Redis from 'ioredis';
 import type { RedisOptions } from 'ioredis';
 // Internal App
 import { Tenant } from '@/interfaces';
-import { selectSettings } from '@/tenants/tenantOptions';
+import { redisSetts } from '@/tenants/tenantSettings';
 
-export async function createRedisInstance(tenantUrl?: Tenant): Promise<Redis> {
-  const redisConnect = await selectSettings(tenantUrl);
+export async function redisConnect(tenant: Tenant): Promise<Redis> {
+  const { host, port, db, username, password, keyPrefix, tls } = await redisSetts(tenant);
 
   const redisOptions: RedisOptions = {
-    host: redisConnect.redisHost,
-    port: redisConnect.redisPort,
-    db: redisConnect.redisDb,
-    username: redisConnect.redisUser,
-    password: redisConnect.redisPassword,
-    keyPrefix: `${redisConnect.redisPrefix}:`,
+    host,
+    port,
+    db,
+    username,
+    password,
+    keyPrefix,
     lazyConnect: true,
     showFriendlyErrorStack: true,
-    enableAutoPipelining: false,
+    enableAutoPipelining: true,
     maxRetriesPerRequest: 1,
-    tls: redisConnect.redisSsl === 'ON' ? { rejectUnauthorized: false } : undefined,
+    tls,
   };
 
   const redisInstance = new Redis(redisOptions);
@@ -35,19 +35,19 @@ export async function createRedisInstance(tenantUrl?: Tenant): Promise<Redis> {
     console.log('Redis closed');
   });
 
-  redisInstance.on('reconnecting', () => {
-    console.log('Redis');
-  });
-
   redisInstance.on('end', () => {
     console.log('Redis ended');
+  });
+
+  redisInstance.on('reconnecting', () => {
+    console.log('Redis reconnecting');
   });
 
   return redisInstance;
 }
 
-export async function redisExcute() {
-  const redisInstance = await createRedisInstance();
+export async function redisExcute(tenant: Tenant) {
+  const redisInstance = await redisConnect(tenant);
 
   const set = async (key: string, value: string) => {
     const result = await redisInstance.set(key, value);

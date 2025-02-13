@@ -2,7 +2,7 @@ export const defaultTenant = 'bt';
 export const defaultLang = 'en';
 export const timeZone = process.env.TIMEZONE;
 const availableTenants = [defaultTenant, 'pm'] as const;
-const allowedTenants = [...availableTenants, 'pp'] as const;
+const allowedTenants = [...availableTenants] as const;
 const availableLangs = ['en', 'es'] as const;
 
 export const appSettings = {
@@ -57,6 +57,7 @@ export const apiPaths = {
   appBrowserApi: `${apiSrc}/v1.0.0`, // API version for browser to application requests
   customersApi: `${apiSrc}/v0`, // API version for customer requests
   cardsSolApi: `${apiSrc}/v1.3`, // API version for cards solution requests
+  accountsApi: `${apiSrc}/v1.1`, // API version for accounts requests
 };
 
 /**

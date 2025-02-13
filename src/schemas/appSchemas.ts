@@ -15,7 +15,7 @@ const tenantSettingsSchema = z.object({
   redisHost: z.string(),
   redisPort: z.number(),
   redisDb: z.number(),
-  redisSsl: z.string(),
+  redisTls: z.string(),
   redisUser: z.string(),
   redisPassword: z.string(),
   redisPrefix: z.string(),

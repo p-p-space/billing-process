@@ -2,7 +2,7 @@ import axios from 'axios';
 import { importSPKI } from 'jose';
 // Internal app
 import { jwtAlgs, headersKey } from '@/constans';
-import { selectSettings } from '@/tenants/tenantOptions';
+import { browserHttpSetts } from '@/tenants/tenantSettings';
 import { createErrorResponseApi, createResponseApi } from './helpersAxios';
 import { encryptData, decryptData, signData, verifySignature, disassembleJWS, assembleJWS, encode } from '@/security';
 
@@ -17,7 +17,9 @@ const browserAxios = axios.create();
  */
 browserAxios.interceptors.request.use(async (request) => {
   const { data, headers } = request;
-  const { webUrl, webJwePubKey, secJwsStr } = await selectSettings();
+  const { secJweStr, settings } = await browserHttpSetts();
+  const secretJwe = encode(secJweStr);
+  const { webUrl, webJwePubKey, secJwsStr } = (await decryptData(settings, secretJwe)) as Record<string, string>;
   request.baseURL = webUrl;
 
   if (data?.payload) {
@@ -48,7 +50,9 @@ browserAxios.interceptors.response.use(
     const { data, headers } = response;
 
     if (data?.payload) {
-      const { webJwsPubKey, secJweStr } = await selectSettings();
+      const { secJweStr, settings } = await browserHttpSetts();
+      const secretJwe = encode(secJweStr);
+      const { webJwsPubKey } = (await decryptData(settings, secretJwe)) as Record<string, string>;
 
       try {
         let { payload } = data;

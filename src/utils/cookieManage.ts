@@ -1,7 +1,8 @@
 import { cookies } from 'next/headers';
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 // Internal app imports
-import type { CookieOptions } from '@/interfaces';
+import type { CookieOptions, Tenant } from '@/interfaces';
+import { tenantCookieName } from '@/constans';
 
 // Define constants for default values
 const DEFAULT_PATH = '/';
@@ -98,4 +99,10 @@ export async function deleteCookie(cookieName: string): Promise<void> {
   } catch (error) {
     throw new Error(`Deleting cookie: ${(error as Error).message}`); // Re-throw the error after logging it
   }
+}
+
+export async function tenantCookie(): Promise<Tenant> {
+  const tenant = (await readCookie(tenantCookieName)) as Tenant;
+
+  return tenant;
 }

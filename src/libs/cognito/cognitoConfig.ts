@@ -2,8 +2,8 @@
 
 import crypto from 'crypto';
 import * as aws from '@aws-sdk/client-cognito-identity-provider';
+import { cognitoCredSetts } from '@/tenants/tenantSettings';
 // Internal App
-import { selectSettings } from '@/tenants/tenantOptions';
 
 /**
  * Creates a new instance of CognitoIdentityProviderClient with the provided credentials.
@@ -11,21 +11,17 @@ import { selectSettings } from '@/tenants/tenantOptions';
  * @returns {aws.CognitoIdentityProviderClient} A new instance of CognitoIdentityProviderClient.
  */
 export async function createCognitoClient(): Promise<aws.CognitoIdentityProviderClient> {
-  const { region, accessKeyId, secretAccessKey } = await cognitoCreedentials();
+  const { region } = await cognitoCredSetts();
 
   const cognitoClient = new aws.CognitoIdentityProviderClient({
     region,
-    credentials: {
-      accessKeyId,
-      secretAccessKey,
-    },
   });
 
   return cognitoClient;
 }
 
 export async function hashClienSecret(user: string) {
-  const { clientId, clientSecret } = await cognitoCreedentials();
+  const { clientId, clientSecret } = await cognitoCredSetts();
 
   const secretHash = crypto
     .createHmac('sha256', clientSecret)
@@ -33,19 +29,6 @@ export async function hashClienSecret(user: string) {
     .digest('base64');
 
   return { secretHash };
-}
-
-export async function cognitoCreedentials() {
-  const credentials = await selectSettings();
-
-  return {
-    clientId: credentials.cognitoClientId,
-    clientSecret: credentials.cognitoClientSecret,
-    region: credentials.cognitoRegion,
-    accessKeyId: credentials.cognitoAccessKeyId,
-    secretAccessKey: credentials.cognitoSecretAccessKey,
-    userPollId: credentials.cognitoUserPoolId,
-  };
 }
 
 export async function cognitoConnect(command: aws.InitiateAuthCommand) {

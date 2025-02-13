@@ -4,14 +4,12 @@ import type { NextRequest } from 'next/server';
 // Internal App
 
 import { createResponseApi } from '@/libs/axios';
-import { createRedisInstance } from '@/libs/redis';
+import { redisConnect } from '@/libs/redis';
 import type { ApiResponsePromise } from '@/interfaces';
-import { selectSettings } from '@/tenants/tenantOptions';
 
 export async function POST(request: NextRequest): ApiResponsePromise {
-  const { tenant, currentId } = await request.json();
-  const { sessExpTime } = await selectSettings(tenant);
-  const redisInstance = await createRedisInstance(tenant);
+  const { tenant, currentId, sessExpTime } = await request.json();
+  const redisInstance = await redisConnect(tenant);
   const cookieId = { code: '200.00.000', message: 'Process ok', sessionId: '' };
   const sessRegeneration = sessExpTime + 10 > 60 ? 60 : sessExpTime;
 
@@ -20,7 +18,7 @@ export async function POST(request: NextRequest): ApiResponsePromise {
     const expireAt = await redisInstance.ttl(currentId);
     const sessionId = sessionData.sessionId && expireAt > sessRegeneration ? currentId : uuid4();
     sessionData.sessionId = sessionId;
-    sessionData.sessExpTime = `${sessExpTime}`;
+    sessionData.sessExpTime = sessExpTime;
     await redisInstance.hset(sessionId, sessionData);
     await redisInstance.expire(sessionId, sessExpTime + 10);
     cookieId.sessionId = sessionId;

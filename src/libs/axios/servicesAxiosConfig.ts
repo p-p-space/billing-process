@@ -4,7 +4,7 @@ import axios from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
 import { jwtAlgs, headersKey } from '@/constans';
-import { selectSettings } from '@/tenants/tenantOptions';
+import { servHttpSetts } from '@/tenants/tenantSettings';
 import { createErrorResponseApi, createResponseApi } from './helpersAxios';
 import { decryptData, disassembleJWS, encryptData, signData } from '@/security';
 
@@ -19,7 +19,7 @@ const servicesAxios = axios.create();
  */
 servicesAxios.interceptors.request.use(async (request) => {
   const { data } = request;
-  const { servUrl, servJwePubKey, servJwsPrivKey } = await selectSettings();
+  const { servUrl, servJwePubKey, servJwsPrivKey } = await servHttpSetts();
   request.baseURL = servUrl;
 
   if (data?.payload) {
@@ -50,7 +50,7 @@ servicesAxios.interceptors.response.use(
     const { data } = response;
 
     if (data?.data) {
-      const { servJwePrivKey } = await selectSettings();
+      const { servJwePrivKey } = await servHttpSetts();
       const { code, message, datetime, data: cipherData } = data;
 
       try {

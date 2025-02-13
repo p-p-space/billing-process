@@ -6,7 +6,7 @@ import { getLocale, getMessages, getTranslations } from 'next-intl/server';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 //Internal app
 import type { ChildrenProps, ParamsProps } from '@/interfaces';
-import { selectSettings, selectTheme } from '@/tenants/tenantOptions';
+import { assetSetts, tenantMuiTheme } from '@/tenants/tenantSettings';
 import { ClientProvider, GlobalError, GlobalSuccess, Lang, LoadingScreen, MuiProvider } from '@/components';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -25,8 +25,8 @@ export default async function RootLayoutMain({ children, params }: ChildrenProps
   const { tenant } = await params;
   const lang = await getLocale();
   const messages = await getMessages();
-  const { tenantTheme, tenantImages, webUrl } = await selectSettings();
-  const themeVars = await selectTheme(tenantTheme);
+  const { tenantTheme, tenantImages, webUrl } = await assetSetts();
+  const themeVars = await tenantMuiTheme(tenantTheme);
 
   return (
     <html lang={lang} suppressHydrationWarning>

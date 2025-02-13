@@ -1,6 +1,6 @@
 // Iternal App
-import { redisConnect, timeZone } from '@/constans';
 import { Tenant, TenantSettings } from '@/interfaces';
+import { prefixCookieName, redisConnect, SessSettings, timeZone } from '@/constans';
 
 const customer: Tenant = 'pm';
 
@@ -9,7 +9,8 @@ export const localSettings = {
   redisUser: redisConnect.user ?? 'orion214005',
   redisPassword: redisConnect.password ?? 'orion214005*novo',
   redisPrefix: customer,
-  redisExp: parseInt(redisConnect.exp ?? '240'),
+  sessExpTime: parseInt(SessSettings.sessExpTime ?? '180'),
+  sessCookieName: `${prefixCookieName}${customer}`,
   tenantId: '581134d0-a5dc-4930-ae60-60efa18c9f14',
   tenantClientId: '3b5FEaH7Gbkmz40Uk86Ght6cTumxxi3v',
   tenantClientSecret: 'NfIGwKwIswU3SwJD',

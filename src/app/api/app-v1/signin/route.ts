@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal App
-import type { ApiResponsePromise } from '@/interfaces';
 import { createResponseApi } from '@/libs/axios';
+import type { ApiResponsePromise } from '@/interfaces';
+import { cognitoCredSetts } from '@/tenants/tenantSettings';
 import { InitiateAuthCommand } from '@aws-sdk/client-cognito-identity-provider';
-import { cognitoConnect, cognitoCreedentials, hashClienSecret } from '@/libs/cognito';
+import { cognitoConnect, hashClienSecret } from '@/libs/cognito';
 
 export async function POST(request: NextRequest): ApiResponsePromise {
   const { email, password } = await request.json();
-
-  const { clientId } = await cognitoCreedentials();
+  const { clientId } = await cognitoCredSetts();
   const { secretHash } = await hashClienSecret(email);
 
   const command = new InitiateAuthCommand({
