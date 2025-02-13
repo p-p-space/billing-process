@@ -51,16 +51,23 @@ servicesAxios.interceptors.response.use(
 
     if (data?.data) {
       const { servJwePrivKey } = await servHttpSetts();
-      const { code, message, datetime, data: cipherData } = data;
+      const { code, message, datetime, metadata, data: cipherData } = data;
 
       try {
         const secretJwe = await importPKCS8(servJwePrivKey, jwtAlgs.jweAlgRsa);
-        const payload = await decryptData(cipherData, secretJwe);
+        let payload = await decryptData(cipherData, secretJwe);
+
+        if (metadata) {
+          payload = { ...payload, metadata };
+        }
 
         response.data = createResponseApi({ code, datetime, message, payload });
       } catch (error) {
         response.status = 500;
-        response.data = createResponseApi({ message: `servicesAxios Response (${(error as Error).message})` });
+        response.data = createResponseApi({
+          code: '500.00.000',
+          message: `servicesAxios Response (${(error as Error).message})`,
+        });
       }
     }
 
