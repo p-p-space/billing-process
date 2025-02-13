@@ -1,17 +1,17 @@
 // Internal App
 import { TenantSettings } from '@/interfaces';
-import { baseURLs, defaultTenant, prefixCookieName, redisConnect, SessSettings, timeZone } from '@/constans';
+import { baseURLs, defaultTenant, prefixCookieName, redisSettings, SessSettings, timeZone } from '@/constans';
 
 export const localSettings: TenantSettings = {
   webUrl: baseURLs.app ?? 'http://localhost:3000',
   servUrl: baseURLs.serv ?? 'https://t-api.novopayment.com',
   timeZone: timeZone ?? 'America/Miami',
-  redisHost: redisConnect.host ?? 'dev-redis.novopayment.net',
-  redisPort: parseInt(redisConnect.port ?? '6379'),
-  redisDb: parseInt(redisConnect.db ?? '0'),
-  redisTls: redisConnect.ssl ?? 'ON',
-  redisUser: redisConnect.user ?? 'orion214005',
-  redisPassword: redisConnect.password ?? 'orion214005*novo',
+  redisHost: redisSettings.host ?? 'dev-redis.novopayment.net',
+  redisPort: parseInt(redisSettings.port ?? '6379'),
+  redisDb: parseInt(redisSettings.db ?? '0'),
+  redisTls: redisSettings.ssl ?? 'ON',
+  redisUser: redisSettings.user ?? 'orion214005',
+  redisPassword: redisSettings.password ?? 'orion214005*novo',
   redisPrefix: defaultTenant,
   sessExpTime: parseInt(SessSettings.sessExpTime ?? '180'),
   sessCookieName: `${prefixCookieName}${defaultTenant}`,
@@ -27,7 +27,7 @@ export const localSettings: TenantSettings = {
   cognitoUserPoolId: 'us-east-1_X86CaPJWw',
   cognitoClientId: '5se5vueiulffn56c91u02lrmua',
   cognitoClientSecret: 'f2nmuhunsjk6relkcvn1inpmfi7n6et6afmfjo3dq6b6g7s6cli',
-  cognitoAccessKeyId: 'RPletIhXmMDPbw5O8mp7mD5X72iDFoLq7AwITvlp',
+  cognitoAccessKeyId: 'AKIAS2VS4EYR4CW5PJJY',
   cognitoSecretAccessKey: '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',
   secJweStr: 'ce10509d021fe426dfcdecb01287971a',
   secJwsStr: '5b58bb161dbd5fa7a77863d9dd9c49c7c36b89555d206af8d6e13df8677aeeba',

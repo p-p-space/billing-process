@@ -99,9 +99,18 @@ export const headersKey = {
 };
 
 /**
+ * Cookie settings
+ */
+export const cookieSettings = {
+  defaultPath: '/',
+  defaultSameSite: 'lax' as const,
+  defaultExpires: process.env.COOKIE_EXPIRES ?? new Date(Date.now() + 24 * 60 * 60 * 1000),
+};
+
+/**
  * Redis connection settings
  */
-export const redisConnect = {
+export const redisSettings = {
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,
   db: process.env.REDIS_DB,

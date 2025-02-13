@@ -2,10 +2,10 @@ import uuid4 from 'uuid4';
 import { useCallback } from 'react';
 import { isAxiosError } from 'axios';
 // Internal App
-import { useTenantStore, useUiStore } from '@/store';
 import { headersKey } from '@/constans';
-import type { RequestAxios, RequestContent } from '@/interfaces';
+import { useTenantStore, useUiStore } from '@/store';
 import { createHttpConfig, manageRequest } from '@/libs/axios';
+import type { RequestAxios, RequestContent } from '@/interfaces';
 
 export function useBrowserRequest(loading = true) {
   const setLoadingScreen = useUiStore((state) => state.setLoadingScreen);

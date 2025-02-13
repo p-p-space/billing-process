@@ -1,13 +1,8 @@
 import { cookies } from 'next/headers';
-import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
+import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 // Internal app imports
 import type { CookieOptions, Tenant } from '@/interfaces';
-import { tenantCookieName } from '@/constans';
-
-// Define constants for default values
-const DEFAULT_PATH = '/';
-const DEFAULT_SAMESITE = 'lax';
-const DEFAULT_EXPIRATION = new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000);
+import { cookieSettings, tenantCookieName } from '@/constans';
 
 /**
  * Sets a cookie with the specified options.
@@ -21,7 +16,8 @@ const DEFAULT_EXPIRATION = new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000);
  * @returns {ResponseCookie} cookieContent - The content of the cookie.
  */
 export function cookieValues(options: CookieOptions): ResponseCookie {
-  const { name, value, path = DEFAULT_PATH, sameSite = DEFAULT_SAMESITE, expires = DEFAULT_EXPIRATION } = options;
+  const { defaultPath, defaultSameSite, defaultExpires } = cookieSettings;
+  const { name, value, path = defaultPath, sameSite = defaultSameSite, expires = defaultExpires } = options;
 
   if (!name || !value) {
     throw new Error('Cookie name and value are required');
@@ -39,7 +35,8 @@ export function cookieValues(options: CookieOptions): ResponseCookie {
   if (expires instanceof Date) {
     cookieContent.expires = expires;
   } else {
-    cookieContent.maxAge = expires;
+    const maxAge = typeof expires === 'number' ? expires : parseInt(expires);
+    cookieContent.maxAge = maxAge;
   }
 
   return cookieContent;
@@ -57,7 +54,7 @@ export async function setCookie(cookieContent: ResponseCookie): Promise<void> {
   try {
     cookieStore.set(cookieContent);
   } catch (error) {
-    throw new Error(`Setting cookie: ${(error as Error).message}`); // Re-throw the error after logging it
+    throw new Error(`Setting cookie: ${(error as Error).message}`);
   }
 }
 
@@ -78,7 +75,7 @@ export async function readCookie(cookieName: string): Promise<string | undefined
 
     return cookieValue;
   } catch (error) {
-    throw new Error(`Reading cookie: ${(error as Error).message}`); // Re-throw the error after logging it
+    throw new Error(`Reading cookie: ${(error as Error).message}`);
   }
 }
 
@@ -97,10 +94,14 @@ export async function deleteCookie(cookieName: string): Promise<void> {
   try {
     cookieStore.delete(cookieName);
   } catch (error) {
-    throw new Error(`Deleting cookie: ${(error as Error).message}`); // Re-throw the error after logging it
+    throw new Error(`Deleting cookie: ${(error as Error).message}`);
   }
 }
 
+/**
+ * Reads the value of the tenant cookie.
+ * @returns {Promise<Tenant>}
+ */
 export async function tenantCookie(): Promise<Tenant> {
   const tenant = (await readCookie(tenantCookieName)) as Tenant;
 

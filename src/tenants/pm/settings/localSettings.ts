@@ -1,13 +1,13 @@
 // Iternal App
 import { Tenant, TenantSettings } from '@/interfaces';
-import { prefixCookieName, redisConnect, SessSettings, timeZone } from '@/constans';
+import { prefixCookieName, redisSettings, SessSettings, timeZone } from '@/constans';
 
 const customer: Tenant = 'pm';
 
 export const localSettings = {
   timeZone: timeZone ?? 'America/Jamaica',
-  redisUser: redisConnect.user ?? 'orion214005',
-  redisPassword: redisConnect.password ?? 'orion214005*novo',
+  redisUser: redisSettings.user ?? 'orion214005',
+  redisPassword: redisSettings.password ?? 'orion214005*novo',
   redisPrefix: customer,
   sessExpTime: parseInt(SessSettings.sessExpTime ?? '180'),
   sessCookieName: `${prefixCookieName}${customer}`,

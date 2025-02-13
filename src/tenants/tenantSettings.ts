@@ -60,104 +60,104 @@ export async function tenantSettings(tenant: Tenant): Promise<TenantSettings> {
 }
 
 export async function redisSetts(tenant: Tenant) {
-  const redisSettings = await tenantSettings(tenant);
+  const redisconf = await tenantSettings(tenant);
 
   return {
-    host: redisSettings.redisHost,
-    port: redisSettings.redisPort,
-    db: redisSettings.redisDb,
-    username: redisSettings.redisUser,
-    password: redisSettings.redisPassword,
-    keyPrefix: `${redisSettings.redisPrefix}:`,
-    tls: redisSettings.redisTls === 'ON' ? { rejectUnauthorized: false } : undefined,
+    host: redisconf.redisHost,
+    port: redisconf.redisPort,
+    db: redisconf.redisDb,
+    username: redisconf.redisUser,
+    password: redisconf.redisPassword,
+    keyPrefix: `${redisconf.redisPrefix}:`,
+    tls: redisconf.redisTls === 'ON' ? { rejectUnauthorized: false } : undefined,
   };
 }
 
 export async function assetSetts() {
   const tenant = await tenantCookie();
-  const assetsSettings = await tenantSettings(tenant);
+  const assetsConf = await tenantSettings(tenant);
 
   return {
-    tenantPwa: assetsSettings.tenantPwa,
-    tenantTheme: assetsSettings.tenantTheme,
-    tenantImages: assetsSettings.tenantImages,
-    webUrl: assetsSettings.webUrl,
+    tenantPwa: assetsConf.tenantPwa,
+    tenantTheme: assetsConf.tenantTheme,
+    tenantImages: assetsConf.tenantImages,
+    webUrl: assetsConf.webUrl,
   };
 }
 
 export async function sessionSetts(tenant: Tenant) {
-  const sessionSettings = await tenantSettings(tenant);
+  const sessionConf = await tenantSettings(tenant);
 
   return {
-    sessExpTime: sessionSettings.sessExpTime,
-    sessCookieName: sessionSettings.sessCookieName,
+    sessExpTime: sessionConf.sessExpTime,
+    sessCookieName: sessionConf.sessCookieName,
   };
 }
 
 export async function browserHttpSetts() {
   const tenant = await tenantCookie();
-  const browserSettings = await tenantSettings(tenant);
+  const browserConf = await tenantSettings(tenant);
 
   const payload = {
-    webUrl: browserSettings.webUrl,
-    webJwePubKey: browserSettings.webJwePubKey,
-    secJwsStr: browserSettings.secJwsStr,
-    webJwsPubKey: browserSettings.webJwsPubKey,
+    webUrl: browserConf.webUrl,
+    webJwePubKey: browserConf.webJwePubKey,
+    secJwsStr: browserConf.secJwsStr,
+    webJwsPubKey: browserConf.webJwsPubKey,
   };
 
-  const secretJwe = encode(browserSettings.secJweStr);
+  const secretJwe = encode(browserConf.secJweStr);
   const settings = await encryptData(payload, secretJwe, jwtAlgs.jweAlgSec);
 
   return {
-    secJweStr: browserSettings.secJweStr,
+    secJweStr: browserConf.secJweStr,
     settings,
   };
 }
 
 export async function appHttpSetts() {
   const tenant = await tenantCookie();
-  const appSettings = await tenantSettings(tenant);
+  const appConf = await tenantSettings(tenant);
 
   return {
-    webUrl: appSettings.webUrl,
-    webJwePrivKey: appSettings.webJwePrivKey,
-    secJwsStr: appSettings.secJwsStr,
-    secJweStr: appSettings.secJweStr,
-    webJwsPrivKey: appSettings.webJwsPrivKey,
+    webUrl: appConf.webUrl,
+    webJwePrivKey: appConf.webJwePrivKey,
+    secJwsStr: appConf.secJwsStr,
+    secJweStr: appConf.secJweStr,
+    webJwsPrivKey: appConf.webJwsPrivKey,
   };
 }
 
 export async function servHttpSetts() {
   const tenant = await tenantCookie();
-  const servSettings = await tenantSettings(tenant);
+  const servConf = await tenantSettings(tenant);
 
   return {
-    servUrl: servSettings.servUrl,
-    servJwePubKey: servSettings.servJwePubKey,
-    servJwsPrivKey: servSettings.servJwsPrivKey,
-    servJwePrivKey: servSettings.servJwePrivKey,
+    servUrl: servConf.servUrl,
+    servJwePubKey: servConf.servJwePubKey,
+    servJwsPrivKey: servConf.servJwsPrivKey,
+    servJwePrivKey: servConf.servJwePrivKey,
   };
 }
 
 export async function cognitoCredSetts() {
   const tenant = await tenantCookie();
-  const cognitoSettings = await tenantSettings(tenant);
+  const cognitoConf = await tenantSettings(tenant);
 
   return {
-    clientId: cognitoSettings.cognitoClientId,
-    clientSecret: cognitoSettings.cognitoClientSecret,
-    region: cognitoSettings.cognitoRegion,
-    userPollId: cognitoSettings.cognitoUserPoolId,
+    clientId: cognitoConf.cognitoClientId,
+    clientSecret: cognitoConf.cognitoClientSecret,
+    region: cognitoConf.cognitoRegion,
+    userPollId: cognitoConf.cognitoUserPoolId,
   };
 }
 
 export async function appCredSetts() {
   const tenant = await tenantCookie();
-  const appSettings = await tenantSettings(tenant);
+  const appCredConf = await tenantSettings(tenant);
 
   return {
-    clientId: appSettings.tenantClientId,
-    clientSecret: appSettings.tenantClientSecret,
-    tenantId: appSettings.tenantId,
+    clientId: appCredConf.tenantClientId,
+    clientSecret: appCredConf.tenantClientSecret,
+    tenantId: appCredConf.tenantId,
   };
 }
