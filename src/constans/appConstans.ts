@@ -43,7 +43,7 @@ export const toggles = {
  * Base URLs for the application and services.
  */
 export const baseURLs = {
-  app: process.env.NEXT_PUBLIC_WEB_URL,
+  app: process.env.WEB_URL,
   serv: process.env.SERV_URL,
 };
 
