@@ -1,14 +1,17 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 // Internal app
 import { connectServices } from '@/services';
+import type { ApiPromise } from '@/interfaces';
+import { createResponseApi } from '@/libs/axios';
 
 /**
  * Handles requests to the services route.
  *
  * @param {NextRequest} request - The HTTP request.
- * @returns {Promise<NextResponse>} - The response from the API or an error response.
+ * @returns {ApiPromise} - The response from the API or an error response.
  */
-async function handler(request: NextRequest): Promise<NextResponse> {
+async function handler(request: NextRequest): ApiPromise {
   const { method } = request;
 
   switch (method) {
@@ -17,9 +20,11 @@ async function handler(request: NextRequest): Promise<NextResponse> {
     case 'PUT':
     case 'PATCH':
     case 'DELETE':
-      return connectServices(request);
-    default:
-      return NextResponse.json({ error: `Method ${request.method} Not Allowed` }, { status: 405 });
+      return await connectServices(request);
+    default: {
+      const noAllow = createResponseApi({ code: '405.00.000', message: `Method ${request.method} Not Allowed` });
+      return NextResponse.json(noAllow, { status: 405 });
+    }
   }
 }
 

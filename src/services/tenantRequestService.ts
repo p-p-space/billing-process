@@ -2,14 +2,14 @@ import { type NextRequest, NextResponse } from 'next/server';
 // Internal app
 import { apiPaths, headersKey } from '@/constans';
 import { createHttpConfig, manageRequest } from '@/libs/axios';
-import type { ApiResponsePromise, RequestAxios } from '@/interfaces';
+import type { ApiPromise, RequestAxios } from '@/interfaces';
 
 /**
  * Handles customer requests by processing the incoming request, configuring the HTTP request,
  * and managing the application request.
  *
  * @param {NextRequest} request - The incoming request object.
- * @returns {ApiResponsePromise} - A promise that resolves to the response object.
+ * @returns {ApiPromise} - A promise that resolves to the response object.
  *
  * @remarks
  * This function performs the following steps:
@@ -21,7 +21,7 @@ import type { ApiResponsePromise, RequestAxios } from '@/interfaces';
  * 6. Manages the application request and processes the response.
  * 7. Sets the authorization JWS token in the response headers.
  */
-export async function handleCustomerRequest(request: NextRequest): ApiResponsePromise {
+export async function handleCustomerRequest(request: NextRequest): ApiPromise {
   const { headers, method, nextUrl } = request;
   const { pathname, search } = nextUrl;
   const uriPath = `${pathname}${search}`;

@@ -3,14 +3,14 @@ import type { NextRequest } from 'next/server';
 // Internal App
 import { headersKey } from '@/constans';
 import { appCredSetts } from '@/tenants/tenantSettings';
-import type { ReqResBody, RequestAxios } from '@/interfaces';
 import { createHttpConfig, manageRequest } from '@/libs/axios';
+import type { ApiPromise, ReqResBody, RequestAxios } from '@/interfaces';
 
 const oauthToken: { bearer?: string } = {
   bearer: undefined,
 };
 
-export async function connectServices(request: NextRequest) {
+export async function connectServices(request: NextRequest): ApiPromise {
   const { headers, method } = request;
   const pathUrl = headers.get(headersKey.appOriginPath);
   const reqId = headers.get(headersKey.AppReqId);

@@ -5,9 +5,9 @@ import type { NextRequest } from 'next/server';
 // Internal app
 import { defaultTenant } from '@/constans';
 import { createErrorResponseApi } from '@/libs/axios';
-import type { ApiResponsePromise, LangFiles } from '@/interfaces';
+import type { ApiPromise, LangFiles } from '@/interfaces';
 
-export async function POST(request: NextRequest): ApiResponsePromise {
+export async function POST(request: NextRequest): ApiPromise {
   const { locale, tenant } = await request.json();
   const jsonRegex = /\.json$/i;
   const language: LangFiles = {

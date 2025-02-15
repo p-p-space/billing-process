@@ -1,15 +1,16 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 // Internal App
 import { readCookie } from '@/utils';
 import { tenantCookieName } from '@/constans';
-import type { ApiResponsePromise, ResponseApi, Tenant } from '@/interfaces';
+import type { ApiPromise, ResponseApi, Tenant } from '@/interfaces';
 
 const status: number = 200;
 const response = {
   code: `${status}.00.000`,
 } as ResponseApi;
 
-export async function GET(request: NextRequest): ApiResponsePromise {
+export async function GET(request: NextRequest): ApiPromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
   const tenant = (await readCookie(tenantCookieName)) as Tenant;
@@ -28,7 +29,7 @@ export async function GET(request: NextRequest): ApiResponsePromise {
   return NextResponse.json(response, { status });
 }
 
-export async function POST(request: NextRequest): ApiResponsePromise {
+export async function POST(request: NextRequest): ApiPromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
   const payload = await request.json();
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest): ApiResponsePromise {
   return NextResponse.json(response, { status });
 }
 
-export async function PUT(request: NextRequest): ApiResponsePromise {
+export async function PUT(request: NextRequest): ApiPromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
   const payload = await request.json();
@@ -50,7 +51,7 @@ export async function PUT(request: NextRequest): ApiResponsePromise {
   return NextResponse.json(response, { status });
 }
 
-export async function PATCH(request: NextRequest): ApiResponsePromise {
+export async function PATCH(request: NextRequest): ApiPromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
   const payload = await request.json();
@@ -61,7 +62,7 @@ export async function PATCH(request: NextRequest): ApiResponsePromise {
   return NextResponse.json(response, { status });
 }
 
-export async function DELETE(request: NextRequest): ApiResponsePromise {
+export async function DELETE(request: NextRequest): ApiPromise {
   const { method, nextUrl } = request;
   const { pathname, search } = nextUrl;
   const status: number = 500;

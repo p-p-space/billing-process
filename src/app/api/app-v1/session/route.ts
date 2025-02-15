@@ -5,9 +5,9 @@ import type { NextRequest } from 'next/server';
 
 import { createResponseApi } from '@/libs/axios';
 import { redisConnect } from '@/libs/redis';
-import type { ApiResponsePromise } from '@/interfaces';
+import type { ApiPromise } from '@/interfaces';
 
-export async function POST(request: NextRequest): ApiResponsePromise {
+export async function POST(request: NextRequest): ApiPromise {
   const { tenant, currentId, sessExpTime } = await request.json();
   const redisInstance = await redisConnect(tenant);
   const cookieId = { code: '200.00.000', message: 'Process ok', sessionId: '' };
