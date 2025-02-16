@@ -1,6 +1,6 @@
 import { AxiosInstance, isAxiosError } from 'axios';
 import type { AxiosError, AxiosResponse } from 'axios';
-// Internal App
+// Internal app
 import { headersKey } from '@/constans';
 import { httpSchemas } from '@/schemas';
 import { applicationAxios, browserAxios, servicesAxios } from './';

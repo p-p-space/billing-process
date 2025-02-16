@@ -1,4 +1,4 @@
-// Internal App
+// Internal app
 import type { Tenant } from '@/interfaces';
 import { appSettings, defaultTenant } from '@/constans';
 

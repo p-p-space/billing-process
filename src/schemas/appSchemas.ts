@@ -1,5 +1,5 @@
 import { z } from 'zod';
-// Internal App
+// Internal app
 import { appSettings } from '@/constans';
 
 const allowedtenantsSchema = z.enum(appSettings.allowedTenants);
@@ -15,7 +15,7 @@ const tenantSettingsSchema = z.object({
   redisHost: z.string(),
   redisPort: z.number(),
   redisDb: z.number(),
-  redisTls: z.string(),
+  redisTls: z.boolean(),
   redisUser: z.string(),
   redisPassword: z.string(),
   redisPrefix: z.string(),

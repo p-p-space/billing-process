@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material';
 import type { Theme } from '@mui/material';
-// Internal App
+// Internal app
 import { StringMap } from '@/interfaces';
 
 /**

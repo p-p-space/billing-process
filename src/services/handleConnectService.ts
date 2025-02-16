@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-// Internal App
+// Internal app
 import { headersKey } from '@/constans';
 import { appCredSetts } from '@/tenants/tenantSettings';
 import { createHttpConfig, manageRequest } from '@/libs/axios';

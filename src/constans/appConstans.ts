@@ -1,3 +1,5 @@
+import { ApiRespObj } from '@/interfaces';
+
 export const defaultTenant = 'bt';
 export const defaultLang = 'en';
 export const timeZone = process.env.TIMEZONE;
@@ -11,53 +13,11 @@ export const appSettings = {
   availableLangs,
 };
 
-// Environment variable for the web environment, defaults to 'local' if not set
-export const webEnv = process.env.WEB_ENV ?? 'local';
-
-// Base path for API endpoints
-export const apiSrc = '/api';
-
-/**
- * Prefix of the application cookies.
- */
-export const prefixCookieName = 'billing_';
-
-/**
- * Name of the application cookie.
- */
-export const tenantCookieName = `${prefixCookieName}tenant`;
-
-/**
- * Name of the tenant cookie.
- */
-export const langCookieName = `${prefixCookieName}lang`;
-
 /**
  * Toggles for enabling/disabling features.
  */
 export const toggles = {
   handleRefresh: process.env.NEXT_PUBLIC_HANDLE_REFRESH ?? 'OFF',
-};
-
-/**
- * Base URLs for the application and services.
- */
-export const baseURLs = {
-  app: process.env.WEB_URL,
-  serv: process.env.SERV_URL,
-};
-
-/**
- * API Paths constructed using template literals.
- */
-export const apiPaths = {
-  apiSearch: /^\/api\/v\d+(\.\d+)*\//, // Regular expression for API search
-  appAPiV1: `${apiSrc}/app-v1`, // Application API path for internal requests
-  appApiServ: '/services', // Services API endpoint
-  appBrowserApi: `${apiSrc}/v1.0.0`, // API version for browser to application requests
-  customersApi: `${apiSrc}/v0`, // API version for customer requests
-  cardsSolApi: `${apiSrc}/v1.3`, // API version for cards solution requests
-  accountsApi: `${apiSrc}/v1.1`, // API version for accounts requests
 };
 
 /**
@@ -82,32 +42,6 @@ export const jwtConfig = {
 };
 
 /**
- * Header keys used in API requests
- */
-export const headersKey = {
-  contentType: 'content-type', // Header key for content type
-  authorization: 'authorization', // Header key for content type
-  appTenant: 'app-tenant', // Header key for tenant
-  appContentSecurity: 'app-content-security', // Header key for content security status
-  appOriginPath: 'app-origin-path', // Header key for application origin path
-  appJwsToken: 'app-token', // Header key for application JWS token
-  AppReqId: 'app-request-id', // Header key for application JWS token
-  appCookie: 'cookie', // Header key for app cookies
-  servJwsToken: 'x-token', // Header key for service JWS token
-  servTenantId: 'x-tenant-id', // Header key for service tenant ID
-  servReqId: 'x-request-id', // Header key for service request ID
-};
-
-/**
- * Cookie settings
- */
-export const cookieSettings = {
-  defaultPath: '/',
-  defaultSameSite: 'lax' as const,
-  defaultExpires: process.env.COOKIE_EXPIRES ?? new Date(Date.now() + 24 * 60 * 60 * 1000),
-};
-
-/**
  * Redis connection settings
  */
 export const redisSettings = {
@@ -120,9 +54,21 @@ export const redisSettings = {
 };
 
 /**
- * Session settings
+ * credentials for the application
  */
-export const SessSettings = {
-  sessExpTime: process.env.SESS_EXP_TIME,
-  sessMatchIp: process.env.SESS_MATCH_IP,
+export const credentials = {
+  tenantId: process.env.TENANT_ID,
+  tenantClientId: process.env.TENANT_CLIENT_ID,
+  tenantClientSecret: process.env.TENANT_CLIENT_SECRET,
+  cognitoRegion: process.env.COGNITO_REGION,
+  cognitoUserPoolId: process.env.COGNITO_USER_POOL_ID,
+  cognitoClientId: process.env.COGNITO_CLIENT_ID,
+  cognitoClientSecret: process.env.COGNITO_CLIENT_SECRET,
+  cognitoAccessKeyId: process.env.COGNITO_ACCESS_KEY_ID,
+  cognitoSecretAccessKey: process.env.COGNITO_SECRET_ACCESS_KEY,
+};
+
+export const apiRespObject: ApiRespObj = {
+  code: '200.00.000',
+  message: 'process ok',
 };

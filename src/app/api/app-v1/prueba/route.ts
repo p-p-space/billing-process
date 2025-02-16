@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-// Internal App
+// Internal app
 import { readCookie } from '@/utils';
 import { tenantCookieName } from '@/constans';
 import type { ApiPromise, ResponseApi, Tenant } from '@/interfaces';

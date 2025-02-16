@@ -1,6 +1,7 @@
-// Internal App
+// Internal app
 import { TenantSettings } from '@/interfaces';
-import { baseURLs, defaultTenant, prefixCookieName, redisSettings, SessSettings, timeZone } from '@/constans';
+import { credentials, defaultTenant, redisSettings, timeZone } from '@/constans';
+import { baseURLs, prefixCookieName, SessSettings } from '@/constans/httpConstans';
 
 export const localSettings: TenantSettings = {
   webUrl: baseURLs.app ?? 'http://localhost:3000',
@@ -9,7 +10,7 @@ export const localSettings: TenantSettings = {
   redisHost: redisSettings.host ?? 'dev-redis.novopayment.net',
   redisPort: parseInt(redisSettings.port ?? '6379'),
   redisDb: parseInt(redisSettings.db ?? '0'),
-  redisTls: redisSettings.ssl ?? 'ON',
+  redisTls: redisSettings.ssl ? redisSettings.ssl === 'ON' : true,
   redisUser: redisSettings.user ?? 'orion214005',
   redisPassword: redisSettings.password ?? 'orion214005*novo',
   redisPrefix: defaultTenant,
@@ -20,15 +21,15 @@ export const localSettings: TenantSettings = {
   tenantTheme: defaultTenant,
   tenantImages: defaultTenant,
   tenantDictionary: defaultTenant,
-  tenantId: '4ebb4b36-11d6-462b-a7de-deecbffb0f71',
-  tenantClientId: 'oa0eaqpiDT7BK6fvKP36PNUSHiWAeRdb',
-  tenantClientSecret: 'UH8q0OwvkXrRdI3x',
-  cognitoRegion: 'us-east-1',
-  cognitoUserPoolId: 'us-east-1_X86CaPJWw',
-  cognitoClientId: '5se5vueiulffn56c91u02lrmua',
-  cognitoClientSecret: 'f2nmuhunsjk6relkcvn1inpmfi7n6et6afmfjo3dq6b6g7s6cli',
-  cognitoAccessKeyId: 'AKIAS2VS4EYR4CW5PJJY',
-  cognitoSecretAccessKey: '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',
+  tenantId: credentials.tenantId ?? '',
+  tenantClientId: credentials.tenantClientId ?? '',
+  tenantClientSecret: credentials.tenantClientSecret ?? '',
+  cognitoRegion: credentials.cognitoRegion ?? 'us-east-1',
+  cognitoUserPoolId: credentials.cognitoUserPoolId ?? '',
+  cognitoClientId: credentials.cognitoClientId ?? '',
+  cognitoClientSecret: credentials.cognitoClientSecret ?? '',
+  cognitoAccessKeyId: credentials.cognitoAccessKeyId ?? '',
+  cognitoSecretAccessKey: credentials.cognitoSecretAccessKey ?? '',
   secJweStr: 'ce10509d021fe426dfcdecb01287971a',
   secJwsStr: '5b58bb161dbd5fa7a77863d9dd9c49c7c36b89555d206af8d6e13df8677aeeba',
   webJwePrivKey:

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
-// Internal App
+// Internal app
 import { appSchemas } from '@/schemas';
 import { defaultTenant } from '@/constans';
 

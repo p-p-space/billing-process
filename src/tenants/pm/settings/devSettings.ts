@@ -1,4 +1,4 @@
-// Internal App
+// Internal app
 import { TenantSettings } from '@/interfaces';
 
 export const devSettings = {

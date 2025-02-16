@@ -3,8 +3,7 @@ import path from 'path';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal app
-import { defaultTenant } from '@/constans';
-import { createErrorResponseApi } from '@/libs/axios';
+import { apiRespObject, defaultTenant } from '@/constans';
 import type { ApiPromise, LangFiles } from '@/interfaces';
 
 export async function POST(request: NextRequest): ApiPromise {
@@ -18,6 +17,8 @@ export async function POST(request: NextRequest): ApiPromise {
     default: path.join(process.cwd(), `dictionary/${defaultTenant}`),
     tenant: path.join(process.cwd(), `dictionary/${tenant}`),
   };
+  const langResp = { ...apiRespObject };
+  let status = 200;
 
   try {
     // Read files from the default directory and filter JSON files
@@ -54,10 +55,12 @@ export async function POST(request: NextRequest): ApiPromise {
       }
     }
 
-    const respLang = { code: '200.00.000', message: 'Process ok', language };
-    return NextResponse.json(respLang, { status: 200 });
+    langResp.language = language;
   } catch (error) {
-    const { status, data } = createErrorResponseApi(error as Error);
-    return NextResponse.json(data, { status });
+    status = 500;
+    langResp.code = `${status}.00.00`;
+    langResp.message = `Internal server ${(error as Error).message}`;
   }
+
+  return NextResponse.json(langResp, { status });
 }

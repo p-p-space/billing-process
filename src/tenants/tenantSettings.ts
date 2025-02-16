@@ -1,6 +1,6 @@
 'use server';
 
-// Internal App
+// Internal app
 import { tenantCookie } from '@/utils';
 import { encode, encryptData } from '@/security';
 import { defaultSettings } from './bt/btSettings';
@@ -69,7 +69,7 @@ export async function redisSetts(tenant: Tenant) {
     username: redisconf.redisUser,
     password: redisconf.redisPassword,
     keyPrefix: `${redisconf.redisPrefix}:`,
-    tls: redisconf.redisTls === 'ON' ? { rejectUnauthorized: false } : undefined,
+    tls: redisconf.redisTls ? { rejectUnauthorized: false } : undefined,
   };
 }
 

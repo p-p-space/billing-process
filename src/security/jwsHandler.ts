@@ -1,6 +1,6 @@
 import type { KeyLike } from 'jose';
 import { CompactSign, compactVerify, base64url } from 'jose';
-// Internal App
+// Internal app
 import { encode, decode } from './jweHandler';
 
 /**

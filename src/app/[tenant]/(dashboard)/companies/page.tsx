@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
-// Internal App
+// Internal app
 import { apiPaths } from '@/constans';
 import { useBrowserRequest } from '@/hooks';
 import { RequestContent } from '@/interfaces';

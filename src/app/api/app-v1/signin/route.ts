@@ -1,16 +1,21 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-// Internal App
-import { createResponseApi } from '@/libs/axios';
-import type { ApiPromise } from '@/interfaces';
-import { cognitoCredSetts } from '@/tenants/tenantSettings';
 import { InitiateAuthCommand } from '@aws-sdk/client-cognito-identity-provider';
+// Internal app
+import { readCookie } from '@/utils';
+import { redisConnect } from '@/libs/redis';
+import type { ApiPromise, Tenant } from '@/interfaces';
+import { tenantCookieName } from '@/constans';
 import { cognitoConnect, hashClienSecret } from '@/libs/cognito';
+import { cognitoCredSetts, sessionSetts } from '@/tenants/tenantSettings';
 
 export async function POST(request: NextRequest): ApiPromise {
   const { email, password } = await request.json();
   const { clientId } = await cognitoCredSetts();
   const { secretHash } = await hashClienSecret(email);
+  const tenant = (await readCookie(tenantCookieName)) as Tenant;
+  const { sessCookieName } = await sessionSetts(tenant);
+  const sessId = (await readCookie(sessCookieName)) as Tenant;
 
   const command = new InitiateAuthCommand({
     AuthFlow: 'USER_PASSWORD_AUTH',
@@ -22,14 +27,25 @@ export async function POST(request: NextRequest): ApiPromise {
     },
   });
 
-  const cognitoResp = await cognitoConnect(command);
-  console.log({ cognitoResp });
+  const { status, cognitoResp, cognitoExec } = await cognitoConnect(command);
 
-  const resp = {
-    code: '200.00.000',
-    message: 'process ok',
-  };
+  const redisInstance = await redisConnect(sessId);
 
-  const respHealth = createResponseApi(resp);
-  return NextResponse.json(respHealth, { status: 200 });
+  if (cognitoExec?.ChallengeName) {
+    const chnagePass = {
+      session: cognitoExec.Session,
+      userId: cognitoExec.ChallengeParameters?.USER_ID_FOR_SRP,
+    };
+
+    await redisInstance.hset(sessId, chnagePass);
+  }
+
+  if (cognitoExec?.AuthenticationResult) {
+    const { AccessToken } = cognitoExec.AuthenticationResult;
+    await redisInstance.hset(sessId, 'accessToken', `${AccessToken}`);
+  }
+
+  await redisInstance.quit();
+
+  return NextResponse.json(cognitoResp, { status });
 }

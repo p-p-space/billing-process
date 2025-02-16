@@ -1,6 +1,6 @@
 import Redis from 'ioredis';
 import type { RedisOptions } from 'ioredis';
-// Internal App
+// Internal app
 import { Tenant } from '@/interfaces';
 import { redisSetts } from '@/tenants/tenantSettings';
 

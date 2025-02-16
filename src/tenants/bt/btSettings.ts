@@ -1,4 +1,4 @@
-// Internal App
+// Internal app
 import { webEnv } from '@/constans';
 import { EnvSettings } from '@/interfaces';
 import { localSettings, devSettings, testSettings, uatSettings, prodSettings } from './settings';

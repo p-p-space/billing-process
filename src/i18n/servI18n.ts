@@ -1,6 +1,6 @@
 'use server';
 
-// Internal App
+// Internal app
 import type { Lang, Tenant } from '@/interfaces';
 import { availableTenant, cookieValues, setCookie, readCookie } from '@/utils';
 import { appSettings, defaultLang, langCookieName, tenantCookieName } from '@/constans';

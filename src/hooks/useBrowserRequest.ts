@@ -1,7 +1,7 @@
 import uuid4 from 'uuid4';
 import { useCallback } from 'react';
 import { isAxiosError } from 'axios';
-// Internal App
+// Internal app
 import { headersKey } from '@/constans';
 import { useTenantStore, useUiStore } from '@/store';
 import { createHttpConfig, manageRequest } from '@/libs/axios';
@@ -30,12 +30,10 @@ export function useBrowserRequest(loading = true) {
         const requestType = 'browser';
         const responseWebRequest = await manageRequest(requestConfig, requestType);
         const { data, status } = responseWebRequest;
-        const { message } = data;
-
-        setLoadingScreen(false);
+        const { code } = data;
 
         if (status < 200 || status >= 300) {
-          throw new Error(message);
+          throw new Error(code);
         }
 
         return data;
@@ -47,6 +45,8 @@ export function useBrowserRequest(loading = true) {
         const errorResponse = error as Error;
 
         throw errorResponse.message;
+      } finally {
+        setLoadingScreen(false);
       }
     },
     [loading, setLoadingScreen, tenant]

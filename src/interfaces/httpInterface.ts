@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { NextResponse } from 'next/server';
-// Internal App
+// Internal app
 import type { httpSchemas } from '@/schemas';
 
 /**
@@ -35,6 +35,11 @@ export type RequestType = z.infer<typeof httpSchemas.requestType>;
  * Represents the structure of a response from the API.
  */
 export type ResponseApi = z.infer<typeof httpSchemas.responseApi>;
+export type ApiRespObj = {
+  code: ResponseApi['code'];
+  message: ResponseApi['message'];
+  [x: string]: unknown;
+};
 
 /**
  * Represents the structure of an error response from the API.

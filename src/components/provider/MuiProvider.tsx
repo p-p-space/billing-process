@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { Box, CircularProgress, CssBaseline } from '@mui/material';
-// Internal App
+// Internal app
 import { useTenantStore } from '@/store';
 import { createTenantTheme } from '@/theme-ui';
 import type { ChildrenProps, TenantSettProps } from '@/interfaces';

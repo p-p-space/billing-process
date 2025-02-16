@@ -1,6 +1,6 @@
 import type { JWTPayload } from 'jose';
 import { SignJWT, jwtVerify, importPKCS8, importSPKI } from 'jose';
-// Internal App
+// Internal app
 import { jwtAlgs, jwtConfig } from '@/constans';
 
 /**

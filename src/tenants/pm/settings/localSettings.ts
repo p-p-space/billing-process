@@ -1,4 +1,4 @@
-// Iternal App
+// Internal app
 import { Tenant, TenantSettings } from '@/interfaces';
 import { prefixCookieName, redisSettings, SessSettings, timeZone } from '@/constans';
 

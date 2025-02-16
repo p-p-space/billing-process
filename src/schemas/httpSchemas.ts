@@ -1,5 +1,5 @@
 import { z } from 'zod';
-// Internal App
+// Internal app
 import { appSchemas } from './appSchemas';
 
 const codeRegex = /^codeHttp\.\d{2}\.\d{3}$/;
