@@ -21,18 +21,8 @@
   "prettier.semi": true,
   "prettier.singleAttributePerLine": false,
   "prettier.singleQuote": true,
-  "window.commandCenter": true,
-  "emmet.includeLanguages": {
-    "postcss": "css"
-  },
   "files.associations": {
     ".env.*": "properties",
     ".env*": "properties"
-  },
-  "[html]": {
-    "editor.suggest.insertMode": "replace"
-  },
-  "[prisma]": {
-    "editor.defaultFormatter": "Prisma.prisma"
   }
 }
