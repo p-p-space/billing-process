@@ -1,0 +1,23 @@
+services:
+  web:
+    image: betsy:0.0.1
+    container_name: betsy-app
+    build:
+      context: .
+      dockerfile: Dockerfile-betsy
+      args:
+        - WEB_ENV=${WEB_ENV}
+    command: ['node', 'server.js', '--hostname', '0.0.0.0']
+    restart: always
+    ports:
+      - 30000:3000
+    env_file:
+      - ./docker/.env.docker-compose
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - web_network
+
+networks:
+  web_network:
+    external: true
