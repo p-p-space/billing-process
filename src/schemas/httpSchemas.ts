@@ -31,6 +31,16 @@ const errorResponseApiSchema = z.object({
   status: z.number(),
   data: responseApiSchema.pick({ code: true, message: true }),
 });
+const errorClientRespSchema = z.object({
+  data: responseApiSchema.pick({ code: true, message: true, payload: true }),
+});
+const cognitoAuthResultSchema = z.object({
+  AccessToken: z.string(),
+  ExpiresIn: z.number(),
+  IdToken: z.string(),
+  RefreshToken: z.string(),
+  TokenType: z.string(),
+});
 
 export const httpSchemas = {
   reqResBody: appSchemas.reqResBody,
@@ -40,4 +50,6 @@ export const httpSchemas = {
   requestContent: requestContentSchema,
   requestAxios: requestAxiosSchema,
   errorResponseApi: errorResponseApiSchema,
+  errorClientResp: errorClientRespSchema,
+  cognitoAuthResult: cognitoAuthResultSchema,
 };

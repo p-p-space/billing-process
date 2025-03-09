@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { importSPKI } from 'jose';
 // Internal app
+import { useUiStore } from '@/store';
+import { useTranslations } from 'next-intl';
 import { jwtAlgs, headersKey } from '@/constans';
 import { browserHttpSetts } from '@/tenants/tenantSettings';
-import { createErrorResponseApi, createResponseApi } from './helpersAxios';
 import { encryptData, decryptData, signData, verifySignature, disassembleJWS, assembleJWS, encode } from '@/security';
 
 /**
@@ -20,6 +21,7 @@ browserAxios.interceptors.request.use(async (request) => {
   const { secJweStr, settings } = await browserHttpSetts();
   const secretJwe = encode(secJweStr);
   const { webUrl, webJwePubKey, secJwsStr } = (await decryptData(settings, secretJwe)) as Record<string, string>;
+
   request.baseURL = webUrl;
 
   if (data?.payload) {
@@ -65,15 +67,20 @@ browserAxios.interceptors.response.use(
 
         response.data.payload = payload;
       } catch (error) {
-        response.status = 500;
-        response.data = createResponseApi({ message: `browserAxios Response (${(error as Error).message})` });
+        throw new Error(`browserAxios Response (${(error as Error).message})`);
       }
     }
 
     return response;
   },
   (error) => {
-    return createErrorResponseApi(error);
+    console.error(error);
+    const t = useTranslations();
+    const setModalError = useUiStore.getState().setModalError;
+    setModalError({
+      title: t('messages.somethingwentWrong'),
+      description: t('messages.pleaseTryAgain'),
+    });
   }
 );
 

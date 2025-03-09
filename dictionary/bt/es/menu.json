@@ -7,6 +7,6 @@
     "users": "Usuarios y roles",
     "profile": "Perfil de usuario",
     "update": "Actulizar contraseña",
-    "log-out": "Cerrar sesión"
+    "logOut": "Cerrar sesión"
   }
 }

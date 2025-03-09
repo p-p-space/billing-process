@@ -55,13 +55,9 @@ servicesAxios.interceptors.response.use(
 
       try {
         const secretJwe = await importPKCS8(servJwePrivKey, jwtAlgs.jweAlgRsa);
-        let payload = await decryptData(cipherData, secretJwe);
+        const payload = await decryptData(cipherData, secretJwe);
 
-        if (metadata) {
-          payload = { ...payload, metadata };
-        }
-
-        response.data = createResponseApi({ code, datetime, message, payload });
+        response.data = createResponseApi({ code, datetime, message, metadata, payload });
       } catch (error) {
         response.status = 500;
         response.data = createResponseApi({

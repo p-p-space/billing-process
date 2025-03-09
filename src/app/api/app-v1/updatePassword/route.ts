@@ -1,44 +1,37 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { InitiateAuthCommand } from '@aws-sdk/client-cognito-identity-provider';
+import { RespondToAuthChallengeCommand } from '@aws-sdk/client-cognito-identity-provider';
 // Internal app
-import { setSessAttr, setSession } from '@/libs/redis';
 import type { ApiPromise } from '@/interfaces';
 import { cognitoCredSetts } from '@/tenants/tenantSettings';
+import { deleteSessAttr, getSessAttr, setSession } from '@/libs/redis';
 import { cognitoConnect, decodeAuthResult, hashClienSecret } from '@/libs/cognito';
 
 export async function POST(request: NextRequest): ApiPromise {
-  const { email, password } = await request.json();
+  const { newPassword } = await request.json();
   const { clientId } = await cognitoCredSetts();
-  const { secretHash } = await hashClienSecret(email);
+  const userId = (await getSessAttr('userId')) as string;
+  const session = (await getSessAttr('session')) as string;
+  const { secretHash } = await hashClienSecret(userId);
 
-  const command = new InitiateAuthCommand({
-    AuthFlow: 'USER_PASSWORD_AUTH',
+  const command = new RespondToAuthChallengeCommand({
     ClientId: clientId,
-    AuthParameters: {
-      USERNAME: email,
-      PASSWORD: password,
+    ChallengeName: 'NEW_PASSWORD_REQUIRED',
+    ChallengeResponses: {
+      NEW_PASSWORD: newPassword,
+      USERNAME: userId,
       SECRET_HASH: secretHash,
     },
+    Session: session,
   });
 
   const { status, cognitoResp, result } = await cognitoConnect(command);
-
-  if (result?.ChallengeName) {
-    cognitoResp.code = '200.00.301';
-    cognitoResp.payload = { challengeName: result.ChallengeName };
-    const sessAttr = {
-      session: result.Session,
-      userId: result.ChallengeParameters.USER_ID_FOR_SRP,
-    };
-
-    await setSessAttr(sessAttr);
-  }
 
   if (result?.AuthenticationResult) {
     const Authresult = decodeAuthResult(result.AuthenticationResult);
 
     await setSession(Authresult);
+    await deleteSessAttr(['session', 'userId']);
   }
 
   return NextResponse.json(cognitoResp, { status });

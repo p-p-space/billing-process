@@ -1,8 +1,8 @@
 import { getRequestConfig } from 'next-intl/server';
 // Internal app
 import { getAppLang } from './servI18n';
-import { defaultTenant } from '@/constans';
-import { manageRequest } from '@/libs/axios';
+import { defaultTenant, headersKey } from '@/constans';
+import { createHttpConfig, manageRequest } from '@/libs/axios';
 import type { Lang, LangData, LangFiles, RequestAxios } from '@/interfaces';
 
 /**
@@ -12,14 +12,24 @@ import type { Lang, LangData, LangFiles, RequestAxios } from '@/interfaces';
 export default getRequestConfig(async () => {
   const { locale, tenant } = await getAppLang();
   const dataRequest = { locale, tenant };
+
+  const httpConfig = createHttpConfig();
+  httpConfig.headers[headersKey.appTenant] = tenant;
+
   const requestConfig: RequestAxios = {
     method: 'post',
-    pathUrl: `/language`,
+    pathUrl: '/language',
     dataRequest,
+    httpConfig,
   };
   const requestType = 'application';
 
-  const { data } = await manageRequest(requestConfig, requestType);
+  const { data, status } = await manageRequest(requestConfig, requestType);
+
+  if (status !== 200) {
+    console.error(data);
+  }
+
   const { messages } = await loadDataLang(data.language, locale, tenant);
 
   return {

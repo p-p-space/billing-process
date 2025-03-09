@@ -53,7 +53,7 @@ export type EnvSettings = z.infer<typeof appSchemas.envSettings>;
 export type StringMap = z.infer<typeof appSchemas.stringMap>;
 
 /**
- * Tenant is a type that represents the structure of a tenant
+ * Tenant and Default Tenant are a type that represents the structure of a tenant
  */
 export type DefaultTenant = typeof defaultTenant;
-export type Tenant = z.infer<typeof appSchemas.allowedTenants>;
+export type Tenant = z.infer<typeof appSchemas.availableTenants>;

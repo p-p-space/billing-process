@@ -1,13 +1,20 @@
+import { create } from 'zustand';
+import type { StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { create, StateCreator } from 'zustand';
 // Internal app
 import { TenantStore } from '@/interfaces';
-import { defaultTenant } from '@/constans';
+import { defaultTenant, tenantPrefix } from '@/constans';
 
 const storeApi: StateCreator<TenantStore, [['zustand/devtools', never]]> = (set) => ({
-  tenant: defaultTenant,
-  tenantSett: { tenant: defaultTenant, webUrl: '', tenantImages: defaultTenant },
-  setTenant: (tenant) => set(() => ({ tenant }), false, 'setTenant'),
+  tenantSett: {
+    sessExpTime: 0,
+    sessResetTime: 0,
+    tenant: defaultTenant,
+    tenantImages: defaultTenant,
+    tenantPwa: defaultTenant,
+    tenantUri: `${tenantPrefix}${defaultTenant}`,
+    webUrl: '',
+  },
   setTenantSett: (tenantSett) => set(() => ({ tenantSett }), false, 'setTenantSett'),
 });
 

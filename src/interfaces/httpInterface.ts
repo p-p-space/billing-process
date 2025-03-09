@@ -47,6 +47,17 @@ export type ApiRespObj = {
 export type ErrorResponseApi = z.infer<typeof httpSchemas.errorResponseApi>;
 
 /**
- * Represents a promise that resolves to a Next.js response containing either a successful API response or an error response.
+ * Represents the structure of an error response from the client.
+ */
+export type ErrorClientResp = z.infer<typeof httpSchemas.errorClientResp>;
+
+/**
+ * Represents a promise that resolves to a Next.js response containing either a successful API response or an error
+ * response.
  */
 export type ApiPromise = Promise<NextResponse<ResponseApi>>;
+
+/**
+ * Represents the structure of a Cognito authentication result.
+ */
+export type CognitoAuthResult = z.infer<typeof httpSchemas.cognitoAuthResult>;

@@ -1,10 +1,9 @@
 import { z } from 'zod';
 // Internal app
-import { appSettings } from '@/constans';
+import { availableLangs, availableTenants } from '@/constans';
 
-const allowedtenantsSchema = z.enum(appSettings.allowedTenants);
-const availableTenantsSchema = z.enum(appSettings.availableTenants);
-const availableLangsSchema = z.enum(appSettings.availableLangs);
+const availableTenantsSchema = z.enum(availableTenants);
+const availableLangsSchema = z.enum(availableLangs);
 const langDataSchema = z.record(z.record(z.string()));
 const langFilesSchema = z.record(z.array(z.string()));
 const reqResBodySchema = z.record(z.unknown());
@@ -18,10 +17,11 @@ const tenantSettingsSchema = z.object({
   redisTls: z.boolean(),
   redisUser: z.string(),
   redisPassword: z.string(),
-  redisPrefix: z.string(),
+  redisPrefix: z.string().optional(),
   sessExpTime: z.number(),
-  sessCookieName: z.string(),
+  sessResetTime: z.number().optional(),
   sessMatchIp: z.boolean(),
+  sessRefresh: z.boolean(),
   tenantPwa: availableTenantsSchema,
   tenantTheme: availableTenantsSchema,
   tenantImages: availableTenantsSchema,
@@ -33,8 +33,6 @@ const tenantSettingsSchema = z.object({
   cognitoUserPoolId: z.string(),
   cognitoClientId: z.string(),
   cognitoClientSecret: z.string(),
-  cognitoAccessKeyId: z.string(),
-  cognitoSecretAccessKey: z.string(),
   secJweStr: z.string(),
   secJwsStr: z.string(),
   webJwePrivKey: z.string(),
@@ -50,7 +48,6 @@ const envSettingsSchema = z.record(tenantSettingsSchema);
 const stringMapSchema = z.record(z.string(), z.string());
 
 export const appSchemas = {
-  allowedTenants: allowedtenantsSchema,
   availableTenants: availableTenantsSchema,
   availableLangs: availableLangsSchema,
   langData: langDataSchema,

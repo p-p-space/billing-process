@@ -15,6 +15,11 @@ export const prefixCookieName = 'billing_';
 export const tenantCookieName = `${prefixCookieName}tenant`;
 
 /**
+ * Name of the session cookie.
+ */
+export const sessCookieName = `${prefixCookieName}info`;
+
+/**
  * Name of the tenant cookie.
  */
 export const langCookieName = `${prefixCookieName}lang`;
@@ -69,7 +74,8 @@ export const cookieSettings = {
 /**
  * Session settings
  */
-export const SessSettings = {
+export const sessSettings = {
   sessExpTime: process.env.SESS_EXP_TIME,
   sessMatchIp: process.env.SESS_MATCH_IP,
+  sessRefresh: process.env.SESS_REFRESH,
 };

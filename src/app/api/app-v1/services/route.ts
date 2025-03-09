@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal app
-import { connectServices } from '@/services';
 import type { ApiPromise } from '@/interfaces';
+import { connectServices } from '@/middlewares';
 import { createResponseApi } from '@/libs/axios';
 
 /**
@@ -22,7 +22,7 @@ async function handler(request: NextRequest): ApiPromise {
     case 'DELETE':
       return await connectServices(request);
     default: {
-      const noAllow = createResponseApi({ code: '405.00.000', message: `Method ${request.method} Not Allowed` });
+      const noAllow = createResponseApi({ code: '405.00.000', message: `Method ${method} Not Allowed` });
       return NextResponse.json(noAllow, { status: 405 });
     }
   }

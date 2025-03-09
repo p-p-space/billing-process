@@ -6,8 +6,8 @@ import { appCredSetts } from '@/tenants/tenantSettings';
 import { createHttpConfig, manageRequest } from '@/libs/axios';
 import type { ApiPromise, ReqResBody, RequestAxios } from '@/interfaces';
 
-const oauthToken: { bearer?: string } = {
-  bearer: undefined,
+const oauthToken: { bearer: string | null } = {
+  bearer: null,
 };
 
 export async function connectServices(request: NextRequest): ApiPromise {
@@ -60,7 +60,7 @@ export async function getOauthBearer() {
 
   const requestConfig = {
     method: 'post',
-    pathUrl: `/oauth2/v1/token`,
+    pathUrl: '/oauth2/v1/token',
     dataRequest,
     httpConfig,
   } as RequestAxios;
@@ -72,7 +72,7 @@ export async function getOauthBearer() {
     oauthToken.bearer = data.access_token;
 
     setTimeout(() => {
-      oauthToken.bearer = undefined;
+      oauthToken.bearer = null;
     }, data.expires_in * 1000 - 5000);
 
     return NextResponse.next();

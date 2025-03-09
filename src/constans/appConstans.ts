@@ -1,17 +1,11 @@
 import { ApiRespObj } from '@/interfaces';
 
+export const tenantPrefix = 't-';
 export const defaultTenant = 'bt';
+export const availableTenants = [defaultTenant, 'pm'] as const;
 export const defaultLang = 'en';
+export const availableLangs = ['en', 'es'] as const;
 export const timeZone = process.env.TIMEZONE;
-const availableTenants = [defaultTenant, 'pm'] as const;
-const allowedTenants = [...availableTenants] as const;
-const availableLangs = ['en', 'es'] as const;
-
-export const appSettings = {
-  availableTenants,
-  allowedTenants,
-  availableLangs,
-};
 
 /**
  * Toggles for enabling/disabling features.

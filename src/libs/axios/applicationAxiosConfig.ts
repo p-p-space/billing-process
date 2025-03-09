@@ -20,6 +20,7 @@ const applicationAxios = axios.create();
 applicationAxios.interceptors.request.use(async (request) => {
   const { data, headers, url } = request;
   const { webUrl, webJwePrivKey, secJwsStr } = await appHttpSetts();
+
   request.baseURL = `${webUrl}${apiPaths.appAPiV1}`;
 
   if (data?.payload) {
@@ -42,6 +43,9 @@ applicationAxios.interceptors.request.use(async (request) => {
     }
   }
 
+  // logger for client response
+  console.log(`Request url: ${request.baseURL}${url} data: ${JSON.stringify(request.data)}`);
+
   return request;
 });
 
@@ -51,12 +55,18 @@ applicationAxios.interceptors.request.use(async (request) => {
  */
 applicationAxios.interceptors.response.use(
   async (response) => {
-    const { data, status } = response;
+    const { config, data, status } = response;
+
+    // logger for client response
+    console.log(`Response url: ${config.baseURL}${config.url} data: ${JSON.stringify(response.data)}`);
 
     if (status >= 300 && !data.message) {
       const respApi = {
         code: `${status}.00.000`,
-        message: status === 404 ? data.fault.faultstring : `Request failed with status code ${status}`,
+        message:
+          status === 404 && data?.fault?.faultstring
+            ? data.fault.faultstring
+            : `Request failed with status code ${status}`,
       };
 
       response.data = createResponseApi(respApi);

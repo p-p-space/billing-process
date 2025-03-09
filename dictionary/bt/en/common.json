@@ -8,6 +8,9 @@
     "close": "close",
     "update": "Update",
     "edit": "Edit",
-    "save": "Save"
+    "save": "Save",
+    "inactivityTitle": "Hey {username}, are you still there?",
+    "inactivityMessage": "You've been inactive for a while. Your session will automatically close in {time} seconds if you don't confirm this message.",
+    "sessKeep": "Session keep"
   }
 }

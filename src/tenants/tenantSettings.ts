@@ -1,66 +1,14 @@
 'use server';
 
 // Internal app
-import { tenantCookie } from '@/utils';
+import { jwtAlgs } from '@/constans';
+import { currenTenant } from '@/utils';
+import type { Tenant } from '@/interfaces';
 import { encode, encryptData } from '@/security';
-import { defaultSettings } from './bt/btSettings';
-import { defaultThemeVars } from './bt/btUiTheme';
-import { appSettings, defaultTenant, jwtAlgs } from '@/constans';
-import type { TenantSettings, Tenant, StringMap } from '@/interfaces';
-
-let currentSettings: TenantSettings | null = null;
-
-export async function tenantMuiTheme(tenant: Tenant): Promise<StringMap> {
-  const { availableTenants } = appSettings;
-  const availableTenantsList = availableTenants.map((tenant) => tenant);
-
-  try {
-    let themeOptions = {};
-
-    if (tenant !== defaultTenant && availableTenantsList.includes(tenant)) {
-      const options = await import(`./${tenant}/${tenant}UiTheme`);
-      themeOptions = options.themeVars;
-    }
-
-    const currentTheme = { ...defaultThemeVars, ...themeOptions };
-
-    return currentTheme;
-  } catch (error) {
-    throw new Error(`Tenant Theme: ${(error as Error).message}`);
-  }
-}
-
-export async function tenantSettings(tenant: Tenant): Promise<TenantSettings> {
-  if (currentSettings) {
-    return currentSettings;
-  }
-
-  const { availableTenants } = appSettings;
-  const availableTenantsList = availableTenants.map((tenant) => tenant);
-
-  try {
-    let optionSettings = {};
-
-    if (tenant !== defaultTenant && availableTenantsList.includes(tenant)) {
-      const options = await import(`./${tenant}/${tenant}Settings`);
-
-      optionSettings = options.settings;
-    }
-
-    currentSettings = { ...defaultSettings, ...optionSettings };
-
-    setTimeout(() => {
-      currentSettings = null;
-    }, 30000);
-
-    return currentSettings;
-  } catch (error) {
-    throw new Error(`Tenant Settings: ${(error as Error).message}`);
-  }
-}
+import { handleSettings } from './settingsManage';
 
 export async function redisSetts(tenant: Tenant) {
-  const redisconf = await tenantSettings(tenant);
+  const redisconf = await handleSettings(tenant);
 
   return {
     host: redisconf.redisHost,
@@ -74,29 +22,32 @@ export async function redisSetts(tenant: Tenant) {
 }
 
 export async function assetSetts() {
-  const tenant = await tenantCookie();
-  const assetsConf = await tenantSettings(tenant);
+  const tenant = await currenTenant();
+  const assetsConf = await handleSettings(tenant);
 
   return {
+    sessExpTime: assetsConf.sessExpTime,
+    sessResetTime: assetsConf.sessResetTime,
+    tenantImages: assetsConf.tenantImages,
     tenantPwa: assetsConf.tenantPwa,
     tenantTheme: assetsConf.tenantTheme,
-    tenantImages: assetsConf.tenantImages,
     webUrl: assetsConf.webUrl,
   };
 }
 
 export async function sessionSetts(tenant: Tenant) {
-  const sessionConf = await tenantSettings(tenant);
+  const sessionConf = await handleSettings(tenant);
 
   return {
     sessExpTime: sessionConf.sessExpTime,
-    sessCookieName: sessionConf.sessCookieName,
+    sessResetTime: sessionConf.sessResetTime,
+    sessRefresh: sessionConf.sessRefresh,
   };
 }
 
 export async function browserHttpSetts() {
-  const tenant = await tenantCookie();
-  const browserConf = await tenantSettings(tenant);
+  const tenant = await currenTenant();
+  const browserConf = await handleSettings(tenant);
 
   const payload = {
     webUrl: browserConf.webUrl,
@@ -115,8 +66,8 @@ export async function browserHttpSetts() {
 }
 
 export async function appHttpSetts() {
-  const tenant = await tenantCookie();
-  const appConf = await tenantSettings(tenant);
+  const tenant = await currenTenant();
+  const appConf = await handleSettings(tenant);
 
   return {
     webUrl: appConf.webUrl,
@@ -128,8 +79,8 @@ export async function appHttpSetts() {
 }
 
 export async function servHttpSetts() {
-  const tenant = await tenantCookie();
-  const servConf = await tenantSettings(tenant);
+  const tenant = await currenTenant();
+  const servConf = await handleSettings(tenant);
 
   return {
     servUrl: servConf.servUrl,
@@ -140,8 +91,8 @@ export async function servHttpSetts() {
 }
 
 export async function cognitoCredSetts() {
-  const tenant = await tenantCookie();
-  const cognitoConf = await tenantSettings(tenant);
+  const tenant = await currenTenant();
+  const cognitoConf = await handleSettings(tenant);
 
   return {
     clientId: cognitoConf.cognitoClientId,
@@ -152,8 +103,8 @@ export async function cognitoCredSetts() {
 }
 
 export async function appCredSetts() {
-  const tenant = await tenantCookie();
-  const appCredConf = await tenantSettings(tenant);
+  const tenant = await currenTenant();
+  const appCredConf = await handleSettings(tenant);
 
   return {
     clientId: appCredConf.tenantClientId,

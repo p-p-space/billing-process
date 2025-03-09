@@ -8,6 +8,9 @@
     "close": "Cerrar",
     "update": "Actualizar",
     "edit": "Editar",
-    "save": "Guardar"
+    "save": "Guardar",
+    "inactivityTitle": "Hola {username}, ¿sigues ahí?",
+    "inactivityMessage": "Has estado inactivo por un rato. Tu sesión se cerrará automáticamente en {time} segundos si no confirmas este mensaje.",
+    "sessKeep": "Mantener sesión"
   }
 }

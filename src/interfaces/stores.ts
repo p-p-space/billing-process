@@ -52,12 +52,19 @@ interface ErrorMessage {
 interface Message {
   title: string;
   description: string;
+  maxWidth?: number;
+  componentRef?: React.RefObject<HTMLElement>;
   actions: [
     {
       text: string;
       variant: 'text' | 'contained' | 'outlined';
       onClick: () => void;
-    }
+    },
+    {
+      text: string;
+      variant: 'text' | 'contained' | 'outlined';
+      onClick: () => void;
+    }?
   ];
 }
 

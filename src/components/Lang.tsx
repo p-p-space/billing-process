@@ -5,12 +5,11 @@ import { useLocale } from 'next-intl';
 import { Tooltip, IconButton } from '@mui/material';
 // Internal app
 import { setAppLang } from '@/i18n';
-import { appSettings } from '@/constans';
 import logoEs from '%/images/lang/es.png';
 import logoEn from '%/images/lang/en.png';
+import { availableLangs } from '@/constans';
 
 export default function Lang() {
-  const { availableLangs } = appSettings;
   const currentLang = useLocale();
   const nextLang = availableLangs.filter((lang) => lang !== currentLang)[0];
 

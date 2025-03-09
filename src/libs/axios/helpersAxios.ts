@@ -1,5 +1,5 @@
-import { AxiosInstance, isAxiosError } from 'axios';
-import type { AxiosError, AxiosResponse } from 'axios';
+import { isAxiosError } from 'axios';
+import type { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 // Internal app
 import { headersKey } from '@/constans';
 import { httpSchemas } from '@/schemas';
@@ -46,7 +46,7 @@ export function createHttpConfig(config?: HeaderConfig): HttpConfig {
 /**
  * Manages an HTTP request.
  *
- * @param {RequestAxios} requestAxios - The content of the request.
+ * @param {RequestContent} requestAxios - The content of the request.
  * @param {RequestType} requestType - The type of the request.
  * @returns {Promise<AxiosResponse>} The response from the Axios request.
  * @throws Will throw an error if the request content is invalid.

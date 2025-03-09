@@ -1,8 +1,10 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 // Internal app
+import { setCookie } from '@/utils';
 import { apiPaths, headersKey } from '@/constans';
-import { createHttpConfig, manageRequest } from '@/libs/axios';
 import type { ApiPromise, RequestAxios } from '@/interfaces';
+import { createHttpConfig, manageRequest } from '@/libs/axios';
 
 /**
  * Handles customer requests by processing the incoming request, configuring the HTTP request,
@@ -50,11 +52,19 @@ export async function handleCustomerRequest(request: NextRequest): ApiPromise {
   const authJws = data.authJws;
   delete data.authJws;
 
-  const customerReqresp = NextResponse.json(data, { status });
+  if (data.cookies) {
+    for (const cookie of data.cookies) {
+      await setCookie(cookie);
+    }
 
-  if (data.payload) {
-    customerReqresp.headers.set(headersKey.appJwsToken, `JWS ${authJws}`);
+    delete data.cookies;
   }
 
-  return customerReqresp;
+  const customerResp = NextResponse.json(data, { status });
+
+  if (data.payload) {
+    customerResp.headers.set(headersKey.appJwsToken, `JWS ${authJws}`);
+  }
+
+  return customerResp;
 }

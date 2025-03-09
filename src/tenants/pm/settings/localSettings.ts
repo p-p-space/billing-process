@@ -1,16 +1,10 @@
 // Internal app
-import { Tenant, TenantSettings } from '@/interfaces';
-import { prefixCookieName, redisSettings, SessSettings, timeZone } from '@/constans';
-
-const customer: Tenant = 'pm';
+import { TenantSettings } from '@/interfaces';
 
 export const localSettings = {
-  timeZone: timeZone ?? 'America/Jamaica',
-  redisUser: redisSettings.user ?? 'orion214005',
-  redisPassword: redisSettings.password ?? 'orion214005*novo',
-  redisPrefix: customer,
-  sessExpTime: parseInt(SessSettings.sessExpTime ?? '180'),
-  sessCookieName: `${prefixCookieName}${customer}`,
+  timeZone: 'America/Jamaica',
+  redisUser: 'orion214005',
+  redisPassword: 'orion214005*novo',
   tenantId: '581134d0-a5dc-4930-ae60-60efa18c9f14',
   tenantClientId: '3b5FEaH7Gbkmz40Uk86Ght6cTumxxi3v',
   tenantClientSecret: 'NfIGwKwIswU3SwJD',

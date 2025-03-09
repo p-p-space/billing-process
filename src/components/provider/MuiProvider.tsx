@@ -17,14 +17,13 @@ import type { ChildrenProps, TenantSettProps } from '@/interfaces';
 export default function MuiProvider({ children, themeVars, tenantSett }: ChildrenProps & TenantSettProps) {
   const theme = createTenantTheme(themeVars);
   const [isHydrated, setIsHydrated] = useState(true);
-  const setTenant = useTenantStore((state) => state.setTenant);
+
   const setTenantSett = useTenantStore((state) => state.setTenantSett);
 
   useEffect(() => {
-    setTenant(tenantSett.tenant);
     setTenantSett(tenantSett);
     setIsHydrated(false);
-  }, [setTenant, setTenantSett, tenantSett]);
+  }, [setTenantSett, tenantSett]);
 
   return (
     <ThemeProvider theme={theme}>

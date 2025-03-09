@@ -2,29 +2,33 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal app
 import { availableLang } from './i18n';
-import { handleSession } from './libs/session';
-import { handleCustomerRequest } from './services';
 import { availableTenant, cookieValues } from './utils';
-import { apiPaths, apiSrc, langCookieName, tenantCookieName } from './constans';
+import { handleCustomerRequest, handleSession } from './middlewares';
+import { apiPaths, apiSrc, headersKey, langCookieName, tenantCookieName, tenantPrefix } from './constans';
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
-  const { cookies, nextUrl, url } = request;
+  const { cookies, nextUrl, url, headers } = request;
   const { pathname } = nextUrl;
 
-  if (!pathname.startsWith(apiPaths.appAPiV1)) {
-    await handleSession(request, response);
-  }
-
   if (!pathname.startsWith(apiSrc)) {
-    const lang = cookies.get(langCookieName)?.value;
-    const lagnValue = await availableLang(lang);
-    const tenantUrl = url.split('/')[3];
-    const tenantValue = availableTenant(tenantUrl);
-    const cookieLang = cookieValues({ name: langCookieName, value: lagnValue });
+    const tenantUri = headers.get(headersKey.appTenant) ?? url.split('/')[3];
+    const tenant = availableTenant(tenantUri);
+
+    if (!tenantUri.includes(tenant)) {
+      const refreshedURL = new URL(`/${tenantPrefix}${tenant}/signin`, url).toString();
+
+      return NextResponse.redirect(refreshedURL);
+    }
+
+    await handleSession(headers, tenant, response);
+
+    const lagnCookie = cookies.get(langCookieName)?.value;
+    const lagn = await availableLang(lagnCookie);
+    const cookieLang = cookieValues({ name: langCookieName, value: lagn });
     const cookietenant = cookieValues({
       name: tenantCookieName,
-      value: tenantValue,
+      value: tenant,
       sameSite: 'strict',
     });
 
@@ -42,5 +46,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|images|pwa|fonts).*)'],
+  matcher: [`/t-:tenant/:path*`, '/api/v:version/:path*'],
 };

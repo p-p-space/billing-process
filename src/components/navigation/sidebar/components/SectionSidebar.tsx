@@ -46,7 +46,7 @@ export default function SectionSidebar() {
             <ListItemIcon sx={{ minWidth: 'auto', fontSize: 24 }}>
               <i className="ri-logout-circle-r-line"></i>
             </ListItemIcon>
-            <ListItemText primary={t('log-out')} slotProps={{ primary: { fontWeight: 500 } }} />
+            <ListItemText primary={t('logOut')} slotProps={{ primary: { fontWeight: 500 } }} />
           </ListItemButton>
         </ListItem>
       </Box>

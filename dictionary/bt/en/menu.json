@@ -7,6 +7,6 @@
     "users": "Users & roles",
     "profile": "User profile",
     "update": "Update password",
-    "log-out": "Log out"
+    "logOut": "Log out"
   }
 }
