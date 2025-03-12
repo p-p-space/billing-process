@@ -1,17 +1,15 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 //Internal app
 import { menu } from './menu';
 import ItemsSidebar from './ItemsSidebar';
+import { useSessionActions } from '@/hooks';
 
 export default function SectionSidebar() {
   const t = useTranslations('menu');
-
-  const { push } = useRouter();
-
+  const { signout } = useSessionActions();
   const { main, user } = menu[0];
 
   return (
@@ -37,12 +35,7 @@ export default function SectionSidebar() {
         <Divider sx={{ borderColor: 'primary.main' }} />
 
         <ListItem disablePadding sx={{ display: 'flex' }}>
-          <ListItemButton
-            onClick={() => {
-              push('signin');
-            }}
-            sx={{ width: '100%', display: 'flex', alignItems: 'center', gap: 1 }}
-          >
+          <ListItemButton onClick={signout} sx={{ width: '100%', display: 'flex', alignItems: 'center', gap: 1 }}>
             <ListItemIcon sx={{ minWidth: 'auto', fontSize: 24 }}>
               <i className="ri-logout-circle-r-line"></i>
             </ListItemIcon>
