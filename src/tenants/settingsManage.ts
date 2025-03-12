@@ -59,7 +59,7 @@ function updateCurrentSettings(settings: TenantSettings, tenant: Tenant) {
   settings.redisPassword = redisSettings.password ?? settings.redisPassword;
   settings.redisPrefix = `${prefixCookieName}${tenant}`;
   settings.sessExpTime = sessSettings.sessExpTime ? parseInt(sessSettings.sessExpTime) : settings.sessExpTime;
-  settings.sessResetTime = settings.sessExpTime < 180 ? 30 : 60;
+  settings.sessResetTime = settings.sessExpTime <= 60 ? Math.ceil(settings.sessExpTime / 3) : 30;
   settings.sessMatchIp = sessSettings.sessMatchIp ? sessSettings.sessMatchIp === 'ON' : settings.sessMatchIp;
   settings.sessRefresh = sessSettings.sessRefresh ? sessSettings.sessRefresh === 'ON' : settings.sessRefresh;
   settings.tenantId = credentials.tenantId ?? settings.tenantId;

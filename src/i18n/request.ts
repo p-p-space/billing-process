@@ -1,9 +1,10 @@
 import { getRequestConfig } from 'next-intl/server';
 // Internal app
 import { getAppLang } from './servI18n';
+import { createHttpConfig } from '@/libs/http';
+import { applicationRequest } from '@/libs/fetch';
 import { defaultTenant, headersKey } from '@/constans';
-import { createHttpConfig, manageRequest } from '@/libs/axios';
-import type { Lang, LangData, LangFiles, RequestAxios } from '@/interfaces';
+import type { Lang, LangData, LangFiles, HttpRequest } from '@/interfaces';
 
 /**
  * Request configuration to fetch language messages.
@@ -16,15 +17,14 @@ export default getRequestConfig(async () => {
   const httpConfig = createHttpConfig();
   httpConfig.headers[headersKey.appTenant] = tenant;
 
-  const requestConfig: RequestAxios = {
+  const httpRequest: HttpRequest = {
     method: 'post',
     pathUrl: '/language',
     dataRequest,
     httpConfig,
   };
-  const requestType = 'application';
 
-  const { data, status } = await manageRequest(requestConfig, requestType);
+  const { data, status } = await applicationRequest(httpRequest);
 
   if (status !== 200) {
     console.error(data);

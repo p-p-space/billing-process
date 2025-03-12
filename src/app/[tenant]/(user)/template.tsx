@@ -4,8 +4,19 @@ import Image from 'next/image';
 import { Box, Grid2 } from '@mui/material/';
 //Internal App
 import { Slider } from '@/components';
+import { useSessionStorage, useTenantStore } from '@/store';
+import { useEffect } from 'react';
 
 export default function Template({ children }: Readonly<{ children: React.ReactNode }>) {
+  const setSessReset = useSessionStorage((state) => state.setSessReset);
+  const setTimeLeft = useSessionStorage((state) => state.setTimeLeft);
+  const { sessResetTime = 0 } = useTenantStore((state) => state.tenantSett);
+
+  useEffect(() => {
+    setSessReset(0);
+    setTimeLeft(sessResetTime);
+  }, [sessResetTime, setSessReset, setTimeLeft]);
+
   return (
     <Grid2 container spacing={3} height="100vh">
       <Grid2 size={{ lg: 7 }} display={{ xs: 'none', lg: 'flex' }} alignItems="center" justifyContent="center">

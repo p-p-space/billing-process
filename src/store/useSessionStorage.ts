@@ -8,6 +8,7 @@ import { useTenantStore } from './useTenantStore';
 const StoreSession: StateCreator<SessionStorage, [['zustand/devtools', never]]> = (set) => ({
   sessReset: 0,
   showModal: false,
+  timeLeft: useTenantStore.getState().tenantSett.sessResetTime ?? 0,
   setSessReset: (reset) =>
     set(
       () => {
@@ -19,6 +20,7 @@ const StoreSession: StateCreator<SessionStorage, [['zustand/devtools', never]]> 
       'setsessReset'
     ),
   setShowModal: (show) => set((state) => ({ ...state, showModal: show }), false, 'setShowModal'),
+  setTimeLeft: (time) => set((state) => ({ ...state, timeLeft: time }), false, 'setTimeLeft'),
 });
 
 export const useSessionStorage = create<SessionStorage>()(

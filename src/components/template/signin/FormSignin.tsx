@@ -10,6 +10,7 @@ import { Box, Typography, Button } from '@mui/material';
 import { getSchema } from '@/config';
 import { apiPaths } from '@/constans';
 import { useBrowserRequest } from '@/hooks';
+import { useSessionStorage } from '@/store';
 import { InputPass, InputText } from '@/components';
 import type { ReqResBody, RequestContent } from '@/interfaces';
 
@@ -18,6 +19,7 @@ export default function FormSignin() {
   const { push } = useRouter();
   const schema = getSchema(['email', 'password']);
   const { createBrowserRequest } = useBrowserRequest();
+  const setSessReset = useSessionStorage((state) => state.setSessReset);
 
   const { control, handleSubmit } = useForm({
     defaultValues: {
@@ -35,6 +37,7 @@ export default function FormSignin() {
     onSuccess: (data) => {
       console.log(data);
       push('companies');
+      setSessReset();
     },
   });
 

@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal app
 import { headersKey } from '@/constans';
+import { manageRequest } from '@/libs/axios';
+import { createHttpConfig } from '@/libs/http';
 import { appCredSetts } from '@/tenants/tenantSettings';
-import { createHttpConfig, manageRequest } from '@/libs/axios';
-import type { ApiPromise, ReqResBody, RequestAxios } from '@/interfaces';
+import type { ApiPromise, ReqResBody, HttpRequest } from '@/interfaces';
 
 const oauthToken: { bearer: string | null } = {
   bearer: null,
@@ -35,14 +36,14 @@ export async function connectServices(request: NextRequest): ApiPromise {
     dataRequest = await request.json();
   }
 
-  const requestConfig = {
+  const httpRequest = {
     method: method.toLowerCase(),
     pathUrl,
     dataRequest,
     httpConfig,
-  } as RequestAxios;
+  } as HttpRequest;
   const requestType = 'services';
-  const { status, data } = await manageRequest(requestConfig, requestType);
+  const { status, data } = await manageRequest(httpRequest, requestType);
 
   return NextResponse.json(data, { status });
 }
@@ -58,15 +59,15 @@ export async function getOauthBearer() {
   const httpConfig = createHttpConfig({ timeout: 59600 });
   httpConfig.headers[headersKey.contentType] = 'application/x-www-form-urlencoded';
 
-  const requestConfig = {
+  const httpRequest = {
     method: 'post',
     pathUrl: '/oauth2/v1/token',
     dataRequest,
     httpConfig,
-  } as RequestAxios;
+  } as HttpRequest;
   const requestType = 'services';
 
-  const { data, status } = await manageRequest(requestConfig, requestType);
+  const { data, status } = await manageRequest(httpRequest, requestType);
 
   if (status === 200) {
     oauthToken.bearer = data.access_token;

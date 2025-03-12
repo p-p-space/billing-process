@@ -12,7 +12,7 @@ const responseApiSchema = z
     payload: z.unknown().optional(),
   })
   .catchall(z.unknown());
-const requestTypeSchema = z.enum(['browser', 'application', 'services']);
+const requestTypeSchema = z.enum(['browser', 'services']);
 const httpConfigSchema = z.object({
   timeout: z.number(),
   headers: z.record(z.string(), z.string()),
@@ -24,8 +24,8 @@ const requestContentSchema = z.object({
   method: z.enum(['get', 'post', 'put', 'patch', 'delete', 'options', 'head']),
   dataRequest: appSchemas.reqResBody.optional(),
 });
-const requestAxiosSchema = requestContentSchema.extend({
-  httpConfig: httpConfigSchema.optional(),
+const httpRequestSchema = requestContentSchema.extend({
+  httpConfig: httpConfigSchema,
 });
 const errorResponseApiSchema = z.object({
   status: z.number(),
@@ -48,7 +48,7 @@ export const httpSchemas = {
   requestType: requestTypeSchema,
   httpConfig: httpConfigSchema,
   requestContent: requestContentSchema,
-  requestAxios: requestAxiosSchema,
+  httpRequest: httpRequestSchema,
   errorResponseApi: errorResponseApiSchema,
   errorClientResp: errorClientRespSchema,
   cognitoAuthResult: cognitoAuthResultSchema,

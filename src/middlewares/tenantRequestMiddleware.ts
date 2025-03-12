@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal app
 import { setCookie } from '@/utils';
+import { createHttpConfig } from '@/libs/http';
+import { applicationRequest } from '@/libs/fetch';
 import { apiPaths, headersKey } from '@/constans';
-import type { ApiPromise, RequestAxios } from '@/interfaces';
-import { createHttpConfig, manageRequest } from '@/libs/axios';
+import type { ApiPromise, HttpRequest } from '@/interfaces';
 
 /**
  * Handles customer requests by processing the incoming request, configuring the HTTP request,
@@ -35,19 +36,18 @@ export async function handleCustomerRequest(request: NextRequest): ApiPromise {
     pathUrl = apiPaths.appApiServ;
   }
 
-  const requestConfig = {
+  const httpRequest = {
     method: method.toLowerCase(),
     pathUrl,
     dataRequest: undefined,
     httpConfig,
-  } as RequestAxios;
-  const requestType = 'application';
+  } as HttpRequest;
 
   if (headers.get(headersKey.appContentSecurity) !== null) {
-    requestConfig.dataRequest = await request.json();
+    httpRequest.dataRequest = await request.json();
   }
 
-  const { status, data } = await manageRequest(requestConfig, requestType);
+  const { data, status } = await applicationRequest(httpRequest);
 
   const authJws = data.authJws;
   delete data.authJws;

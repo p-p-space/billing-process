@@ -24,7 +24,7 @@ export type RequestContent = z.infer<typeof httpSchemas.requestContent>;
 /**
  * Represents the content of an HTTP axios request.
  */
-export type RequestAxios = z.infer<typeof httpSchemas.requestAxios>;
+export type HttpRequest = z.infer<typeof httpSchemas.httpRequest>;
 
 /**
  * Represents the type of an HTTP request.

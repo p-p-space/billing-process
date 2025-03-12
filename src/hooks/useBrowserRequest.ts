@@ -3,9 +3,10 @@ import { useCallback } from 'react';
 // Internal app
 import { headersKey } from '@/constans';
 import { HandleError } from '@/libs/error';
+import { manageRequest } from '@/libs/axios';
+import { createHttpConfig } from '@/libs/http';
 import { useTenantStore, useUiStore } from '@/store';
-import { createHttpConfig, manageRequest } from '@/libs/axios';
-import type { RequestAxios, RequestContent } from '@/interfaces';
+import type { HttpRequest, RequestContent } from '@/interfaces';
 
 export function useBrowserRequest(loading = true) {
   const setLoadingScreen = useUiStore((state) => state.setLoadingScreen);
@@ -27,9 +28,9 @@ export function useBrowserRequest(loading = true) {
 
       try {
         setLoadingScreen(loading);
-        const requestConfig: RequestAxios = { pathUrl, method, dataRequest, httpConfig };
+        const httpRequest: HttpRequest = { pathUrl, method, dataRequest, httpConfig };
         const requestType = 'browser';
-        const responseWebRequest = await manageRequest(requestConfig, requestType);
+        const responseWebRequest = await manageRequest(httpRequest, requestType);
         const { data, status } = responseWebRequest;
 
         if (status < 200 || status >= 300) {

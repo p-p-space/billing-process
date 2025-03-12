@@ -23,25 +23,17 @@ export async function redisConnect(tenant: Tenant): Promise<Redis> {
 
   const redisInstance = new Redis(redisOptions);
 
-  redisInstance.on('connect', () => {
-    console.log('Redis connected');
-  });
+  redisInstance.on('connect', () => {});
 
   redisInstance.on('error', (error) => {
     console.error(`Redis connection: ${error.message}`);
   });
 
-  redisInstance.on('close', () => {
-    console.log('Redis closed');
-  });
+  redisInstance.on('close', () => {});
 
-  redisInstance.on('end', () => {
-    console.log('Redis ended');
-  });
+  redisInstance.on('end', () => {});
 
-  redisInstance.on('reconnecting', () => {
-    console.log('Redis reconnecting');
-  });
+  redisInstance.on('reconnecting', () => {});
 
   return redisInstance;
 }

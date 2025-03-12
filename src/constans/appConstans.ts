@@ -11,7 +11,7 @@ export const timeZone = process.env.TIMEZONE;
  * Toggles for enabling/disabling features.
  */
 export const toggles = {
-  handleRefresh: process.env.NEXT_PUBLIC_HANDLE_REFRESH ?? 'OFF',
+  handleRefresh: process.env.HANDLE_REFRESH ?? 'OFF',
 };
 
 /**

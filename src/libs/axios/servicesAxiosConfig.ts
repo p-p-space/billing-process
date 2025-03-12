@@ -3,9 +3,10 @@
 import axios from 'axios';
 import { importPKCS8, importSPKI } from 'jose';
 // Internal app
+import { createResponseApi } from '../http';
 import { jwtAlgs, headersKey } from '@/constans';
 import { servHttpSetts } from '@/tenants/tenantSettings';
-import { createErrorResponseApi, createResponseApi } from './helpersAxios';
+import { createErrorResponseApi } from './helpersAxios';
 import { decryptData, disassembleJWS, encryptData, signData } from '@/security';
 
 /**
@@ -18,9 +19,13 @@ const servicesAxios = axios.create();
  * Encrypts the request data and signs it before sending.
  */
 servicesAxios.interceptors.request.use(async (request) => {
-  const { data } = request;
+  const { data, headers, url } = request;
   const { servUrl, servJwePubKey, servJwsPrivKey } = await servHttpSetts();
   request.baseURL = servUrl;
+
+  console.log(
+    `Request url: ${request.baseURL}${url} headers: ${JSON.stringify(headers)} data: ${JSON.stringify(request.data)}`
+  );
 
   if (data?.payload) {
     try {
@@ -47,7 +52,7 @@ servicesAxios.interceptors.request.use(async (request) => {
  */
 servicesAxios.interceptors.response.use(
   async (response) => {
-    const { data } = response;
+    const { config, data, headers } = response;
 
     if (data?.data) {
       const { servJwePrivKey } = await servHttpSetts();
@@ -66,6 +71,12 @@ servicesAxios.interceptors.response.use(
         });
       }
     }
+
+    console.log(
+      `Response url: ${config.baseURL}${config.url} headers: ${JSON.stringify(headers)} data: ${JSON.stringify(
+        response.data
+      )}`
+    );
 
     return response;
   },

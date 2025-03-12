@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { Box } from '@mui/material';
 //Internal app
 import { useMenuStore } from '@/store';
-import type { ChildrenProps } from '@/interfaces';
+import { useSessionControl } from '@/hooks';
 import { Navbar, Sidebar } from '@/components';
+import type { ChildrenProps } from '@/interfaces';
 
 export default function Template({ children }: ChildrenProps) {
+  useSessionControl();
   const drawerWidth = 280;
   const { drawerStatus, setDrawerStatus } = useMenuStore();
   const [isClosing, setIsClosing] = useState<boolean>(false);

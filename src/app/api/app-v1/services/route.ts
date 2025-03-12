@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 // Internal app
 import type { ApiPromise } from '@/interfaces';
-import { connectServices } from '@/middlewares';
-import { createResponseApi } from '@/libs/axios';
+import { connectServices } from '@/libs/axios';
+import { createResponseApi } from '@/libs/http';
 
 /**
  * Handles requests to the services route.

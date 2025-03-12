@@ -1,29 +1,23 @@
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 // Internal app
-import { apiPaths } from '@/constans';
-import { RequestContent } from '@/interfaces';
-import { useBrowserRequest } from './useBrowserRequest';
-import { useRoutesStore, useSessionStorage, useTenantStore, useUiStore } from '@/store';
+import { useTenantStore, useUiStore } from '@/store';
+import { useSessionActions } from './useSessionActions';
+import { useSessionStorage } from '@/store/useSessionStorage';
 
-export function useSessionControl(external: boolean = false) {
+export function useSessionControl() {
   const t = useTranslations();
-  const { push } = useRouter();
-  const closeModal = useUiStore((state) => state.closeModal);
+  const { refresh, signout } = useSessionActions();
   const setModal = useUiStore((state) => state.setModal);
-  const setSessReset = useSessionStorage((state) => state.setSessReset);
   const setShowModal = useSessionStorage((state) => state.setShowModal);
-  const { createBrowserRequest } = useBrowserRequest();
-  const { tenantUri, sessResetTime = 0 } = useTenantStore((state) => state.tenantSett);
+  const { sessResetTime = 0 } = useTenantStore((state) => state.tenantSett);
   const sessReset = useSessionStorage((state) => state.sessReset);
   const showModal = useSessionStorage((state) => state.showModal);
-  const setRoute = useRoutesStore((state) => state.setRoute);
+  const timeLeft = useSessionStorage((state) => state.timeLeft);
+  const setTimeLeft = useSessionStorage((state) => state.setTimeLeft);
   const modalTimer = useRef<NodeJS.Timeout | undefined>(undefined);
   const sessTimer = useRef<NodeJS.Timeout | undefined>(undefined);
   const intervalTimer = useRef<NodeJS.Timeout | undefined>(undefined);
-  const [timeLeft, setTimeLeft] = useState(sessResetTime);
 
   const clearTimers = useCallback(
     (clear: string) => {
@@ -45,42 +39,6 @@ export function useSessionControl(external: boolean = false) {
     [showModal]
   );
 
-  const { mutate } = useMutation({
-    mutationFn: (request: RequestContent) => {
-      closeModal();
-      setShowModal(false);
-      setTimeLeft(sessResetTime);
-      return createBrowserRequest(request);
-    },
-  });
-
-  const signout = useCallback(() => {
-    const dataSignout: RequestContent = {
-      pathUrl: `${apiPaths.appBrowserApi}/signout`,
-      method: 'get',
-    };
-
-    if (external) {
-      setRoute('loginRoute', 'login');
-    }
-
-    setSessReset(0);
-    mutate(dataSignout, {
-      onSettled: () => {
-        push(`/${tenantUri}/signin`);
-      },
-    });
-  }, [external, mutate, push, setRoute, setSessReset, tenantUri]);
-
-  const refresh = useCallback(() => {
-    const dataRefresh: RequestContent = {
-      pathUrl: `${apiPaths.appBrowserApi}/refresSesion`,
-      method: 'get',
-    };
-
-    mutate(dataRefresh);
-  }, [mutate]);
-
   useEffect(() => {
     let show = showModal;
 
@@ -92,13 +50,11 @@ export function useSessionControl(external: boolean = false) {
 
     if (show) {
       intervalTimer.current = setInterval(() => {
-        setTimeLeft((prevTime) => {
-          if (prevTime <= 0) {
-            clearInterval(intervalTimer.current);
-            return 0;
-          }
-          return prevTime - 1;
-        });
+        setTimeLeft(timeLeft - 1);
+
+        if (timeLeft <= 0) {
+          clearInterval(intervalTimer.current);
+        }
       }, 1000);
 
       setModal({
@@ -126,7 +82,7 @@ export function useSessionControl(external: boolean = false) {
     return () => {
       clearTimers('intervalTimer');
     };
-  }, [clearTimers, refresh, sessResetTime, setModal, setShowModal, showModal, signout, t, timeLeft]);
+  }, [clearTimers, refresh, sessResetTime, setModal, setShowModal, setTimeLeft, showModal, signout, t, timeLeft]);
 
   useEffect(() => {
     clearTimers('sessTimer');
@@ -143,6 +99,4 @@ export function useSessionControl(external: boolean = false) {
       clearTimers('modalTimer');
     };
   }, [clearTimers, sessReset, sessResetTime, setShowModal, showModal, signout]);
-
-  return { signout };
 }

@@ -16,8 +16,10 @@ export type TenantStore = {
 export type SessionStorage = {
   sessReset: number;
   showModal: boolean;
+  timeLeft: number;
   setSessReset: (reset?: number) => void;
   setShowModal: (show: boolean) => void;
+  setTimeLeft: (time: number) => void;
 };
 
 export type RoutesStore = {
