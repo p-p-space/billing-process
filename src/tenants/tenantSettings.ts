@@ -28,6 +28,7 @@ export async function assetSetts() {
   return {
     sessExpTime: assetsConf.sessExpTime,
     sessResetTime: assetsConf.sessResetTime,
+    tenantAllowed: assetsConf.tenantAllowed,
     tenantImages: assetsConf.tenantImages,
     tenantPwa: assetsConf.tenantPwa,
     tenantTheme: assetsConf.tenantTheme,

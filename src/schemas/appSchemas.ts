@@ -26,6 +26,7 @@ const tenantSettingsSchema = z.object({
   tenantTheme: availableTenantsSchema,
   tenantImages: availableTenantsSchema,
   tenantDictionary: availableTenantsSchema,
+  tenantAllowed: z.array(z.string()),
   tenantId: z.string(),
   tenantClientId: z.string(),
   tenantClientSecret: z.string(),

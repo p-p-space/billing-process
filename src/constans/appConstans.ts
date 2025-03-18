@@ -3,6 +3,7 @@ import { ApiRespObj } from '@/interfaces';
 export const tenantPrefix = 't-';
 export const defaultTenant = 'bt';
 export const availableTenants = [defaultTenant, 'pm'] as const;
+export const urlTenant = availableTenants.map((tenant) => `${tenantPrefix}${tenant}`);
 export const defaultLang = 'en';
 export const availableLangs = ['en', 'es'] as const;
 export const timeZone = process.env.TIMEZONE;

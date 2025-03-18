@@ -1,6 +1,6 @@
 // Internal app
 import { TenantSettings } from '@/interfaces';
-import { defaultTenant } from '@/constans';
+import { defaultTenant, urlTenant } from '@/constans';
 
 export const localSettings: TenantSettings = {
   webUrl: 'http://localhost:3000',
@@ -19,6 +19,7 @@ export const localSettings: TenantSettings = {
   tenantTheme: defaultTenant,
   tenantImages: defaultTenant,
   tenantDictionary: defaultTenant,
+  tenantAllowed: urlTenant,
   tenantId: '',
   tenantClientId: '',
   tenantClientSecret: '',

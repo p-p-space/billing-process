@@ -3,13 +3,19 @@ import type { NextRequest } from 'next/server';
 // Internal app
 import { availableLang } from './i18n';
 import { availableTenant, cookieValues } from './utils';
+import { tenantPrefix, defaultTenant } from './constans/appConstans';
 import { handleCustomerRequest, handleSession } from './middlewares';
-import { apiPaths, apiSrc, headersKey, langCookieName, tenantCookieName, tenantPrefix } from './constans';
+import { apiPaths, apiSrc, headersKey, langCookieName, tenantCookieName } from './constans';
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const { cookies, nextUrl, url, headers } = request;
   const { pathname } = nextUrl;
+
+  if (pathname === '/') {
+    const rootRedirectURL = new URL(`/${tenantPrefix}${defaultTenant}/signin`, url).toString();
+    return NextResponse.redirect(rootRedirectURL);
+  }
 
   if (!pathname.startsWith(apiSrc)) {
     const tenantUri = headers.get(headersKey.appTenant) ?? url.split('/')[3];
@@ -46,5 +52,10 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [`/t-:tenant/:path*`, '/api/v:version/:path*'],
+  matcher: [
+    `/t-:tenant/:path*`,
+    '/api/v:version/:path*',
+    '/',
+    '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|images|pwa|fonts).*)',
+  ],
 };
