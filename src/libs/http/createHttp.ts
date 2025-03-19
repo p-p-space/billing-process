@@ -29,7 +29,7 @@ export function createHttpConfig(config?: HeaderConfig): HttpConfig {
   if (config?.headers) {
     const { headers } = config;
     Object.values(headersKey).forEach((header) => {
-      if (headers.has(header)) {
+      if (headers.has(header) && header !== '__next_hmr_refresh_hash__') {
         httpConfig.headers[header] = `${headers.get(header)}`;
       }
     });
