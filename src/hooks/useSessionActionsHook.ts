@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 // Internal app
 import { apiPaths } from '@/constans';
 import { RequestContent } from '@/interfaces';
-import { useBrowserRequest } from './useBrowserRequest';
+import { useBrowserRequest } from './useBrowserRequestHook';
 import { useSessionStorage } from '@/store/useSessionStorage';
 import { useRoutesStore, useTenantStore, useUiStore } from '@/store';
 

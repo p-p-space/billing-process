@@ -2,7 +2,7 @@ import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef } from 'react';
 // Internal app
 import { useTenantStore, useUiStore } from '@/store';
-import { useSessionActions } from './useSessionActions';
+import { useSessionActions } from './useSessionActionsHook';
 import { useSessionStorage } from '@/store/useSessionStorage';
 
 export function useSessionControl() {
