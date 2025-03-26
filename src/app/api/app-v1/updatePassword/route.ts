@@ -28,9 +28,9 @@ export async function POST(request: NextRequest): ApiPromise {
   const { status, cognitoResp, result } = await cognitoConnect(command);
 
   if (result?.AuthenticationResult) {
-    const Authresult = decodeAuthResult(result.AuthenticationResult);
+    const authresult = decodeAuthResult(result.AuthenticationResult);
 
-    await setSession(Authresult);
+    await setSession(authresult);
     await deleteSessAttr(['session', 'userId']);
   }
 

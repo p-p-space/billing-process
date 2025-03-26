@@ -36,8 +36,8 @@ export default function FormSignin() {
     },
     onSuccess: (data) => {
       console.log(data);
-      push('companies');
       setSessReset();
+      return push('companies');
     },
   });
 

@@ -27,7 +27,7 @@ export default async function Tenantlayout({ children, params }: ChildrenProps &
   const { tenantAllowed, tenantTheme, ...tenantSett } = await assetSetts();
 
   if (!tenantAllowed.includes(tenantUri)) {
-    redirect(`/${tenantAllowed[0]}/signin`);
+    return redirect(`/${tenantAllowed[0]}/signin`);
   }
 
   const tenantfeatures = { tenant, tenantUri, ...tenantSett };

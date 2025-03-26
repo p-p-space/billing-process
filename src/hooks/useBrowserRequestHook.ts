@@ -8,14 +8,13 @@ import { createHttpConfig } from '@/libs/http';
 import { useTenantStore, useUiStore } from '@/store';
 import type { HttpRequest, RequestContent } from '@/interfaces';
 
-export function useBrowserRequest(loading = true) {
+export function useBrowserRequest() {
   const setLoadingScreen = useUiStore((state) => state.setLoadingScreen);
-
   const { tenant } = useTenantStore((state) => state.tenantSett);
 
   const createBrowserRequest = useCallback(
     async (requestContent: RequestContent) => {
-      const { pathUrl, method, ...data } = requestContent;
+      const { pathUrl, method, loading = true, ...data } = requestContent;
       let { dataRequest } = data;
       const httpConfig = createHttpConfig();
       httpConfig.headers[headersKey.AppReqId] = uuid4();
@@ -42,7 +41,7 @@ export function useBrowserRequest(loading = true) {
         setLoadingScreen(false);
       }
     },
-    [loading, setLoadingScreen, tenant]
+    [setLoadingScreen, tenant]
   );
 
   return {

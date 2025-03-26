@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 //Internal app
 import type { MenuStoreProps } from '@/interfaces';
 
@@ -23,16 +23,19 @@ import type { MenuStoreProps } from '@/interfaces';
  * @property {function} setDrawerStatus - Function to set the status of the drawer.
  */
 export const useMenuStore = create<MenuStoreProps>()(
-  persist(
-    (set) => ({
-      currentItem: 'purchase',
+  devtools(
+    persist(
+      (set) => ({
+        currentItem: 'purchase',
 
-      setCurrentItem: (item) => set({ currentItem: item }),
+        setCurrentItem: (item) => set({ currentItem: item }),
 
-      drawerStatus: false,
+        drawerStatus: false,
 
-      setDrawerStatus: (status) => set({ drawerStatus: status }),
-    }),
-    { name: 'menu-store', version: undefined }
+        setDrawerStatus: (status) => set({ drawerStatus: status }),
+      }),
+      { name: 'menu-store', version: undefined }
+    ),
+    { name: 'menuStore' }
   )
 );

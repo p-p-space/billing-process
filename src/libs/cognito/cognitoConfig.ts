@@ -66,6 +66,6 @@ export function decodeAuthResult(result: CognitoAuthResult) {
     refreshToken,
     cognitoUserId,
     cognitoExp,
-    email,
+    userAttr: JSON.stringify({ email }),
   };
 }

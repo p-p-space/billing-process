@@ -66,16 +66,15 @@ export async function browserHttpSetts() {
   };
 }
 
-export async function appHttpSetts() {
-  const tenant = await currenTenant();
+export async function appHttpSetts(tenant: Tenant) {
   const appConf = await handleSettings(tenant);
 
   return {
-    webUrl: appConf.webUrl,
-    webJwePrivKey: appConf.webJwePrivKey,
-    secJwsStr: appConf.secJwsStr,
     secJweStr: appConf.secJweStr,
+    secJwsStr: appConf.secJwsStr,
+    webJwePrivKey: appConf.webJwePrivKey,
     webJwsPrivKey: appConf.webJwsPrivKey,
+    webUrl: appConf.webUrl,
   };
 }
 

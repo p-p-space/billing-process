@@ -17,17 +17,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(rootRedirectURL);
   }
 
-  if (!pathname.startsWith(apiSrc)) {
-    const tenantUri = headers.get(headersKey.appTenant) ?? url.split('/')[3];
-    const tenant = availableTenant(tenantUri);
+  const tenantUri = headers.get(headersKey.appTenant) ?? url.split('/')[3];
+  const tenant = availableTenant(tenantUri);
 
+  if (!pathname.startsWith(apiSrc)) {
     if (!tenantUri.includes(tenant)) {
       const refreshedURL = new URL(`/${tenantPrefix}${tenant}/signin`, url).toString();
 
       return NextResponse.redirect(refreshedURL);
     }
 
-    await handleSession(headers, tenant, response);
+    await handleSession(tenant, response);
 
     const lagnCookie = cookies.get(langCookieName)?.value;
     const lagn = await availableLang(lagnCookie);

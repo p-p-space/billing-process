@@ -1,3 +1,5 @@
+import { DataServerProps } from './propsInterface';
+
 /**
  * Interface representing the properties of the UiStore.
  *
@@ -112,4 +114,13 @@ type Data = {
       onClick: () => void;
     }
   ];
+};
+
+export type UserStore = {
+  email: string;
+  userAttr: DataServerProps['userAttr'];
+
+  setEmail: (email: string) => void;
+  setUserAttr: (attr: object) => void;
+  resetUserStore: () => void;
 };

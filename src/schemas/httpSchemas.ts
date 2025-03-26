@@ -22,6 +22,7 @@ const httpConfigSchema = z.object({
 const requestContentSchema = z.object({
   pathUrl: z.string(),
   method: z.enum(['get', 'post', 'put', 'patch', 'delete', 'options', 'head']),
+  loading: z.boolean().optional(),
   dataRequest: appSchemas.reqResBody.optional(),
 });
 const httpRequestSchema = requestContentSchema.extend({

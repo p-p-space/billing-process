@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 //Internal app
 import { getSessAttr } from '@/libs/redis';
+import { DashboardProvider } from '@/components';
 import { getTranslations } from 'next-intl/server';
 import { ChildrenProps, ParamsProps } from '@/interfaces';
 
@@ -21,8 +22,10 @@ export default async function Dashboardlayout({ children, params }: ChildrenProp
   const logged = await getSessAttr('logged');
 
   if (!logged) {
-    redirect(`/${tenantUri}/signin`);
+    return redirect(`/${tenantUri}/signin`);
   }
 
-  return <>{children}</>;
+  const userAttr = JSON.parse((await getSessAttr('userAttr')) ?? '{}');
+
+  return <DashboardProvider userAttr={userAttr}>{children}</DashboardProvider>;
 }

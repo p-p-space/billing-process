@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 //Internal app
 import type { UiStore } from '@/interfaces';
+import { devtools } from 'zustand/middleware';
 
 /**
  * Store and change states for show/hide elements in UI.
@@ -33,36 +34,41 @@ import type { UiStore } from '@/interfaces';
  * @property {function} closeModal - Function to close the global modal.
  * @property {function} setModal - Function to set the global modal.
  */
-export const useUiStore = create<UiStore>()((set) => ({
-  /*Big Modal*/
-  loadingScreen: false,
+export const useUiStore = create<UiStore>()(
+  devtools(
+    (set) => ({
+      /*Big Modal*/
+      loadingScreen: false,
 
-  setLoadingScreen: (status: boolean) => set(() => ({ loadingScreen: status })),
+      setLoadingScreen: (status: boolean) => set(() => ({ loadingScreen: status })),
 
-  /*Notification error */
-  modalErrorObject: null,
+      /*Notification error */
+      modalErrorObject: null,
 
-  showModalError: false,
+      showModalError: false,
 
-  closeModalError: () => set({ showModalError: false }),
+      closeModalError: () => set({ showModalError: false }),
 
-  setModalError: (value) => set({ showModalError: true, modalErrorObject: value }),
+      setModalError: (value) => set({ showModalError: true, modalErrorObject: value }),
 
-  /*Notification success */
-  modalSuccessObject: null,
+      /*Notification success */
+      modalSuccessObject: null,
 
-  showModalSuccess: false,
+      showModalSuccess: false,
 
-  closeModalSuccess: () => set({ showModalSuccess: false }),
+      closeModalSuccess: () => set({ showModalSuccess: false }),
 
-  setModalSuccess: (value) => set({ showModalSuccess: true, modalSuccessObject: value }),
+      setModalSuccess: (value) => set({ showModalSuccess: true, modalSuccessObject: value }),
 
-  /*Global Modal */
-  modalObject: null,
+      /*Global Modal */
+      modalObject: null,
 
-  showModal: false,
+      showModal: false,
 
-  closeModal: () => set({ showModal: false }),
+      closeModal: () => set({ showModal: false }),
 
-  setModal: (value) => set({ showModal: true, modalObject: value }),
-}));
+      setModal: (value) => set({ showModal: true, modalObject: value }),
+    }),
+    { name: 'uiStore' }
+  )
+);

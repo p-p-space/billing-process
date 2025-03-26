@@ -20,10 +20,12 @@ export type SessionStorage = {
   setSessReset: (reset?: number) => void;
   setShowModal: (show: boolean) => void;
   setTimeLeft: (time: number) => void;
+  resetSessStore: (time: number) => void;
 };
 
 export type RoutesStore = {
   loginRoute: string;
   recoveryRoute: string;
   setRoute: (section: string, newRoute: string) => void;
+  resetRouteStore: () => void;
 };

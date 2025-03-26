@@ -18,4 +18,4 @@ const storeApi: StateCreator<TenantStore, [['zustand/devtools', never]]> = (set)
   setTenantSett: (tenantSett) => set(() => ({ tenantSett }), false, 'setTenantSett'),
 });
 
-export const useTenantStore = create<TenantStore>()(devtools(storeApi));
+export const useTenantStore = create<TenantStore>()(devtools(storeApi, { name: 'TenantStore' }));

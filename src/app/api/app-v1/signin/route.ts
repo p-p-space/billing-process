@@ -36,9 +36,9 @@ export async function POST(request: NextRequest): ApiPromise {
   }
 
   if (result?.AuthenticationResult) {
-    const Authresult = decodeAuthResult(result.AuthenticationResult);
+    const authresult = decodeAuthResult(result.AuthenticationResult);
 
-    await setSession(Authresult);
+    await setSession(authresult);
   }
 
   return NextResponse.json(cognitoResp, { status });

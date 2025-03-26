@@ -4,3 +4,4 @@ export * from './useRoutesStore';
 export * from './useSessionStorage';
 export * from './useTenantStore';
 export * from './useUiStore';
+export * from './useUserStore';

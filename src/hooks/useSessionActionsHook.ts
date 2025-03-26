@@ -15,7 +15,7 @@ export function useSessionActions() {
   const setShowModal = useSessionStorage((state) => state.setShowModal);
   const { createBrowserRequest } = useBrowserRequest();
   const setTimeLeft = useSessionStorage((state) => state.setTimeLeft);
-  const { tenantUri, sessResetTime = 0 } = useTenantStore((state) => state.tenantSett);
+  const { tenantUri, sessResetTime } = useTenantStore((state) => state.tenantSett);
   const setRoute = useRoutesStore((state) => state.setRoute);
 
   const { mutate } = useMutation({

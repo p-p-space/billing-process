@@ -43,7 +43,7 @@ export const redisSettings = {
   host: process.env.REDIS_HOST,
   port: process.env.REDIS_PORT,
   db: process.env.REDIS_DB,
-  ssl: process.env.REDIS_SSL,
+  tls: process.env.REDIS_TLS,
   user: process.env.REDIS_USER,
   password: process.env.REDIS_PASSWORD,
 };

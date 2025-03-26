@@ -1,21 +1,18 @@
 'use client';
 
 import Image from 'next/image';
+import { useEffect } from 'react';
 import { Box, Grid2 } from '@mui/material/';
 //Internal App
 import { Slider } from '@/components';
-import { useSessionStorage, useTenantStore } from '@/store';
-import { useEffect } from 'react';
+import { useInitStates } from '@/hooks';
 
 export default function Template({ children }: Readonly<{ children: React.ReactNode }>) {
-  const setSessReset = useSessionStorage((state) => state.setSessReset);
-  const setTimeLeft = useSessionStorage((state) => state.setTimeLeft);
-  const { sessResetTime = 0 } = useTenantStore((state) => state.tenantSett);
+  const { initStates } = useInitStates();
 
   useEffect(() => {
-    setSessReset(0);
-    setTimeLeft(sessResetTime);
-  }, [sessResetTime, setSessReset, setTimeLeft]);
+    initStates();
+  }, [initStates]);
 
   return (
     <Grid2 container spacing={3} height="100vh">

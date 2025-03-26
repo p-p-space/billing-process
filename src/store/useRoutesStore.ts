@@ -3,10 +3,16 @@ import { devtools, persist, createJSONStorage } from 'zustand/middleware';
 //internal app
 import { RoutesStore } from '@/interfaces';
 
-const storeApi: StateCreator<RoutesStore, [['zustand/devtools', never]]> = (set) => ({
+const initRoute = {
   loginRoute: 'login',
   recoveryRoute: 'requestCode',
+};
+
+const storeApi: StateCreator<RoutesStore, [['zustand/devtools', never]]> = (set) => ({
+  ...initRoute,
+
   setRoute: (section, newRoute) => set(() => ({ [section]: newRoute }), false, 'setRoute'),
+  resetRouteStore: () => set(() => initRoute, false, 'resetRouteStore'),
 });
 
 /**
@@ -32,6 +38,7 @@ export const useRoutesStore = create<RoutesStore>()(
     persist(storeApi, {
       name: 'routes-store',
       storage: createJSONStorage(() => sessionStorage),
-    })
+    }),
+    { name: 'routesStore' }
   )
 );

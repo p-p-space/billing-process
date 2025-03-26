@@ -1,10 +1,8 @@
 import { getRequestConfig } from 'next-intl/server';
 // Internal app
 import { getAppLang } from './servI18n';
-import { createHttpConfig } from '@/libs/http';
-import { applicationRequest } from '@/libs/fetch';
-import { defaultTenant, headersKey } from '@/constans';
-import type { Lang, LangData, LangFiles, HttpRequest } from '@/interfaces';
+import { defaultTenant } from '@/constans';
+import { messagesHandle } from './messagesHandle';
 
 /**
  * Request configuration to fetch language messages.
@@ -12,58 +10,38 @@ import type { Lang, LangData, LangFiles, HttpRequest } from '@/interfaces';
  */
 export default getRequestConfig(async () => {
   const { locale, tenant } = await getAppLang();
-  const dataRequest = { locale, tenant };
+  const langData = await messagesHandle(locale, tenant);
 
-  const httpConfig = createHttpConfig();
-  httpConfig.headers[headersKey.appTenant] = tenant;
+  const defaultMessages = await Promise.all(
+    langData.default.map(async (file) => {
+      const messages = await import(`../../dictionary/${defaultTenant}/${file}.json`);
+      return messages.default;
+    })
+  );
 
-  const httpRequest: HttpRequest = {
-    method: 'post',
-    pathUrl: '/language',
-    dataRequest,
-    httpConfig,
-  };
-
-  const { data, status } = await applicationRequest(httpRequest);
-
-  if (status !== 200) {
-    console.error(data);
+  let tenantMessages = [];
+  if (langData.tenant && langData.tenant.length > 0) {
+    tenantMessages = await Promise.all(
+      langData.tenant.map(async (file) => {
+        const messages = await import(`../../dictionary/${tenant}/${file}.json`);
+        return messages.default;
+      })
+    );
   }
 
-  const { messages } = await loadDataLang(data.language, locale, tenant);
+  const combinedMessages = defaultMessages.reduce((acc, messages) => ({ ...acc, ...messages }), {});
+  tenantMessages.forEach((messages) => {
+    Object.keys(messages).forEach((key) => {
+      if (combinedMessages[key]) {
+        combinedMessages[key] = { ...combinedMessages[key], ...messages[key] };
+      } else {
+        combinedMessages[key] = messages[key];
+      }
+    });
+  });
 
   return {
     locale,
-    messages,
+    messages: combinedMessages,
   };
 });
-
-/**
- * Loads language data for the application and tenant.
- * @param {LangFiles} language - Language files.
- * @param {Lang} locale - Locale language.
- * @param {string} tenant - Tenant identifier.
- * @returns {Promise<{messages: LangData}>} - Combined language messages.
- */
-async function loadDataLang(language: LangFiles, locale: Lang, tenant: string): Promise<{ messages: LangData }> {
-  let messages: LangData = {};
-
-  for (const lang of language.default) {
-    let appLang: LangData = {};
-    let tenantLang: LangData = {};
-    const langName = lang.replace(`${locale}/`, '');
-
-    // Import application language data
-    appLang = (await import(`../../dictionary/${defaultTenant}/${lang}.json`)).default;
-
-    // Import tenant language data if it exists
-    if (language.tenant.indexOf(lang) !== -1) {
-      tenantLang = (await import(`../../dictionary/${tenant}/${lang}.json`)).default;
-    }
-
-    // Combine application and tenant messages
-    messages = { ...messages, [langName]: { ...appLang[langName], ...tenantLang[langName] } };
-  }
-
-  return { messages };
-}

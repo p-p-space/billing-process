@@ -10,7 +10,7 @@ export default async function RootLayoutMain({ children }: ChildrenProps) {
   const messages = await getMessages();
 
   return (
-    <html lang={lang}>
+    <html lang={lang} suppressHydrationWarning>
       <body style={{ margin: 0 }}>
         <NextIntlClientProvider messages={messages}>
           <InitColorSchemeScript attribute="class" />

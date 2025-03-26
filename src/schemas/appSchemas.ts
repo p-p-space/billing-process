@@ -19,7 +19,7 @@ const tenantSettingsSchema = z.object({
   redisPassword: z.string(),
   redisPrefix: z.string().optional(),
   sessExpTime: z.number(),
-  sessResetTime: z.number().optional(),
+  sessResetTime: z.number(),
   sessMatchIp: z.boolean(),
   sessRefresh: z.boolean(),
   tenantPwa: availableTenantsSchema,

@@ -7,7 +7,7 @@
     "turbo": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "standalone": "cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/ && node .next/standalone/server.js",
+    "standalone": "cp -r public .next/standalone/ && cp -r dictionary .next/standalone/ && cp -r .next/static .next/standalone/.next/ && node .next/standalone/server.js",
     "lint": "next lint"
   },
   "dependencies": {

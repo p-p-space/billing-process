@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 //Internal app
 import type { NavbarStoreProps } from '@/interfaces';
 
@@ -11,12 +11,15 @@ import type { NavbarStoreProps } from '@/interfaces';
  * @property {function} setNavbarObject - Function to set the state of the navbar object.
  */
 export const useNavbarStore = create<NavbarStoreProps>()(
-  persist(
-    (set) => ({
-      navbarObject: null,
+  devtools(
+    persist(
+      (set) => ({
+        navbarObject: null,
 
-      setNavbarObject: (value) => set({ navbarObject: value }),
-    }),
-    { name: 'navbar-store', version: undefined }
+        setNavbarObject: (value) => set({ navbarObject: value }),
+      }),
+      { name: 'navbar-store', version: undefined }
+    ),
+    { name: 'navbarStore' }
   )
 );

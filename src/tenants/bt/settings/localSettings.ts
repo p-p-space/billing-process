@@ -13,6 +13,7 @@ export const localSettings: TenantSettings = {
   redisUser: 'orion214005',
   redisPassword: 'orion214005*novo',
   sessExpTime: 180,
+  sessResetTime: 30,
   sessMatchIp: false,
   sessRefresh: false,
   tenantPwa: defaultTenant,

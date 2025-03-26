@@ -19,6 +19,7 @@ export { default as Sidebar } from './navigation/sidebar/Sidebar';
 //Provider
 export { default as MuiProvider } from './provider/MuiProvider';
 export { default as ClientProvider } from './provider/ClientProvider';
+export { default as DashboardProvider } from './provider/DashboardProvider';
 //Spinner
 export { default as LoadingScreen } from './LoadingScreen';
 //Modal

@@ -10,7 +10,7 @@ export function useSessionControl() {
   const { refresh, signout } = useSessionActions();
   const setModal = useUiStore((state) => state.setModal);
   const setShowModal = useSessionStorage((state) => state.setShowModal);
-  const { sessResetTime = 0 } = useTenantStore((state) => state.tenantSett);
+  const { sessResetTime } = useTenantStore((state) => state.tenantSett);
   const sessReset = useSessionStorage((state) => state.sessReset);
   const showModal = useSessionStorage((state) => state.showModal);
   const timeLeft = useSessionStorage((state) => state.timeLeft);

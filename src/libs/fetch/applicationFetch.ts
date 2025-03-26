@@ -1,8 +1,8 @@
 import { importPKCS8 } from 'jose';
 import { NextRequest } from 'next/server';
 // Internal app
-import { HttpRequest } from '@/interfaces';
 import { createResponseApi } from '../http';
+import { HttpRequest, Tenant } from '@/interfaces';
 import { appHttpSetts } from '@/tenants/tenantSettings';
 import { apiPaths, jwtAlgs, headersKey } from '@/constans';
 import { assembleJWS, verifySignature, decryptData, encryptData, signData, disassembleJWS, encode } from '@/security';
@@ -14,9 +14,10 @@ import { assembleJWS, verifySignature, decryptData, encryptData, signData, disas
 export async function applicationRequest(httpRequest: HttpRequest) {
   const { method, pathUrl, httpConfig, ...dataReq } = httpRequest;
   const { headers, timeout } = httpConfig;
+  const tenant = headers[headersKey.appTenant] as Tenant;
   let { dataRequest } = dataReq;
 
-  const { secJweStr, secJwsStr, webJwePrivKey, webJwsPrivKey, webUrl } = await appHttpSetts();
+  const { secJweStr, secJwsStr, webJwePrivKey, webJwsPrivKey, webUrl } = await appHttpSetts(tenant);
   const url = `${webUrl}${apiPaths.appAPiV1}${pathUrl}`;
 
   if (dataRequest?.payload) {

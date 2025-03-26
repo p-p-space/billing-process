@@ -15,10 +15,10 @@ export async function redisSession(tenant?: Tenant) {
   return { redisInstance, sessionId, tenant };
 }
 
-export async function createRefreshSess(tenant: Tenant) {
+export async function createRefreshSess(tenant: Tenant, currentId: string) {
   const timePlus = 20;
-  const { redisInstance, sessionId: currentId } = await redisSession(tenant);
-  const { sessExpTime, sessResetTime = 0 } = await sessionSetts(tenant);
+  const { redisInstance } = await redisSession(tenant);
+  const { sessExpTime, sessResetTime } = await sessionSetts(tenant);
 
   let sessionId = uuid4();
   let currentTime = Date.now();

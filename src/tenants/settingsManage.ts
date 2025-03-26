@@ -1,10 +1,9 @@
 // Internal app
-
 import { defaultSettings } from './bt/btSettings';
 import { defaultThemeVars } from './bt/btUiTheme';
 import type { TenantSettings, Tenant, StringMap } from '@/interfaces';
-import { baseURLs, prefixCookieName, sessSettings } from '@/constans/httpConstans';
 import { availableTenants, credentials, defaultTenant, redisSettings, timeZone } from '@/constans';
+import { Appkeys, baseURLs, prefixCookieName, servRsakeys, sessSettings, webRsakeys } from '@/constans/httpConstans';
 
 export async function tenantMuiTheme(tenant: Tenant): Promise<StringMap> {
   const availableTenantsList = availableTenants.map((tenant) => tenant);
@@ -48,35 +47,62 @@ export async function handleSettings(tenant: Tenant): Promise<TenantSettings> {
 }
 
 function updateCurrentSettings(settings: TenantSettings, tenant: Tenant) {
+  const tenantSett = tenant.toUpperCase();
+  const redisHost = process.env[`${tenantSett}_REDIS_HOST`] ?? redisSettings.host;
+  const redisPort = process.env[`${tenantSett}_REDIS_PORT`] ?? redisSettings.port;
+  const redisDb = process.env[`${tenantSett}_REDIS_DB`] ?? redisSettings.db;
+  const redisTls = process.env[`${tenantSett}REDIS_TLS`] ?? redisSettings.tls;
+  const redisUser = process.env[`${tenantSett}_REDIS_USER`] ?? redisSettings.user;
+  const redisPass = process.env[`${tenantSett}_REDIS_PASSWORD`] ?? redisSettings.password;
+  const tenantId = process.env[`${tenantSett}_TENANT_ID`] ?? credentials.tenantId;
+  const tenantClientSecret = process.env[`${tenantSett}_TENANT_CLIENT_ID`] ?? credentials.tenantClientSecret;
+  const tenantClientId = process.env[`${tenantSett}_TENANT_CLIENT_SECRET`] ?? credentials.tenantClientId;
+  const cognitoRegion = process.env[`${tenantSett}_COGNITO_REGION`] ?? credentials.cognitoRegion;
+  const cognitoUserPoolId = process.env[`${tenantSett}_COGNITO_USER_POOL_ID`] ?? credentials.cognitoUserPoolId;
+  const cognitoClientId = process.env[`${tenantSett}_COGNITO_CLIENT_ID`] ?? credentials.cognitoClientId;
+  const cognitoClientSecret = process.env[`${tenantSett}_COGNITO_CLIENT_SECRET`] ?? credentials.cognitoClientSecret;
+  const webJwePrivKey = process.env[`${tenantSett}_WEB_JWE_PRIV_KEY`] ?? webRsakeys.webJwePrivKey;
+  const webJwePubKey = process.env[`${tenantSett}_WEB_JWE_PUB_KEY`] ?? webRsakeys.webJwePubKey;
+  const webJwsPrivKey = process.env[`${tenantSett}_WEB_JWS_PRIV_KEY`] ?? webRsakeys.webJwsPrivKey;
+  const webJwsPubKey = process.env[`${tenantSett}_WEB_JWS_PUB_KEY`] ?? webRsakeys.webJwsPubKey;
+  const servJwePrivKey = process.env[`${tenantSett}_SERV_JWE_PRIV_KEY`] ?? servRsakeys.servJwePrivKey;
+  const servJwePubKey = process.env[`${tenantSett}_SERV_JWE_PUB_KEY`] ?? servRsakeys.servJwePubKey;
+  const servJwsPrivKey = process.env[`${tenantSett}_SERV_JWS_PRIV_KEY`] ?? servRsakeys.servJwsPrivKey;
+  const servJwsPubKey = process.env[`${tenantSett}_SERV_JWS_PUB_KEY`] ?? servRsakeys.servJwsPubKey;
+  const secJweStr = process.env[`${tenantSett}_SEC_JWE_STR`] ?? Appkeys.secJweStr;
+  const secJwsStr = process.env[`${tenantSett}_SEC_JWS_STR`] ?? Appkeys.secJwsStr;
+
   settings.webUrl = baseURLs.app ?? settings.webUrl;
   settings.servUrl = baseURLs.serv ?? settings.servUrl;
   settings.timeZone = timeZone ?? settings.timeZone;
-  settings.redisHost = redisSettings.host ?? settings.redisHost;
-  settings.redisPort = redisSettings.port ? parseInt(redisSettings.port) : settings.redisPort;
-  settings.redisDb = redisSettings.db ? parseInt(redisSettings.db) : settings.redisDb;
-  settings.redisTls = redisSettings.ssl ? redisSettings.ssl === 'ON' : settings.redisTls;
-  settings.redisUser = redisSettings.user ?? settings.redisUser;
-  settings.redisPassword = redisSettings.password ?? settings.redisPassword;
+  settings.redisHost = redisHost ?? settings.redisHost;
+  settings.redisPort = redisPort ? parseInt(redisPort) : settings.redisPort;
+  settings.redisDb = redisDb ? parseInt(redisDb) : settings.redisDb;
+  settings.redisTls = redisTls ? redisTls === 'ON' : settings.redisTls;
+  settings.redisUser = redisUser ?? settings.redisUser;
+  settings.redisPassword = redisPass ?? settings.redisPassword;
   settings.redisPrefix = `${prefixCookieName}${tenant}`;
   settings.sessExpTime = sessSettings.sessExpTime ? parseInt(sessSettings.sessExpTime) : settings.sessExpTime;
-  settings.sessResetTime = settings.sessExpTime <= 60 ? Math.ceil(settings.sessExpTime / 3) : 30;
+  settings.sessResetTime = sessSettings.sessResetTime ? parseInt(sessSettings.sessResetTime) : settings.sessResetTime;
   settings.sessMatchIp = sessSettings.sessMatchIp ? sessSettings.sessMatchIp === 'ON' : settings.sessMatchIp;
   settings.sessRefresh = sessSettings.sessRefresh ? sessSettings.sessRefresh === 'ON' : settings.sessRefresh;
-  settings.tenantId = credentials.tenantId ?? settings.tenantId;
-  settings.tenantClientSecret = credentials.tenantClientSecret ?? settings.tenantClientSecret;
-  settings.tenantClientId = credentials.tenantClientId ?? settings.tenantClientId;
-  settings.cognitoRegion = credentials.cognitoRegion ?? settings.cognitoRegion;
-  settings.cognitoUserPoolId = credentials.cognitoUserPoolId ?? settings.cognitoUserPoolId;
-  settings.cognitoClientId = credentials.cognitoClientId ?? settings.cognitoClientId;
-  settings.cognitoClientSecret = credentials.cognitoClientSecret ?? settings.cognitoClientSecret;
-  settings.webJwePrivKey = headersPem(settings.webJwePrivKey, 'private');
-  settings.webJwePubKey = headersPem(settings.webJwePubKey, 'public');
-  settings.webJwsPrivKey = headersPem(settings.webJwsPrivKey, 'private');
-  settings.webJwsPubKey = headersPem(settings.webJwsPubKey, 'public');
-  settings.servJwePrivKey = headersPem(settings.servJwePrivKey, 'private');
-  settings.servJwePubKey = headersPem(settings.servJwePubKey, 'public');
-  settings.servJwsPrivKey = headersPem(settings.servJwsPrivKey, 'private');
-  settings.servJwsPubKey = headersPem(settings.servJwsPubKey, 'public');
+  settings.tenantId = tenantId ?? settings.tenantId;
+  settings.tenantClientSecret = tenantClientSecret ?? settings.tenantClientSecret;
+  settings.tenantClientId = tenantClientId ?? settings.tenantClientId;
+  settings.cognitoRegion = cognitoRegion ?? settings.cognitoRegion;
+  settings.cognitoUserPoolId = cognitoUserPoolId ?? settings.cognitoUserPoolId;
+  settings.cognitoClientId = cognitoClientId ?? settings.cognitoClientId;
+  settings.cognitoClientSecret = cognitoClientSecret ?? settings.cognitoClientSecret;
+  settings.webJwePrivKey = headersPem(webJwePrivKey ?? settings.webJwePrivKey, 'private');
+  settings.webJwePubKey = headersPem(webJwePubKey ?? settings.webJwePubKey, 'public');
+  settings.webJwsPrivKey = headersPem(webJwsPrivKey ?? settings.webJwsPrivKey, 'private');
+  settings.webJwsPubKey = headersPem(webJwsPubKey ?? settings.webJwsPubKey, 'public');
+  settings.servJwePrivKey = headersPem(servJwePrivKey ?? settings.servJwePrivKey, 'private');
+  settings.servJwePubKey = headersPem(servJwePubKey ?? settings.servJwePubKey, 'public');
+  settings.servJwsPrivKey = headersPem(servJwsPrivKey ?? settings.servJwsPrivKey, 'private');
+  settings.servJwsPubKey = headersPem(servJwsPubKey ?? settings.servJwsPubKey, 'public');
+  settings.secJweStr = secJweStr ?? settings.secJweStr;
+  settings.secJwsStr = secJwsStr ?? settings.secJwsStr;
 
   return settings;
 }

@@ -76,6 +76,35 @@ export const cookieSettings = {
  */
 export const sessSettings = {
   sessExpTime: process.env.SESS_EXP_TIME,
+  sessResetTime: process.env.SESS_RESET_TIME,
   sessMatchIp: process.env.SESS_MATCH_IP,
   sessRefresh: process.env.SESS_REFRESH,
+};
+
+/**
+ * Application keys
+ */
+export const Appkeys = {
+  secJweStr: process.env.SEC_JWE_STR,
+  secJwsStr: process.env.SEC_JWS_STR,
+};
+
+/**
+ * Web RSA keys
+ */
+export const webRsakeys = {
+  webJwePrivKey: process.env.WEB_JWE_PRIV_KEY,
+  webJwePubKey: process.env.WEB_JWE_PUB_KEY,
+  webJwsPrivKey: process.env.WEB_JWS_PRIV_KEY,
+  webJwsPubKey: process.env.WEB_JWS_PUB_KEY,
+};
+
+/**
+ * Service RSA keys
+ */
+export const servRsakeys = {
+  servJwePrivKey: process.env.SERV_JWE_PRIV_KEY,
+  servJwePubKey: process.env.SERV_JWE_PUB_KEY,
+  servJwsPrivKey: process.env.SERV_JWS_PRIV_KEY,
+  servJwsPubKey: process.env.SERV_JWS_PUB_KEY,
 };

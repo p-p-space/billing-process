@@ -22,3 +22,10 @@ export type TenantSettProps = {
   tenantSett: TenantStore['tenantSett'];
   themeVars: StringMap;
 };
+
+/**
+ * Type definition for props that include a user attributes.
+ */
+export type DataServerProps = {
+  userAttr: Record<string, any>;
+};
